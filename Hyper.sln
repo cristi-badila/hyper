@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.HyperIoC", "Tests.Hyp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IoC", "IoC", "{4178EB08-00B0-44CD-AB2D-0D54E036AB7E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperIoC.Mvc", "HyperIoC.Mvc\HyperIoC.Mvc.csproj", "{2BEE0CF2-5B6B-4D8D-A9B2-CA555DBADA85}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{06BB8D97-D3DC-457B-A89B-F6317F1F7A96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06BB8D97-D3DC-457B-A89B-F6317F1F7A96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06BB8D97-D3DC-457B-A89B-F6317F1F7A96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BEE0CF2-5B6B-4D8D-A9B2-CA555DBADA85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BEE0CF2-5B6B-4D8D-A9B2-CA555DBADA85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BEE0CF2-5B6B-4D8D-A9B2-CA555DBADA85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BEE0CF2-5B6B-4D8D-A9B2-CA555DBADA85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,5 +36,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{48931BD3-DB09-4B72-9ED3-61B6ACEB192D} = {4178EB08-00B0-44CD-AB2D-0D54E036AB7E}
 		{06BB8D97-D3DC-457B-A89B-F6317F1F7A96} = {4178EB08-00B0-44CD-AB2D-0D54E036AB7E}
+		{2BEE0CF2-5B6B-4D8D-A9B2-CA555DBADA85} = {4178EB08-00B0-44CD-AB2D-0D54E036AB7E}
 	EndGlobalSection
 EndGlobal

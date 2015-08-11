@@ -28,6 +28,12 @@ namespace HyperIoC
             _currentTypeDetail.LifetimeManager = new SingletonLifetimeManager();
         }
 
+        internal void SetLifetimeTo(ILifetimeManager lifetimeManager)
+        {
+            if (_currentTypeDetail != null)
+                _currentTypeDetail.LifetimeManager = lifetimeManager;
+        }
+
         internal void AddType(string key, Type type)
         {
             _currentTypeDetail = new ItemDetail(type);
