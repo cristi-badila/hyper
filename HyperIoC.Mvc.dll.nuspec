@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>HyperIoCMvc</id>
+    <title>Hyperbolic IoC Mvc</title>
+    <version>1.0.0</version>
+    <authors>Hyperbolic Solutions</authors>
+    <owners>Hyperbolic Solutions</owners>
+    <projectUrl>https://github.com/steve-hyperbolic/hyper/wiki/HyperIoCMvc</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Hyperbolic Solutions simple IoC framework for Mvc</description>
+    <releaseNotes>Initial release of the Mvc IoC framework.</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>IoC .NET Dependency injection</tags>
+    <dependencies>
+      <dependency id="HyperIoC" version="1.0.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="HyperIoC.Mvc\bin\Release\HyperIoC.Mvc.dll" target="lib/net40" />
+  </files>
+</package>
