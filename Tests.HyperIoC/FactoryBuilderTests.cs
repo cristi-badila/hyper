@@ -55,20 +55,19 @@ namespace Tests.HyperIoC
         [Test]
         public void CreateBuildsFactoryFromAnother()
         {
-            const string setting = "DEBUG";
-
             var originalFactory = FactoryBuilder
                 .Build()
-                .WithProfile<DebugProfile>(() => setting == "DEBUG")
+                .WithProfile<AnyProfile>()
                 .Create();
             var factory = FactoryBuilder
                 .Build(originalFactory)
-                .WithProfile<ReleaseProfile>(() => setting == "RELEASE")
+                .WithProfile<DebugProfile>(() => originalFactory.Get<ITestConfig>().Config == "DEBUG")
+                .WithProfile<ReleaseProfile>(() => originalFactory.Get<ITestConfig>().Config == "RELEASE")
                 .Create();
 
             var instance = factory.Get<ITestClass>();
 
-            Assert.That(instance, Is.InstanceOf<TestClass>());
+            Assert.That(instance, Is.InstanceOf<AnotherTestClass>());
         }
     }
 }
