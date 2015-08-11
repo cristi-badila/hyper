@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperIoC", "HyperIoC\HyperI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.HyperIoC", "Tests.HyperIoC\Tests.HyperIoC.csproj", "{06BB8D97-D3DC-457B-A89B-F6317F1F7A96}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IoC", "IoC", "{4178EB08-00B0-44CD-AB2D-0D54E036AB7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{48931BD3-DB09-4B72-9ED3-61B6ACEB192D} = {4178EB08-00B0-44CD-AB2D-0D54E036AB7E}
+		{06BB8D97-D3DC-457B-A89B-F6317F1F7A96} = {4178EB08-00B0-44CD-AB2D-0D54E036AB7E}
 	EndGlobalSection
 EndGlobal
