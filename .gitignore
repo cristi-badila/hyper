@@ -2,3 +2,5 @@
 *.csproj
 bin
 obj
+*.user
+packages
