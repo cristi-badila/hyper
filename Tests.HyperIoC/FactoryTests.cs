@@ -79,6 +79,19 @@ namespace Tests.HyperIoC
             Assert.That(instance, Is.InstanceOf<TestClass>());
         }
 
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void GetReturnsInstanceFromAbstractDefinition(string key)
+        {
+            _factory.Add<ITestClass, YetAnotherTestClass>();
+            _factory.Add<AbstractTestClass, TestClass2>(key);
+
+            var instance = _factory.Get<ITestClass>();
+
+            Assert.That(instance, Is.InstanceOf<YetAnotherTestClass>());
+        }
+
         [Test]
         public void GetReturnsInstanceWithKey()
         {

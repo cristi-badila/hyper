@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Support\AbstractTestClass.cs" />
     <Compile Include="Support\AnyProfile.cs" />
     <Compile Include="Support\DebugProfile.cs" />
     <Compile Include="FactoryBuilderTests.cs" />
@@ -55,7 +56,9 @@
     <Compile Include="Support\ITestClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Support\TestClass.cs" />
+    <Compile Include="Support\TestClass2.cs" />
     <Compile Include="Support\TestConfig.cs" />
+    <Compile Include="Support\YetAnotherTestClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
