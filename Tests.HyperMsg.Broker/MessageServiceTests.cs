@@ -12,26 +12,14 @@ namespace Tests.HyperMsg.Broker
     public class MessageServiceTests : TestBase<MessageService>
     {
         [Test]
-        public void PostAddsPersistentMessageToDatabase()
+        public void PostAddsMessageToDatabase()
         {
             var message = new StandardMessage<User>(new User {Forename = "Homer", Surname = "Simpson"});
-            message.Persistent = true;
 
             Subject.Post(message);
 
             MockFor<IMessageRepository>().Verify(r => r.Add(
                 It.Is<MessageEntity>(e => e.MessageId == message.Id)), Times.Once);
-        }
-
-        [Test]
-        public void PostDoesNotAddNonPersistentMessageToDatabase()
-        {
-            var message = new StandardMessage<User>(new User { Forename = "Homer", Surname = "Simpson" });
-
-            Subject.Post(message);
-
-            MockFor<IMessageRepository>().Verify(r => r.Add(
-                It.Is<MessageEntity>(e => e.MessageId == message.Id)), Times.Never);
         }
     }
 }

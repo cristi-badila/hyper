@@ -15,15 +15,12 @@ namespace HyperMsg.Broker.Services
 
         public void Post(Message message)
         {
-            if (message.Persistent)
+            var entity = new MessageEntity
             {
-                var entity = new MessageEntity
-                {
-                    MessageId = message.Id,
-                    Body = JsonConvert.SerializeObject(message)
-                };
-                _messageRepository.Add(entity);
-            }
+                MessageId = message.Id,
+                Body = JsonConvert.SerializeObject(message)
+            };
+            _messageRepository.Add(entity);
         }
     }
 }
