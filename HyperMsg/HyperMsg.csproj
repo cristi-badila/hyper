@@ -50,15 +50,27 @@
     <Compile Include="Config\ConfigSettings.cs" />
     <Compile Include="Config\IConfigSettings.cs" />
     <Compile Include="Contracts\IMessageService.cs" />
+    <Compile Include="ErrorResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ErrorResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Exceptions\MessageException.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\IMessageProvider.cs" />
+    <Compile Include="Providers\InMemoryMessageProvider.cs" />
     <Compile Include="Providers\RemoteMessageProvider.cs" />
     <Compile Include="BrokeredMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ErrorResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

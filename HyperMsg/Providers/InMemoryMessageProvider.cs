@@ -1,26 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel;
-using System.ServiceModel.Description;
-using HyperMsg.Config;
-using HyperMsg.Contracts;
+using System.Text;
 using HyperMsg.Exceptions;
 
 namespace HyperMsg.Providers
 {
-    public class RemoteMessageProvider : IMessageProvider
+    public class InMemoryMessageProvider : IMessageProvider
     {
-        private readonly ChannelFactory<IMessageService> _channelFactory;
+        private readonly List<Message> _messages = new List<Message>();
         private bool _disposed;
 
-        public RemoteMessageProvider(IConfigSettings settings)
-        {
-            _channelFactory = new ChannelFactory<IMessageService>(new WebHttpBinding(), settings.Address);
-            _channelFactory.Endpoint.Behaviors.Add(new WebHttpBehavior());
-        }
-
-        ~RemoteMessageProvider()
+        ~InMemoryMessageProvider()
         {
             Dispose(false);
         }
@@ -31,9 +22,7 @@ namespace HyperMsg.Providers
             if (string.IsNullOrWhiteSpace(message.EndPoint))
                 throw new MessageException(ErrorResources.MessageEndpoint);
 
-            var channel = _channelFactory.CreateChannel();
-            channel.Post(message);
-            CloseChannel(channel);
+            _messages.Add(message);
         }
 
         public IEnumerable<TMessage> Receive<TMessage>(string endPoint, int count = 1) where TMessage : Message
@@ -43,10 +32,7 @@ namespace HyperMsg.Providers
             if (count < 1 || count > 100)
                 throw new ArgumentOutOfRangeException(nameof(count), ErrorResources.MessageCountOutOfRange);
 
-            var channel = _channelFactory.CreateChannel();
-            var messages = channel.Get(endPoint, count.ToString()).ToList();
-            CloseChannel(channel);
-            return messages.Cast<TMessage>();
+            return _messages.Where(m => m.EndPoint == endPoint).Take(count).Cast<TMessage>();
         }
 
         public void Dispose()
@@ -59,18 +45,10 @@ namespace HyperMsg.Providers
         {
             if (!_disposed && disposing)
             {
-                _channelFactory.Close();
+                _messages.Clear();
             }
 
             _disposed = true;
-        }
-
-        private static void CloseChannel(IMessageService service)
-        {
-            // ReSharper disable SuspiciousTypeConversion.Global
-            var clientChannel = service as IClientChannel;
-            // ReSharper restore SuspiciousTypeConversion.Global
-            clientChannel?.Close();
         }
     }
 }
