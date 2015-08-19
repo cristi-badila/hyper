@@ -6,9 +6,10 @@ namespace HyperMsg.Broker.Data.Repositories
 {
     public interface IMessageRepository
     {
-        MessageEntity Get(Guid id);
+        IEnumerable<MessageEntity> Get(params Guid[] messageIds);
         IEnumerable<MessageEntity> Get(string endpoint, int count);
         void Add(MessageEntity messageEntity);
-        void Remove(params Guid[] ids);
+        void Remove(params Guid[] messageIds);
+        void Update(params MessageEntity[] entities);
     }
 }

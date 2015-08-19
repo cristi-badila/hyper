@@ -16,20 +16,25 @@ namespace HyperMsg.Broker.Data.Repositories
             _databaseFactory = databaseFactory;
         }
 
-        public MessageEntity Get(Guid id)
+        public IEnumerable<MessageEntity> Get(params Guid[] messageIds)
         {
             using (var session = _databaseFactory.OpenSession())
             using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
             {
-                Api.JetSetCurrentIndex(session.SessionId, table, "UIX_MESSAGEID");
-                Api.MakeKey(session.SessionId, table, id, MakeKeyGrbit.NewKey);
+                var entities = new List<MessageEntity>();
 
-                if (Api.TrySeek(session.SessionId, table, SeekGrbit.SeekEQ))
+                foreach (var messageId in messageIds)
                 {
-                    return Create(session.SessionId, table);
+                    Api.JetSetCurrentIndex(session.SessionId, table, "UIX_MESSAGEID");
+                    Api.MakeKey(session.SessionId, table, messageId, MakeKeyGrbit.NewKey);
+
+                    if (Api.TrySeek(session.SessionId, table, SeekGrbit.SeekEQ))
+                    {
+                        entities.Add(Create(session.SessionId, table));
+                    }
                 }
 
-                return null;
+                return entities;
             }
         }
 
@@ -74,24 +79,53 @@ namespace HyperMsg.Broker.Data.Repositories
                 columnDesc = Api.GetTableColumnid(session.SessionId, table, "Persistent");
                 Api.SetColumn(session.SessionId, table, columnDesc, messageEntity.Persistent);
 
+                columnDesc = Api.GetTableColumnid(session.SessionId, table, "RetryLimit");
+                Api.SetColumn(session.SessionId, table, columnDesc, messageEntity.RetryLimit);
+
+                columnDesc = Api.GetTableColumnid(session.SessionId, table, "RetryCount");
+                Api.SetColumn(session.SessionId, table, columnDesc, (short)0);
+
                 updater.Save();
                 session.Complete();
             }
         }
 
-        public void Remove(params Guid[] ids)
+        public void Remove(params Guid[] messageIds)
         {
             using (var session = _databaseFactory.OpenSession())
             using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
             {
-                foreach (var id in ids)
+                foreach (var messageId in messageIds)
                 {
                     Api.JetSetCurrentIndex(session.SessionId, table, "UIX_MESSAGEID");
-                    Api.MakeKey(session.SessionId, table, id, MakeKeyGrbit.NewKey);
+                    Api.MakeKey(session.SessionId, table, messageId, MakeKeyGrbit.NewKey);
 
                     if (Api.TrySeek(session.SessionId, table, SeekGrbit.SeekEQ))
                     {
                         Api.JetDelete(session.SessionId, table);
+                    }
+                }
+
+                session.Complete();
+            }
+        }
+
+        public void Update(params MessageEntity[] entities)
+        {
+            using (var session = _databaseFactory.OpenSession())
+            using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
+            {
+                foreach (var entity in entities)
+                {
+                    Api.JetSetCurrentIndex(session.SessionId, table, "UIX_MESSAGEID");
+                    Api.MakeKey(session.SessionId, table, entity.MessageId, MakeKeyGrbit.NewKey);
+
+                    if (Api.TrySeek(session.SessionId, table, SeekGrbit.SeekEQ))
+                    {
+                        Api.JetPrepareUpdate(session.SessionId, table, JET_prep.Replace);
+                        var columnDesc = Api.GetTableColumnid(session.SessionId, table, "RetryCount");
+                        Api.SetColumn(session.SessionId, table, columnDesc, entity.RetryCount);
+                        Api.JetUpdate(session.SessionId, table);
                     }
                 }
 
@@ -117,6 +151,12 @@ namespace HyperMsg.Broker.Data.Repositories
 
             columnDesc = Api.GetTableColumnid(sessionId, table, "Persistent");
             entity.Persistent = Api.RetrieveColumnAsBoolean(sessionId, table, columnDesc) ?? false;
+
+            columnDesc = Api.GetTableColumnid(sessionId, table, "RetryLimit");
+            entity.RetryLimit = Api.RetrieveColumnAsInt16(sessionId, table, columnDesc) ?? 5;
+
+            columnDesc = Api.GetTableColumnid(sessionId, table, "RetryCount");
+            entity.RetryCount = Api.RetrieveColumnAsInt16(sessionId, table, columnDesc) ?? 0;
 
             return entity;
         }

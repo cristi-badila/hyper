@@ -10,6 +10,12 @@ namespace HyperMsg.Messages
     public class Acknowledgement
     {
         /// <summary>
+        /// Gets or sets a flag indicating if the list of messages has been abandoned. This will increment the retry
+        /// for each message.
+        /// </summary>
+        public bool IsAbandoned { get; set; }
+
+        /// <summary>
         /// Gets or sets the list of messages Ids to acknowledge.
         /// </summary>
         [DataMember]

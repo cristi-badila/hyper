@@ -48,7 +48,7 @@ namespace Tests.HyperMsg.Broker.Data.Repositories
             var entity = new MessageEntity {MessageId = id, Body = "<Body/>", EndPoint = "test"};
 
             _repository.Add(entity);
-            entity = _repository.Get(id);
+            entity = _repository.Get(id).First();
 
             Assert.That(entity, Is.Not.Null);
             Assert.That(entity.Body, Is.EqualTo("<Body/>"));
@@ -63,11 +63,9 @@ namespace Tests.HyperMsg.Broker.Data.Repositories
             _repository.Add(entity1);
             _repository.Add(entity2);
             _repository.Remove(entity1.MessageId, entity2.MessageId);
-            entity1 = _repository.Get(entity1.MessageId);
-            entity2 = _repository.Get(entity2.MessageId);
+            var entities = _repository.Get(entity1.MessageId, entity2.MessageId);
 
-            Assert.That(entity1, Is.Null);
-            Assert.That(entity2, Is.Null);
+            Assert.That(entities.Any(), Is.False);
         }
 
         [Test]
@@ -117,6 +115,25 @@ namespace Tests.HyperMsg.Broker.Data.Repositories
         {
             var entities = _repository.Get("test", 10).ToList();
             Assert.That(entities.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void CanUpdateRetryCount()
+        {
+            var entity1 = new MessageEntity { MessageId = Guid.NewGuid(), Body = "<Body/>", EndPoint = "test" };
+            var entity2 = new MessageEntity { MessageId = Guid.NewGuid(), Body = "<Body/>", EndPoint = "test" };
+            _repository.Add(entity1);
+            _repository.Add(entity2);
+            entity1.RetryCount = 3;
+            entity2.RetryCount = 4;
+
+            _repository.Update(entity1, entity2);
+
+            var entities = _repository.Get(entity1.MessageId, entity2.MessageId).ToList();
+            entity1 = entities.First(me => me.MessageId == entity1.MessageId);
+            Assert.That(entity1.RetryCount, Is.EqualTo(3));
+            entity2 = entities.First(me => me.MessageId == entity2.MessageId);
+            Assert.That(entity2.RetryCount, Is.EqualTo(4));
         }
     }
 }

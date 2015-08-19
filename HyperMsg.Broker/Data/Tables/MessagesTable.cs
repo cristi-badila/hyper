@@ -52,6 +52,20 @@ namespace HyperMsg.Broker.Data.Tables
                     grbit = ColumndefGrbit.None
                 }, null, 0, out columnid);
 
+            Api.JetAddColumn(session.SessionId, tableId, "RetryLimit",
+                new JET_COLUMNDEF
+                {
+                    coltyp = JET_coltyp.Short,
+                    grbit = ColumndefGrbit.None
+                }, null, 0, out columnid);
+
+            Api.JetAddColumn(session.SessionId, tableId, "RetryCount",
+                new JET_COLUMNDEF
+                {
+                    coltyp = JET_coltyp.Short,
+                    grbit = ColumndefGrbit.None
+                }, null, 0, out columnid);
+
             const string idIndex = "+Id\0\0";
             Api.JetCreateIndex(session.SessionId, tableId, "IDX_ID",
                 CreateIndexGrbit.IndexPrimary, idIndex, idIndex.Length, 100);

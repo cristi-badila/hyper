@@ -65,13 +65,36 @@ namespace Tests.HyperMsg.Broker.Services
         }
 
         [Test]
-        public void AcknowledgeRemovesMessages()
+        public void AcknowledgeRemovesNonAbandonedMessages()
         {
-            var message = new Acknowledgement {MessageIds = new[] {Guid.NewGuid(), Guid.NewGuid()}};
+            var message = new Acknowledgement {IsAbandoned = false, MessageIds = new[] {Guid.NewGuid(), Guid.NewGuid()}};
 
             Subject.Acknowledge(message);
 
             MockFor<IMessageRepository>().Verify(r => r.Remove(message.MessageIds), Times.Once);
+        }
+
+        [Test]
+        public void AcknowledgeAbandonedDoesNotRemoveMessages()
+        {
+            var message = new Acknowledgement {IsAbandoned = true, MessageIds = new[] {Guid.NewGuid(), Guid.NewGuid()}};
+
+            Subject.Acknowledge(message);
+
+            MockFor<IMessageRepository>().Verify(r => r.Remove(message.MessageIds), Times.Never);
+        }
+
+        [Test]
+        public void AcknowledgeAbandonedIncrementsMessageRetries()
+        {
+            var message = new Acknowledgement { IsAbandoned = true, MessageIds = new[] { Guid.NewGuid(), Guid.NewGuid() } };
+            var entities = new List<MessageEntity>();
+            message.MessageIds.ToList().ForEach(id => entities.Add(new MessageEntity {MessageId = id, RetryLimit = 5, RetryCount = 2}));
+            MockFor<IMessageRepository>().Setup(r => r.Get(message.MessageIds)).Returns(entities);
+
+            Subject.Acknowledge(message);
+
+            entities.ForEach(me => Assert.That(me.RetryCount, Is.EqualTo(3)));
         }
     }
 }

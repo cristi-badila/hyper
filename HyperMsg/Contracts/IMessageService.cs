@@ -19,12 +19,12 @@ namespace HyperMsg.Contracts
         /// from the underlying store. If delivery fails it will still remain in the store. This uses an acknowledgment mechanism
         /// so when the client receives the message it will issue an acknowledgement.
         /// </remarks>
-        /// <param name="endpoint">Endpoint to get the messages for</param>
+        /// <param name="endPoint">Endpoint to get the messages for</param>
         /// <param name="count">Number of messages to retrieve</param>
         /// <returns>Retrieves up to n messages</returns>
         [OperationContract]
         [WebGet(UriTemplate = "api/messages/{endPoint}/{count}")]
-        IEnumerable<Message> Get(string endpoint, string count);
+        IEnumerable<Message> Get(string endPoint, string count);
 
         /// <summary>
         /// Posts a message for subscribers.

@@ -13,6 +13,7 @@ namespace HyperMsg.Messages
         protected Message()
         {
             Id = System.Guid.NewGuid();
+            RetryLimit = 5;
         }
 
         /// <summary>
@@ -38,6 +39,12 @@ namespace HyperMsg.Messages
         /// </summary>
         [DataMember]
         public string EndPoint { get; set; }
+
+        /// <summary>
+        /// Gets or set the number of retries if a message before dead lettering it. Default value is 5.
+        /// </summary>
+        [DataMember]
+        public int RetryLimit { get; set; }
 
         /// <summary>
         /// Sets the body of the message.
