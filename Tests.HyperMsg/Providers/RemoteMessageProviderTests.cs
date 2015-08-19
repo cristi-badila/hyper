@@ -1,5 +1,4 @@
 ﻿using System;
-using HyperMsg;
 using HyperMsg.Config;
 using HyperMsg.Exceptions;
 using HyperMsg.Messages;
@@ -47,17 +46,17 @@ namespace Tests.HyperMsg.Providers
         [TestCase(null)]
         [TestCase("")]
         [TestCase(" ")]
-        public void ReceiveThrowsExceptionWithInvalidEndPoint(string endPoint)
+        public void ReceiveAndDeleteThrowsExceptionWithInvalidEndPoint(string endPoint)
         {
-            Assert.That(() => Subject.Receive<BrokeredMessage>(endPoint), Throws.ArgumentException);
+            Assert.That(() => Subject.ReceiveAndDelete<BrokeredMessage>(endPoint), Throws.ArgumentException);
         }
 
         [TestCase(-1)]
         [TestCase(0)]
         [TestCase(101)]
-        public void ReceiveThrowsExceptionWithInvalidCount(int count)
+        public void ReceiveAndDeleteThrowsExceptionWithInvalidCount(int count)
         {
-            Assert.That(() => Subject.Receive<BrokeredMessage>("test", count), 
+            Assert.That(() => Subject.ReceiveAndDelete<BrokeredMessage>("test", count), 
                 Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
     }

@@ -55,7 +55,7 @@ namespace Tests.HyperMsg.Broker.Services
         [Test]
         public void AcknowledgeRemovesMessages()
         {
-            var message = new AcknowledgeMessage {MessageIds = new[] {Guid.NewGuid(), Guid.NewGuid()}};
+            var message = new Acknowledgement {MessageIds = new[] {Guid.NewGuid(), Guid.NewGuid()}};
 
             Subject.Acknowledge(message);
 

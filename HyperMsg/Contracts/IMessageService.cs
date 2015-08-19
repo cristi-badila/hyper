@@ -40,6 +40,6 @@ namespace HyperMsg.Contracts
         /// <param name="acknowlege">List of messages to acknowledge</param>
         [OperationContract]
         [WebInvoke(UriTemplate = "api/messages/acknowledge")]
-        void Acknowledge(AcknowledgeMessage acknowlege);
+        void Acknowledge(Acknowledgement acknowlege);
     }
 }

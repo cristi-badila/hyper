@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using HyperMsg.Exceptions;
 using HyperMsg.Messages;
 
@@ -33,7 +32,27 @@ namespace HyperMsg.Providers
             if (count < 1 || count > 100)
                 throw new ArgumentOutOfRangeException(nameof(count), ErrorResources.MessageCountOutOfRange);
 
-            return _messages.Where(m => m.EndPoint == endPoint).Take(count).Cast<TMessage>();
+            var messages = _messages.Where(m => m.EndPoint == endPoint).Take(count).Cast<TMessage>().ToList();
+            return messages;
+        }
+
+        public IEnumerable<TMessage> ReceiveAndDelete<TMessage>(string endPoint, int count = 1) where TMessage : Message
+        {
+            if (string.IsNullOrWhiteSpace(endPoint))
+                throw new ArgumentException(ErrorResources.InvalidEndpoint, nameof(endPoint));
+            if (count < 1 || count > 100)
+                throw new ArgumentOutOfRangeException(nameof(count), ErrorResources.MessageCountOutOfRange);
+            
+            var messages = Receive<TMessage>(endPoint, count).ToList();
+
+            Complete(messages.ToArray());
+
+            return messages;
+        }
+
+        public void Complete<TMessage>(params TMessage[] messages) where TMessage : Message
+        {
+            messages.ToList().ForEach(m => _messages.Remove(m));
         }
 
         public void Dispose()

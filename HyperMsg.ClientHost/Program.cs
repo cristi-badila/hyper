@@ -36,7 +36,7 @@ namespace HyperMsg.ClientHost
                 Console.WriteLine("Added messages. Press return to receive");
                 Console.ReadLine();
 
-                var messages = provider.Receive<BrokeredMessage>("test2", 10);
+                var messages = provider.ReceiveAndDelete<BrokeredMessage>("test2", 10);
 
                 foreach (var msg in messages)
                 {
@@ -47,7 +47,7 @@ namespace HyperMsg.ClientHost
                 Console.WriteLine("Recieve messages. Press return to check acknowledgement");
                 Console.ReadLine();
 
-                messages = provider.Receive<BrokeredMessage>("test2", 10);
+                messages = provider.ReceiveAndDelete<BrokeredMessage>("test2", 10);
                 Console.WriteLine("Found {0} messages", messages.Count());
             }
             catch (Exception error)

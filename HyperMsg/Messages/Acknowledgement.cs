@@ -7,7 +7,7 @@ namespace HyperMsg.Messages
     /// Defines an acknowledgement message that is used to acknowledge receipt.
     /// </summary>
     [DataContract]
-    public class AcknowledgeMessage
+    public class Acknowledgement
     {
         /// <summary>
         /// Gets or sets the list of messages Ids to acknowledge.

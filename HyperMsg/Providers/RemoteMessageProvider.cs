@@ -10,11 +10,18 @@ using HyperMsg.Messages;
 
 namespace HyperMsg.Providers
 {
+    /// <summary>
+    /// Defines a message provider that calls a remote service as defined by the configuration settings address property.
+    /// </summary>
     public class RemoteMessageProvider : IMessageProvider
     {
         private readonly ChannelFactory<IMessageService> _channelFactory;
         private bool _disposed;
 
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="settings">Config settings</param>
         public RemoteMessageProvider(IConfigSettings settings)
         {
             _channelFactory = new ChannelFactory<IMessageService>(new WebHttpBinding(), settings.Address);
@@ -46,12 +53,25 @@ namespace HyperMsg.Providers
 
             var channel = _channelFactory.CreateChannel();
             var messages = channel.Get(endPoint, count.ToString()).Cast<TMessage>().ToList();
-            
-            channel.Acknowledge(new AcknowledgeMessage {MessageIds = messages.Select(m => m.Id).ToArray()});
-
             CloseChannel(channel);
 
             return messages;
+        }
+
+        public IEnumerable<TMessage> ReceiveAndDelete<TMessage>(string endPoint, int count = 1) where TMessage : Message
+        {
+            var messages = Receive<TMessage>(endPoint, count).ToList();
+
+            Complete(messages.ToArray());
+
+            return messages;
+        }
+
+        public void Complete<TMessage>(params TMessage[] messages) where TMessage : Message
+        {
+            var channel = _channelFactory.CreateChannel();
+            channel.Acknowledge(new Acknowledgement {MessageIds = messages.Select(m => m.Id).ToArray()});
+            CloseChannel(channel);
         }
 
         public void Dispose()

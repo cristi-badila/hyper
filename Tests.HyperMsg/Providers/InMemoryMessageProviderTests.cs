@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using HyperMsg;
 using HyperMsg.Exceptions;
 using HyperMsg.Messages;
 using HyperMsg.Providers;
@@ -38,13 +37,13 @@ namespace Tests.HyperMsg.Providers
         }
 
         [Test]
-        public void ReceiveReturnsEndPointMessages()
+        public void ReceiveAndDeleteReturnsEndPointMessages()
         {
             Subject.Send(new BrokeredMessage {EndPoint = "test2"});
-            Subject.Send(new BrokeredMessage { EndPoint = "test" });
-            Subject.Send(new BrokeredMessage { EndPoint = "test2" });
+            Subject.Send(new BrokeredMessage {EndPoint = "test"});
+            Subject.Send(new BrokeredMessage {EndPoint = "test2"});
 
-            var messages = Subject.Receive<BrokeredMessage>("test2", 2).ToList();
+            var messages = Subject.ReceiveAndDelete<BrokeredMessage>("test2", 2).ToList();
 
             Assert.That(messages.Count, Is.EqualTo(2));
             Assert.That(messages.All(m => m.EndPoint == "test2"), Is.True);
@@ -53,18 +52,31 @@ namespace Tests.HyperMsg.Providers
         [TestCase(null)]
         [TestCase("")]
         [TestCase(" ")]
-        public void ReceiveThrowsExceptionWithInvalidEndPoint(string endPoint)
+        public void ReceiveAndDeleteThrowsExceptionWithInvalidEndPoint(string endPoint)
         {
-            Assert.That(() => Subject.Receive<BrokeredMessage>(endPoint), Throws.ArgumentException);
+            Assert.That(() => Subject.ReceiveAndDelete<BrokeredMessage>(endPoint), Throws.ArgumentException);
         }
 
         [TestCase(-1)]
         [TestCase(0)]
         [TestCase(101)]
-        public void ReceiveThrowsExceptionWithInvalidCount(int count)
+        public void ReceiveAndDeleteThrowsExceptionWithInvalidCount(int count)
         {
-            Assert.That(() => Subject.Receive<BrokeredMessage>("test", count), 
+            Assert.That(() => Subject.ReceiveAndDelete<BrokeredMessage>("test", count), 
                 Throws.InstanceOf<ArgumentOutOfRangeException>());
+        }
+
+
+        [Test]
+        public void CompleteDeletesMessages()
+        {
+            Subject.Send(new BrokeredMessage { EndPoint = "test2" });
+            var message = Subject.Receive<BrokeredMessage>("test2").First();
+
+            Subject.Complete(message);
+
+            message = Subject.Receive<BrokeredMessage>("test2").FirstOrDefault();
+            Assert.That(message, Is.Null);
         }
     }
 }

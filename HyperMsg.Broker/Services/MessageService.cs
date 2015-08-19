@@ -52,7 +52,7 @@ namespace HyperMsg.Broker.Services
             _messageRepository.Add(entity);
         }
 
-        public void Acknowledge(AcknowledgeMessage acknowlege)
+        public void Acknowledge(Acknowledgement acknowlege)
         {
             _messageRepository.Remove(acknowlege.MessageIds);
         }
