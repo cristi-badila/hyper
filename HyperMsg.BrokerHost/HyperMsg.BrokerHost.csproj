@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnyProfile.cs" />
+    <Compile Include="DependencyResolver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -54,6 +56,13 @@
       <Project>{24D81E1E-040E-4807-AFA5-65CBEC2EE3C1}</Project>
       <Name>HyperMsg.Broker</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HyperMsg\HyperMsg.csproj">
+      <Project>{A5FEEA21-7892-446A-BE63-2DD8078709A5}</Project>
+      <Name>HyperMsg</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

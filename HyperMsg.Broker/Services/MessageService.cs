@@ -1,5 +1,6 @@
 ﻿using HyperMsg.Broker.Data.Entities;
 using HyperMsg.Broker.Data.Repositories;
+using HyperMsg.Contracts;
 using Newtonsoft.Json;
 
 namespace HyperMsg.Broker.Services

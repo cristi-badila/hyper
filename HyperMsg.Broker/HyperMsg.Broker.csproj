@@ -51,10 +51,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrokerManager.cs" />
+    <Compile Include="IDependencyResolver.cs" />
     <Compile Include="ConfigSettings.cs" />
-    <Compile Include="Data\DatabaseManager.cs" />
+    <Compile Include="Data\DatabaseFactory.cs" />
     <Compile Include="Data\Entities\MessageEntity.cs" />
-    <Compile Include="Data\IConnectionProvider.cs" />
+    <Compile Include="Data\IDatabaseFactory.cs" />
     <Compile Include="Data\Repositories\IMessageRepository.cs" />
     <Compile Include="Data\Repositories\MessageRepository.cs" />
     <Compile Include="Data\Tables\MessagesTable.cs" />
@@ -63,8 +64,10 @@
     <Compile Include="IBrokerManager.cs" />
     <Compile Include="IConfigSettings.cs" />
     <Compile Include="Services\MessageService.cs" />
-    <Compile Include="Services\IMessageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Wcf\BrokerServiceBehavior.cs" />
+    <Compile Include="Wcf\BrokerServiceHost.cs" />
+    <Compile Include="Wcf\BrokerInstanceProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HyperMsg\HyperMsg.csproj">

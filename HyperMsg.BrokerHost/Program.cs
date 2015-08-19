@@ -1,6 +1,7 @@
 ﻿using System;
 using HyperIoC;
 using HyperMsg.Broker;
+using HyperMsg.Broker.Data;
 
 namespace HyperMsg.BrokerHost
 {
@@ -18,8 +19,8 @@ namespace HyperMsg.BrokerHost
             {
                 Console.WriteLine("Initialising...");
                 _factory = FactoryBuilder.Build().WithProfile<AnyProfile>().Create();
-
-                initialised = true;
+                
+                initialised = _factory != null;
                 Console.WriteLine("Initialisation complete.");
             }
             catch (Exception error)
@@ -31,11 +32,16 @@ namespace HyperMsg.BrokerHost
             if (initialised)
             {
                 Console.WriteLine("Initialising the broker...");
-                var broker = _factory.Get<IBrokerManager>();
+                IDatabaseFactory databaseFactory = null;
+                IBrokerManager broker = null;
 
                 try
                 {
-                    broker.Init().Run();
+                    databaseFactory = _factory.Get<IDatabaseFactory>();
+                    databaseFactory.Create();
+
+                    broker = _factory.Get<IBrokerManager>();
+                    broker.Run();
 
                     Console.WriteLine("Broker is ready for messages...press return to exit.");
                     Console.ReadLine();
@@ -46,7 +52,8 @@ namespace HyperMsg.BrokerHost
                 }
                 finally
                 {
-                    broker.Dispose();
+                    databaseFactory?.Dispose();
+                    broker?.Dispose();
                 }
             }
         }

@@ -3,10 +3,15 @@ using System;
 namespace HyperMsg.Broker.Data
 {
     /// <summary>
-    /// Defines the members of the IConnectionProvider interface.
+    /// Defines the members of the IDatabaseFactory interface.
     /// </summary>
-    public interface IConnectionProvider : IDisposable
+    public interface IDatabaseFactory : IDisposable
     {
+        /// <summary>
+        /// Creates the database.
+        /// </summary>
+        void Create();
+
         /// <summary>
         /// Opens a transactioned session.
         /// </summary>

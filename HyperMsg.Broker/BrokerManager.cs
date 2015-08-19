@@ -1,8 +1,9 @@
 ﻿using System;
 using System.ServiceModel;
 using System.ServiceModel.Description;
-using System.ServiceModel.Web;
 using HyperMsg.Broker.Services;
+using HyperMsg.Broker.Wcf;
+using HyperMsg.Contracts;
 
 namespace HyperMsg.Broker
 {
@@ -11,26 +12,23 @@ namespace HyperMsg.Broker
     /// </summary>
     public class BrokerManager : IBrokerManager
     {
+        private readonly BrokerServiceHost _host;
         private bool _disposed;
-        private WebServiceHost _host;
+
+        /// <summary>
+        /// Initialises a new instance of the class.
+        /// </summary>
+        public BrokerManager(IDependencyResolver resolver)
+        {
+            _host = new BrokerServiceHost(resolver, typeof(MessageService), new Uri("http://localhost:8000"));
+            _host.AddServiceEndpoint(typeof(IMessageService), new WebHttpBinding(), "");
+            var behaviour = _host.Description.Behaviors.Find<ServiceDebugBehavior>();
+            behaviour.HttpHelpPageEnabled = false;
+        }
 
         ~BrokerManager()
         {
             Dispose(false);
-        }
-
-        /// <summary>
-        /// Initialises the broker.
-        /// </summary>
-        /// <returns>Self</returns>
-        public IBrokerManager Init()
-        {
-            _host = new WebServiceHost(typeof(MessageService), new Uri("http://localhost:8000"));
-            _host.AddServiceEndpoint(typeof(IMessageService), new WebHttpBinding(), "");
-            var behaviour = _host.Description.Behaviors.Find<ServiceDebugBehavior>();
-            behaviour.HttpHelpPageEnabled = false;
-
-            return this;
         }
 
         /// <summary>

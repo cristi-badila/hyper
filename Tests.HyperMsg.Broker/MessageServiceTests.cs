@@ -14,7 +14,8 @@ namespace Tests.HyperMsg.Broker
         [Test]
         public void PostAddsMessageToDatabase()
         {
-            var message = new StandardMessage<User>(new User {Forename = "Homer", Surname = "Simpson"});
+            var message = new BrokeredMessage();
+            message.SetBody(new User { Forename = "Homer", Surname = "Simpson" });
 
             Subject.Post(message);
 

@@ -11,6 +11,18 @@ namespace HyperIoC
     {
         private readonly List<Item> _items = new List<Item>();
 
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        public Factory()
+        {
+            // Add self to the IoC (as resolver) for dependency resolution patterns.
+            var item = new Item(typeof (IFactoryResolver));
+            item.AddType(GetType().FullName, GetType());
+            item.SetLifetimeTo(new SingletonLifetimeManager(this));
+            _items.Add(item);
+        }
+
         private IFactoryLocator Locator => (IFactoryLocator) this;
 
         /// <summary>

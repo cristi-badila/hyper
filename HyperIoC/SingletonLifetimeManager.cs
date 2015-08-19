@@ -10,6 +10,15 @@ namespace HyperIoC
         private volatile object _instance;
         private readonly object _syncRoot = new object();
 
+        /// <summary>
+        /// Initialises a new instance of the class.
+        /// </summary>
+        /// <param name="instance">Instance to use</param>
+        public SingletonLifetimeManager(object instance = null)
+        {
+            _instance = instance;
+        }
+
         public override object Get(Type type, IFactoryLocator locator, IFactoryResolver resolver)
         {
             if (_instance != null) return _instance;

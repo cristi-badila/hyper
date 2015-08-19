@@ -42,6 +42,14 @@ namespace Tests.HyperIoC
         }
 
         [Test]
+        public void AddRegistersSelf()
+        {
+            var resolver = _factory.Get<IFactoryResolver>();
+
+            Assert.That(resolver, Is.Not.Null);
+        }
+
+        [Test]
         public void AddRegistersType()
         {
             var item = _factory.Add<ITestClass, TestClass>();

@@ -8,17 +8,17 @@ namespace HyperMsg.Broker.Data.Repositories
 {
     public class MessageRepository : IMessageRepository
     {
-        private readonly IConnectionProvider _connectionProvider;
+        private readonly IDatabaseFactory _databaseFactory;
         private const string TableName = "Messages";
 
-        public MessageRepository(IConnectionProvider connectionProvider)
+        public MessageRepository(IDatabaseFactory databaseFactory)
         {
-            _connectionProvider = connectionProvider;
+            _databaseFactory = databaseFactory;
         }
 
         public MessageEntity Get(Guid id)
         {
-            using (var session = _connectionProvider.OpenSession())
+            using (var session = _databaseFactory.OpenSession())
             using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
             {
                 Api.JetSetCurrentIndex(session.SessionId, table, "UIX_MESSAGEID");
@@ -35,7 +35,7 @@ namespace HyperMsg.Broker.Data.Repositories
 
         public IEnumerable<MessageEntity> Get(int count)
         {
-            using (var session = _connectionProvider.OpenSession())
+            using (var session = _databaseFactory.OpenSession())
             using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
             {
                 var entities = new List<MessageEntity>();
@@ -55,7 +55,7 @@ namespace HyperMsg.Broker.Data.Repositories
 
         public void Add(MessageEntity messageEntity)
         {
-            using (var session = _connectionProvider.OpenSession())
+            using (var session = _databaseFactory.OpenSession())
             using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
             using (var updater = new Update(session.SessionId, table, JET_prep.Insert))
             {
@@ -72,7 +72,7 @@ namespace HyperMsg.Broker.Data.Repositories
 
         public void Remove(Guid id)
         {
-            using (var session = _connectionProvider.OpenSession())
+            using (var session = _databaseFactory.OpenSession())
             using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
             {
                 Api.JetSetCurrentIndex(session.SessionId, table, "UIX_MESSAGEID");

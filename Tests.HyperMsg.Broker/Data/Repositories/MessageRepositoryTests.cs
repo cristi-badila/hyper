@@ -15,7 +15,7 @@ namespace Tests.HyperMsg.Broker.Data.Repositories
     public class MessageRepositoryTests
     {
         private MessageRepository _repository;
-        private DatabaseManager _databaseManager;
+        private DatabaseFactory _databaseFactory;
 
         [SetUp]
         public void BeforeEachTest()
@@ -24,15 +24,16 @@ namespace Tests.HyperMsg.Broker.Data.Repositories
             var configSettings = new Mock<IConfigSettings>();
             configSettings.Setup(s => s.DatabasePath).Returns(path);
 
-            _databaseManager = new DatabaseManager(configSettings.Object);
+            _databaseFactory = new DatabaseFactory(configSettings.Object);
+            _databaseFactory.Create();
 
-            _repository = new MessageRepository(_databaseManager);
+            _repository = new MessageRepository(_databaseFactory);
         }
 
         [TearDown]
         public void AfterEachTest()
         {
-            _databaseManager.Dispose();
+            _databaseFactory.Dispose();
 
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database");
 

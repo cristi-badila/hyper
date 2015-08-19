@@ -3,6 +3,7 @@ using HyperMsg.Broker;
 using HyperMsg.Broker.Data;
 using HyperMsg.Broker.Data.Repositories;
 using HyperMsg.Broker.Services;
+using HyperMsg.Contracts;
 
 namespace HyperMsg.BrokerHost
 {
@@ -10,9 +11,10 @@ namespace HyperMsg.BrokerHost
     {
         public override void Construct(IFactoryBuilder builder)
         {
+            builder.Add<IDependencyResolver, DependencyResolver>().AsSingleton();
             builder.Add<IConfigSettings, ConfigSettings>().AsSingleton();
             builder.Add<IMessageService, MessageService>();
-            builder.Add<IConnectionProvider, DatabaseManager>().AsSingleton();
+            builder.Add<IDatabaseFactory, DatabaseFactory>().AsSingleton();
             builder.Add<IBrokerManager, BrokerManager>().AsSingleton();
             builder.Add<IMessageRepository, MessageRepository>().AsSingleton();
         }

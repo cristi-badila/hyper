@@ -44,9 +44,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\RemoteMessageProviderTests.cs" />
+    <Compile Include="Support\User.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HyperMsg\HyperMsg.csproj">
+      <Project>{A5FEEA21-7892-446A-BE63-2DD8078709A5}</Project>
+      <Name>HyperMsg</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

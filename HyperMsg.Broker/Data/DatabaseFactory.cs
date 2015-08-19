@@ -6,16 +6,30 @@ using Microsoft.Isam.Esent.Interop;
 
 namespace HyperMsg.Broker.Data
 {
-    public class DatabaseManager : IConnectionProvider
+    /// <summary>
+    /// Defines the database factory for creating the database and connections to it.
+    /// </summary>
+    public class DatabaseFactory : IDatabaseFactory
     {
-        private readonly Instance _instance;
-        private readonly string _databasePath;
+        private readonly IConfigSettings _configSettings;
+        private Instance _instance;
+        private string _databasePath;
         private bool _disposed;
 
-        public DatabaseManager(IConfigSettings configSettings)
+        public DatabaseFactory(IConfigSettings configSettings)
         {
-            var instancePath = configSettings.DatabasePath;
-            _databasePath = Path.Combine(instancePath, "database.mdb");
+            _configSettings = configSettings;
+        }
+
+        ~DatabaseFactory()
+        {
+            Dispose(false);
+        }
+
+        public void Create()
+        {
+            var instancePath = _configSettings.DatabasePath;
+            _databasePath = Path.Combine(instancePath, "database.hdb");
             _instance = new Instance(_databasePath);
 
             _instance.Parameters.CreatePathIfNotExist = true;
@@ -39,11 +53,6 @@ namespace HyperMsg.Broker.Data
             Build();
         }
 
-        ~DatabaseManager()
-        {
-            Dispose(false);
-        }
-
         public TransactionSession OpenSession()
         {
             return new TransactionSession(new Session(_instance), _databasePath);
@@ -59,8 +68,8 @@ namespace HyperMsg.Broker.Data
         {
             if (!_disposed && disposing)
             {
-                _instance.Close();
-                _instance.Dispose();
+                _instance?.Close();
+                _instance?.Dispose();
             }
 
             _disposed = true;

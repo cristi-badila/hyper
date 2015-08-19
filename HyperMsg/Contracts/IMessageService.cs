@@ -1,7 +1,7 @@
 ﻿using System.ServiceModel;
 using System.ServiceModel.Web;
 
-namespace HyperMsg.Broker.Services
+namespace HyperMsg.Contracts
 {
     /// <summary>
     /// Defines the members of the IMessageService interface.
