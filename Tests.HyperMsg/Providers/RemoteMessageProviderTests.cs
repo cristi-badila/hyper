@@ -2,6 +2,7 @@
 using HyperMsg;
 using HyperMsg.Config;
 using HyperMsg.Exceptions;
+using HyperMsg.Messages;
 using HyperMsg.Providers;
 using NUnit.Framework;
 using Tests.HyperMsg.Support;

@@ -2,6 +2,7 @@
 using HyperMsg.Broker.Data.Entities;
 using HyperMsg.Broker.Data.Repositories;
 using HyperMsg.Contracts;
+using HyperMsg.Messages;
 
 namespace HyperMsg.Broker.Services
 {
@@ -49,6 +50,11 @@ namespace HyperMsg.Broker.Services
                 Persistent = message.Persistent
             };
             _messageRepository.Add(entity);
+        }
+
+        public void Acknowledge(AcknowledgeMessage acknowlege)
+        {
+            _messageRepository.Remove(acknowlege.MessageIds);
         }
     }
 }

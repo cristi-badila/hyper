@@ -55,16 +55,19 @@ namespace Tests.HyperMsg.Broker.Data.Repositories
         }
 
         [Test]
-        public void CanDeleteMessage()
+        public void CanDeleteMessages()
         {
-            var id = Guid.NewGuid();
-            var entity = new MessageEntity { MessageId = id, Body = "<Body/>", EndPoint = "test" };
+            var entity1 = new MessageEntity { MessageId = Guid.NewGuid(), Body = "<Body/>", EndPoint = "test" };
+            var entity2 = new MessageEntity { MessageId = Guid.NewGuid(), Body = "<Body/>", EndPoint = "test" };
 
-            _repository.Add(entity);
-            _repository.Remove(id);
-            entity = _repository.Get(id);
+            _repository.Add(entity1);
+            _repository.Add(entity2);
+            _repository.Remove(entity1.MessageId, entity2.MessageId);
+            entity1 = _repository.Get(entity1.MessageId);
+            entity2 = _repository.Get(entity2.MessageId);
 
-            Assert.That(entity, Is.Null);
+            Assert.That(entity1, Is.Null);
+            Assert.That(entity2, Is.Null);
         }
 
         [Test]

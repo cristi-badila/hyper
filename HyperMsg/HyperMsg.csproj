@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Messages\AcknowledgeMessage.cs" />
     <Compile Include="Config\ConfigSettings.cs" />
     <Compile Include="Config\IConfigSettings.cs" />
     <Compile Include="Contracts\IMessageService.cs" />
@@ -56,12 +57,12 @@
       <DependentUpon>ErrorResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Exceptions\MessageException.cs" />
-    <Compile Include="Message.cs" />
+    <Compile Include="Messages\Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\IMessageProvider.cs" />
     <Compile Include="Providers\InMemoryMessageProvider.cs" />
     <Compile Include="Providers\RemoteMessageProvider.cs" />
-    <Compile Include="BrokeredMessage.cs" />
+    <Compile Include="Messages\BrokeredMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

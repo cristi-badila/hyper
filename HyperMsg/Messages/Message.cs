@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace HyperMsg
+namespace HyperMsg.Messages
 {
     /// <summary>
     /// Base class for messages.

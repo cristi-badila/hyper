@@ -1,13 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using HyperMsg;
 using HyperMsg.Broker.Data.Entities;
 using HyperMsg.Broker.Data.Repositories;
 using HyperMsg.Broker.Services;
+using HyperMsg.Messages;
 using Moq;
 using NUnit.Framework;
 using Tests.HyperMsg.Broker.Support;
 
-namespace Tests.HyperMsg.Broker
+namespace Tests.HyperMsg.Broker.Services
 {
     [TestFixture]
     public class MessageServiceTests : TestBase<MessageService>
@@ -37,6 +39,27 @@ namespace Tests.HyperMsg.Broker
             var entities = Subject.Get("test", count);
 
             Assert.That(entities.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void GetReturnsMultipleMessage()
+        {
+            MockFor<IMessageRepository>().Setup(r => r.Get("test", 2)).Returns(
+                new[] { new MessageEntity(), new MessageEntity() });
+
+            var entities = Subject.Get("test", "2");
+
+            Assert.That(entities.Count(), Is.EqualTo(2));
+        }
+
+        [Test]
+        public void AcknowledgeRemovesMessages()
+        {
+            var message = new AcknowledgeMessage {MessageIds = new[] {Guid.NewGuid(), Guid.NewGuid()}};
+
+            Subject.Acknowledge(message);
+
+            MockFor<IMessageRepository>().Verify(r => r.Remove(message.MessageIds), Times.Once);
         }
     }
 }

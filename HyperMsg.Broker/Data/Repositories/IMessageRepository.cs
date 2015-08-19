@@ -9,6 +9,6 @@ namespace HyperMsg.Broker.Data.Repositories
         MessageEntity Get(Guid id);
         IEnumerable<MessageEntity> Get(string endpoint, int count);
         void Add(MessageEntity messageEntity);
-        void Remove(Guid id);
+        void Remove(params Guid[] ids);
     }
 }

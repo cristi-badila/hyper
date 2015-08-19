@@ -79,17 +79,20 @@ namespace HyperMsg.Broker.Data.Repositories
             }
         }
 
-        public void Remove(Guid id)
+        public void Remove(params Guid[] ids)
         {
             using (var session = _databaseFactory.OpenSession())
             using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
             {
-                Api.JetSetCurrentIndex(session.SessionId, table, "UIX_MESSAGEID");
-                Api.MakeKey(session.SessionId, table, id, MakeKeyGrbit.NewKey);
-
-                if (Api.TrySeek(session.SessionId, table, SeekGrbit.SeekEQ))
+                foreach (var id in ids)
                 {
-                    Api.JetDelete(session.SessionId, table);
+                    Api.JetSetCurrentIndex(session.SessionId, table, "UIX_MESSAGEID");
+                    Api.MakeKey(session.SessionId, table, id, MakeKeyGrbit.NewKey);
+
+                    if (Api.TrySeek(session.SessionId, table, SeekGrbit.SeekEQ))
+                    {
+                        Api.JetDelete(session.SessionId, table);
+                    }
                 }
 
                 session.Complete();

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace HyperMsg
+namespace HyperMsg.Messages
 {
     /// <summary>
     /// Defines a brokered message.

@@ -6,6 +6,7 @@ using System.ServiceModel.Description;
 using HyperMsg.Config;
 using HyperMsg.Contracts;
 using HyperMsg.Exceptions;
+using HyperMsg.Messages;
 
 namespace HyperMsg.Providers
 {
@@ -44,9 +45,13 @@ namespace HyperMsg.Providers
                 throw new ArgumentOutOfRangeException(nameof(count), ErrorResources.MessageCountOutOfRange);
 
             var channel = _channelFactory.CreateChannel();
-            var messages = channel.Get(endPoint, count.ToString()).ToList();
+            var messages = channel.Get(endPoint, count.ToString()).Cast<TMessage>().ToList();
+            
+            channel.Acknowledge(new AcknowledgeMessage {MessageIds = messages.Select(m => m.Id).ToArray()});
+
             CloseChannel(channel);
-            return messages.Cast<TMessage>();
+
+            return messages;
         }
 
         public void Dispose()
