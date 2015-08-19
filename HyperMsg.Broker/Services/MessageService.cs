@@ -17,11 +17,12 @@ namespace HyperMsg.Broker.Services
 
         public IEnumerable<Message> Get(string endpoint, string count)
         {
-            int recordCount;
+            int messageCount;
 
-            if (!int.TryParse(count, out recordCount) || recordCount < 1) recordCount = 1;
+            if (!int.TryParse(count, out messageCount) || messageCount < 1) messageCount = 1;
+            if (messageCount > 100) messageCount = 100;
 
-            var entities = _messageRepository.Get(endpoint, recordCount);
+            var entities = _messageRepository.Get(endpoint, messageCount);
 
             var messages = new List<Message>();
 
