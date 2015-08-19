@@ -36,6 +36,22 @@ namespace HyperMsg.Broker.Data.Tables
                     grbit = ColumndefGrbit.None
                 }, null, 0, out columnid);
 
+            Api.JetAddColumn(session.SessionId, tableId, "EndPoint",
+                new JET_COLUMNDEF
+                {
+                    coltyp = JET_coltyp.Text,
+                    cp = JET_CP.Unicode,
+                    grbit = ColumndefGrbit.None
+                }, null, 0, out columnid);
+
+            Api.JetAddColumn(session.SessionId, tableId, "Persistent",
+                new JET_COLUMNDEF
+                {
+                    coltyp = JET_coltyp.Bit,
+                    cp = JET_CP.Unicode,
+                    grbit = ColumndefGrbit.None
+                }, null, 0, out columnid);
+
             const string idIndex = "+Id\0\0";
             Api.JetCreateIndex(session.SessionId, tableId, "IDX_ID",
                 CreateIndexGrbit.IndexPrimary, idIndex, idIndex.Length, 100);
@@ -43,6 +59,10 @@ namespace HyperMsg.Broker.Data.Tables
             const string msgIdIndex = "+MessageId\0\0";
             Api.JetCreateIndex(session.SessionId, tableId, "UIX_MESSAGEID",
                 CreateIndexGrbit.IndexUnique, msgIdIndex, msgIdIndex.Length, 100);
+
+            const string endPointIndex = "+EndPoint\0\0";
+            Api.JetCreateIndex(session.SessionId, tableId, "IDX_ENDPOINT",
+                CreateIndexGrbit.None, endPointIndex, endPointIndex.Length, 100);
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using HyperMsg.Config;
@@ -23,11 +25,6 @@ namespace HyperMsg.Providers
             Dispose(false);
         }
 
-        /// <summary>
-        /// Sends the message to the message service endpoint.
-        /// </summary>
-        /// <typeparam name="TMessage">Message type</typeparam>
-        /// <param name="message">Message to send</param>
         public void Send<TMessage>(TMessage message) where TMessage : Message
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
@@ -37,6 +34,14 @@ namespace HyperMsg.Providers
             var channel = _channelFactory.CreateChannel();
             channel.Post(message);
             CloseChannel(channel);
+        }
+
+        public IEnumerable<TMessage> Receive<TMessage>(string endPoint, int count = 1) where TMessage : Message
+        {
+            var channel = _channelFactory.CreateChannel();
+            var messages = channel.Get(endPoint, count.ToString()).ToList();
+            CloseChannel(channel);
+            return messages.Cast<TMessage>();
         }
 
         public void Dispose()

@@ -19,7 +19,7 @@ namespace HyperMsg
         /// Gets the Unique Id for the message.
         /// </summary>
         [DataMember]
-        public System.Guid Id { get; private set; }
+        public System.Guid Id { get; internal set; }
 
         /// <summary>
         /// Gets or sets a flag indicating if the message is persistent.
@@ -31,7 +31,7 @@ namespace HyperMsg
         /// Gets the message body to transport.
         /// </summary>
         [DataMember]
-        public string Body { get; private set; }
+        public string Body { get; set; }
 
         /// <summary>
         /// Gets or sets the endpoint of the message. This is where any registered subscribers will look for messages.

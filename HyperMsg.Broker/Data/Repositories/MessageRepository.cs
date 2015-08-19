@@ -33,14 +33,17 @@ namespace HyperMsg.Broker.Data.Repositories
             }
         }
 
-        public IEnumerable<MessageEntity> Get(int count)
+        public IEnumerable<MessageEntity> Get(string endpoint, int count)
         {
             using (var session = _databaseFactory.OpenSession())
             using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
             {
                 var entities = new List<MessageEntity>();
 
-                if (Api.TryMoveFirst(session.SessionId, table))
+                Api.JetSetCurrentIndex(session.SessionId, table, "IDX_ENDPOINT");
+                Api.MakeKey(session.SessionId, table, endpoint, Encoding.Unicode, MakeKeyGrbit.NewKey);
+
+                if (Api.TrySeek(session.SessionId, table, SeekGrbit.SeekEQ))
                 {
                     do
                     {
@@ -64,6 +67,12 @@ namespace HyperMsg.Broker.Data.Repositories
 
                 columnDesc = Api.GetTableColumnid(session.SessionId, table, "Body");
                 Api.SetColumn(session.SessionId, table, columnDesc, messageEntity.Body, Encoding.Unicode);
+
+                columnDesc = Api.GetTableColumnid(session.SessionId, table, "EndPoint");
+                Api.SetColumn(session.SessionId, table, columnDesc, messageEntity.EndPoint, Encoding.Unicode);
+
+                columnDesc = Api.GetTableColumnid(session.SessionId, table, "Persistent");
+                Api.SetColumn(session.SessionId, table, columnDesc, messageEntity.Persistent);
 
                 updater.Save();
                 session.Complete();
@@ -91,14 +100,20 @@ namespace HyperMsg.Broker.Data.Repositories
         {
             var entity = new MessageEntity();
 
-            var columnId = Api.GetTableColumnid(sessionId, table, "Id");
-            entity.Id = Api.RetrieveColumnAsInt32(sessionId, table, columnId) ?? -1;
+            var columnDesc = Api.GetTableColumnid(sessionId, table, "Id");
+            entity.Id = Api.RetrieveColumnAsInt32(sessionId, table, columnDesc) ?? -1;
 
-            var columnMessageId = Api.GetTableColumnid(sessionId, table, "MessageId");
-            entity.MessageId = Api.RetrieveColumnAsGuid(sessionId, table, columnMessageId) ?? Guid.Empty;
+            columnDesc = Api.GetTableColumnid(sessionId, table, "MessageId");
+            entity.MessageId = Api.RetrieveColumnAsGuid(sessionId, table, columnDesc) ?? Guid.Empty;
 
-            var columnDesc = Api.GetTableColumnid(sessionId, table, "Body");
+            columnDesc = Api.GetTableColumnid(sessionId, table, "Body");
             entity.Body = Api.RetrieveColumnAsString(sessionId, table, columnDesc, Encoding.Unicode);
+
+            columnDesc = Api.GetTableColumnid(sessionId, table, "EndPoint");
+            entity.EndPoint = Api.RetrieveColumnAsString(sessionId, table, columnDesc, Encoding.Unicode);
+
+            columnDesc = Api.GetTableColumnid(sessionId, table, "Persistent");
+            entity.Persistent = Api.RetrieveColumnAsBoolean(sessionId, table, columnDesc) ?? false;
 
             return entity;
         }

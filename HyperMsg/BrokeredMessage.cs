@@ -8,5 +8,6 @@ namespace HyperMsg
     [DataContract]
     public class BrokeredMessage : Message
     {
+        
     }
 }

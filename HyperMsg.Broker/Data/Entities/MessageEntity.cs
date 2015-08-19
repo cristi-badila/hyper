@@ -7,5 +7,7 @@ namespace HyperMsg.Broker.Data.Entities
         public int Id { get; set; }
         public Guid MessageId { get; set; }
         public string Body { get; set; }
+        public bool Persistent { get; set; }
+        public string EndPoint { get; set; }
     }
 }

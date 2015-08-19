@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using HyperMsg.Broker;
 using HyperMsg.Broker.Config;
 using HyperMsg.Broker.Data;
 using HyperMsg.Broker.Data.Entities;
@@ -46,7 +45,7 @@ namespace Tests.HyperMsg.Broker.Data.Repositories
         public void CanSaveAndRetriveMessage()
         {
             var id = Guid.NewGuid();
-            var entity = new MessageEntity {MessageId = id, Body = "<Body/>"};
+            var entity = new MessageEntity {MessageId = id, Body = "<Body/>", EndPoint = "test"};
 
             _repository.Add(entity);
             entity = _repository.Get(id);
@@ -59,7 +58,7 @@ namespace Tests.HyperMsg.Broker.Data.Repositories
         public void CanDeleteMessage()
         {
             var id = Guid.NewGuid();
-            var entity = new MessageEntity { MessageId = id, Body = "<Body/>" };
+            var entity = new MessageEntity { MessageId = id, Body = "<Body/>", EndPoint = "test" };
 
             _repository.Add(entity);
             _repository.Remove(id);
@@ -80,11 +79,11 @@ namespace Tests.HyperMsg.Broker.Data.Repositories
 
             foreach (var id in idList)
             {
-                var entity = new MessageEntity { MessageId = id, Body = "<Body/>"};
+                var entity = new MessageEntity { MessageId = id, Body = "<Body/>", EndPoint = "test" };
                 _repository.Add(entity);
             }
 
-            var entities = _repository.Get(10).ToList();
+            var entities = _repository.Get("test", 10).ToList();
             Assert.That(entities.Count, Is.EqualTo(10));
             idList.Take(10).ToList().ForEach(id => Assert.That(entities.Any(e => e.MessageId == id), Is.True));
         }
@@ -101,11 +100,11 @@ namespace Tests.HyperMsg.Broker.Data.Repositories
 
             foreach (var id in idList)
             {
-                var entity = new MessageEntity { MessageId = id, Body = "<Body/>" };
+                var entity = new MessageEntity { MessageId = id, Body = "<Body/>", EndPoint = "test" };
                 _repository.Add(entity);
             }
 
-            var entities = _repository.Get(10).ToList();
+            var entities = _repository.Get("test", 10).ToList();
             Assert.That(entities.Count, Is.EqualTo(idList.Count));
             idList.ForEach(id => Assert.That(entities.Any(e => e.MessageId == id), Is.True));
         }
@@ -113,7 +112,7 @@ namespace Tests.HyperMsg.Broker.Data.Repositories
         [Test]
         public void CanGetNextNMessagesNoneExist()
         {
-            var entities = _repository.Get(10).ToList();
+            var entities = _repository.Get("test", 10).ToList();
             Assert.That(entities.Count, Is.EqualTo(0));
         }
     }
