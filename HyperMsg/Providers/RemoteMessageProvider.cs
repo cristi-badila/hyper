@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ServiceModel;
 using System.ServiceModel.Description;
+using HyperMsg.Config;
 using HyperMsg.Contracts;
+using HyperMsg.Exceptions;
 
 namespace HyperMsg.Providers
 {
@@ -10,9 +12,9 @@ namespace HyperMsg.Providers
         private readonly ChannelFactory<IMessageService> _channelFactory;
         private bool _disposed;
 
-        public RemoteMessageProvider()
+        public RemoteMessageProvider(IConfigSettings settings)
         {
-            _channelFactory = new ChannelFactory<IMessageService>(new WebHttpBinding(), "http://localhost:8000");
+            _channelFactory = new ChannelFactory<IMessageService>(new WebHttpBinding(), settings.Address);
             _channelFactory.Endpoint.Behaviors.Add(new WebHttpBehavior());
         }
 
@@ -21,8 +23,17 @@ namespace HyperMsg.Providers
             Dispose(false);
         }
 
+        /// <summary>
+        /// Sends the message to the message service endpoint.
+        /// </summary>
+        /// <typeparam name="TMessage">Message type</typeparam>
+        /// <param name="message">Message to send</param>
         public void Send<TMessage>(TMessage message) where TMessage : Message
         {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (string.IsNullOrWhiteSpace(message.EndPoint))
+                throw new MessageException("Message does not contain a valid endpoint.");
+
             var channel = _channelFactory.CreateChannel();
             channel.Post(message);
             CloseChannel(channel);

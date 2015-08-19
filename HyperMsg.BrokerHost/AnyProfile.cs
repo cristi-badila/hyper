@@ -1,5 +1,6 @@
 ﻿using HyperIoC;
 using HyperMsg.Broker;
+using HyperMsg.Broker.Config;
 using HyperMsg.Broker.Data;
 using HyperMsg.Broker.Data.Repositories;
 using HyperMsg.Broker.Services;

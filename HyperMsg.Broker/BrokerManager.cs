@@ -3,6 +3,7 @@ using System.ServiceModel;
 using System.ServiceModel.Description;
 using HyperMsg.Broker.Services;
 using HyperMsg.Broker.Wcf;
+using HyperMsg.Broker.Config;
 using HyperMsg.Contracts;
 
 namespace HyperMsg.Broker
@@ -18,9 +19,11 @@ namespace HyperMsg.Broker
         /// <summary>
         /// Initialises a new instance of the class.
         /// </summary>
-        public BrokerManager(IDependencyResolver resolver)
+        /// <param name="resolver">Dependency resolver</param>
+        /// <param name="settings">Config settings</param>
+        public BrokerManager(IDependencyResolver resolver, IConfigSettings settings)
         {
-            _host = new BrokerServiceHost(resolver, typeof(MessageService), new Uri("http://localhost:8000"));
+            _host = new BrokerServiceHost(resolver, typeof(MessageService), new Uri(settings.Address));
             _host.AddServiceEndpoint(typeof(IMessageService), new WebHttpBinding(), "");
             var behaviour = _host.Description.Behaviors.Find<ServiceDebugBehavior>();
             behaviour.HttpHelpPageEnabled = false;

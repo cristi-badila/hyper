@@ -52,7 +52,7 @@
   <ItemGroup>
     <Compile Include="BrokerManager.cs" />
     <Compile Include="IDependencyResolver.cs" />
-    <Compile Include="ConfigSettings.cs" />
+    <Compile Include="Config\ConfigSettings.cs" />
     <Compile Include="Data\DatabaseFactory.cs" />
     <Compile Include="Data\Entities\MessageEntity.cs" />
     <Compile Include="Data\IDatabaseFactory.cs" />
@@ -62,7 +62,7 @@
     <Compile Include="Data\Tables\TableBase.cs" />
     <Compile Include="Data\TransactionSession.cs" />
     <Compile Include="IBrokerManager.cs" />
-    <Compile Include="IConfigSettings.cs" />
+    <Compile Include="Config\IConfigSettings.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Wcf\BrokerServiceBehavior.cs" />

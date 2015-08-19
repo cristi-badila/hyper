@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using HyperMsg.Config;
 using HyperMsg.Providers;
 
 namespace HyperMsg.ClientHost
@@ -13,9 +14,9 @@ namespace HyperMsg.ClientHost
             try
             {
                 Console.ReadLine();
-                var message = new BrokeredMessage();
+                var message = new BrokeredMessage {EndPoint = "test"};
                 message.SetBody(new User { Forename = "Homer", Surname = "Simpson" });
-                var provider = new RemoteMessageProvider();
+                var provider = new RemoteMessageProvider(new ConfigSettings());
                 provider.Send(message);
             }
             catch (Exception error)

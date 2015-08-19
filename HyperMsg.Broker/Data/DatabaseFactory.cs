@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using HyperMsg.Broker.Config;
 using HyperMsg.Broker.Data.Tables;
 using Microsoft.Isam.Esent.Interop;
 

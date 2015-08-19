@@ -34,6 +34,12 @@ namespace HyperMsg
         public string Body { get; private set; }
 
         /// <summary>
+        /// Gets or sets the endpoint of the message. This is where any registered subscribers will look for messages.
+        /// </summary>
+        [DataMember]
+        public string EndPoint { get; set; }
+
+        /// <summary>
         /// Sets the body of the message.
         /// </summary>
         /// <typeparam name="TBody">Bodt type</typeparam>

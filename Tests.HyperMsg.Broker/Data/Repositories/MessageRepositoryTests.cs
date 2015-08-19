@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using HyperMsg.Broker;
+using HyperMsg.Broker.Config;
 using HyperMsg.Broker.Data;
 using HyperMsg.Broker.Data.Entities;
 using HyperMsg.Broker.Data.Repositories;
