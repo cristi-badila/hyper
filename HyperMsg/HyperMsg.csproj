@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="Exceptions\MessageException.cs" />
     <Compile Include="Messages\Message.cs" />
+    <Compile Include="Messages\MessageResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\IMessageProvider.cs" />
     <Compile Include="Providers\InMemoryMessageProvider.cs" />

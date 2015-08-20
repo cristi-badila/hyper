@@ -24,7 +24,7 @@ namespace HyperMsg.Contracts
         /// <returns>Retrieves up to n messages</returns>
         [OperationContract]
         [WebGet(UriTemplate = "api/messages/{endPoint}/{count}")]
-        IEnumerable<Message> Get(string endPoint, string count);
+        MessageResponse<IEnumerable<Message>> Get(string endPoint, string count);
 
         /// <summary>
         /// Posts a message for subscribers.
@@ -32,7 +32,7 @@ namespace HyperMsg.Contracts
         /// <param name="message">Message to post</param>
         [OperationContract]
         [WebInvoke(UriTemplate="api/messages")]
-        void Post(Message message);
+        MessageResponse Post(Message message);
 
         /// <summary>
         /// Acknowledges the list of messages by removing them from the store.
@@ -40,6 +40,6 @@ namespace HyperMsg.Contracts
         /// <param name="acknowlege">List of messages to acknowledge</param>
         [OperationContract]
         [WebInvoke(UriTemplate = "api/messages/acknowledge")]
-        void Acknowledge(Acknowledgement acknowlege);
+        MessageResponse Acknowledge(Acknowledgement acknowlege);
     }
 }

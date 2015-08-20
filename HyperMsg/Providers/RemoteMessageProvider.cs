@@ -25,7 +25,8 @@ namespace HyperMsg.Providers
         public RemoteMessageProvider(IConfigSettings settings)
         {
             _channelFactory = new ChannelFactory<IMessageService>(new WebHttpBinding(), settings.Address);
-            _channelFactory.Endpoint.Behaviors.Add(new WebHttpBehavior());
+            _channelFactory.Endpoint.Behaviors.Add(
+                new WebHttpBehavior {FaultExceptionEnabled = false, HelpEnabled = false});
         }
 
         ~RemoteMessageProvider()
@@ -52,7 +53,12 @@ namespace HyperMsg.Providers
                 throw new ArgumentOutOfRangeException(nameof(count), ErrorResources.MessageCountOutOfRange);
 
             var channel = _channelFactory.CreateChannel();
-            var messages = channel.Get(endPoint, count.ToString()).Cast<TMessage>().ToList();
+            var response = channel.Get(endPoint, count.ToString());
+
+            if (response.HasError)
+                throw new Exception(response.Error);
+
+            var messages = response.Body.Cast<TMessage>().ToList();
             CloseChannel(channel);
 
             return messages;

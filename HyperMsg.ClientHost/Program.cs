@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.Serialization;
 using HyperMsg.Config;
 using HyperMsg.Messages;
 using HyperMsg.Providers;
@@ -88,7 +87,7 @@ namespace HyperMsg.ClientHost
 
                     Console.WriteLine("Completed previously abandoned messages: Count is {0}", messages.Count);
 
-                    provider.Dispose();
+                    
 
                     //var message = new BrokeredMessage {EndPoint = "test"};
                     //message.SetBody(new User {Forename = "Homer", Surname = "Simpson"});

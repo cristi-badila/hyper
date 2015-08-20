@@ -36,9 +36,10 @@ namespace Tests.HyperMsg.Broker.Services
         {
             MockFor<IMessageRepository>().Setup(r => r.Get("test", 1)).Returns(new[] {new MessageEntity()});
 
-            var entities = Subject.Get("test", count);
+            var response = Subject.Get("test", count);
 
-            Assert.That(entities.Count(), Is.EqualTo(1));
+            var messages = response.Body;
+            Assert.That(messages.Count(), Is.EqualTo(1));
         }
 
         [Test]
@@ -47,9 +48,10 @@ namespace Tests.HyperMsg.Broker.Services
             MockFor<IMessageRepository>().Setup(r => r.Get("test", 2)).Returns(
                 new[] { new MessageEntity(), new MessageEntity() });
 
-            var entities = Subject.Get("test", "2");
+            var response = Subject.Get("test", "2");
 
-            Assert.That(entities.Count(), Is.EqualTo(2));
+            var messages = response.Body;
+            Assert.That(messages.Count(), Is.EqualTo(2));
         }
 
         [Test]
@@ -59,8 +61,9 @@ namespace Tests.HyperMsg.Broker.Services
             for (var i=0; i<100; i++) entities.Add(new MessageEntity());
             MockFor<IMessageRepository>().Setup(r => r.Get("test", 100)).Returns(entities);
 
-            var messages = Subject.Get("test", "101");
+            var response = Subject.Get("test", "101");
 
+            var messages = response.Body;
             Assert.That(messages.Count(), Is.EqualTo(100));
         }
 
