@@ -3,18 +3,18 @@
   <metadata>
     <id>HyperIoCMvc</id>
     <title>Hyperbolic IoC Mvc</title>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <authors>Hyperbolic Solutions</authors>
     <owners>Hyperbolic Solutions</owners>
     <projectUrl>https://github.com/steve-hyperbolic/hyper/wiki/HyperIoCMvc</projectUrl>
     <licenseUrl>https://github.com/steve-hyperbolic/hyper/blob/master/LICENSE.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Hyperbolic Solutions simple IoC framework for Mvc</description>
-    <releaseNotes>License update</releaseNotes>
+    <releaseNotes>Update to use latest HyperIoC version</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>IoC .NET Dependency injection</tags>
     <dependencies>
-      <dependency id="HyperIoC" version="1.0.1" />
+      <dependency id="HyperIoC" version="1.0.3" />
     </dependencies>
   </metadata>
   <files>
