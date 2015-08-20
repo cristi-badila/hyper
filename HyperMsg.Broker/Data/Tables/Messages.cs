@@ -2,7 +2,7 @@ using Microsoft.Isam.Esent.Interop;
 
 namespace HyperMsg.Broker.Data.Tables
 {
-    internal class MessagesTable : TableBase
+    internal class Messages : TableBase
     {
         internal const string TableName = "Messages";
 

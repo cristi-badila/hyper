@@ -120,20 +120,58 @@ namespace Tests.HyperMsg.Broker.Data.Repositories
         [Test]
         public void CanUpdateRetryCount()
         {
-            var entity1 = new MessageEntity { MessageId = Guid.NewGuid(), Body = "<Body/>", EndPoint = "test" };
-            var entity2 = new MessageEntity { MessageId = Guid.NewGuid(), Body = "<Body/>", EndPoint = "test" };
+            var entity1 = new MessageEntity { MessageId = Guid.NewGuid(), Body = "<Body/>", EndPoint = "test", RetryLimit = 5 };
+            var entity2 = new MessageEntity { MessageId = Guid.NewGuid(), Body = "<Body/>", EndPoint = "test", RetryLimit = 5 };
             _repository.Add(entity1);
             _repository.Add(entity2);
             entity1.RetryCount = 3;
             entity2.RetryCount = 4;
 
-            _repository.Update(entity1, entity2);
+            _repository.UpdateRetry(entity1, entity2);
 
             var entities = _repository.Get(entity1.MessageId, entity2.MessageId).ToList();
             entity1 = entities.First(me => me.MessageId == entity1.MessageId);
             Assert.That(entity1.RetryCount, Is.EqualTo(3));
             entity2 = entities.First(me => me.MessageId == entity2.MessageId);
             Assert.That(entity2.RetryCount, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void CanDeadLetterMessageRemovesMessageFromMessages()
+        {
+            var entity1 = new MessageEntity { MessageId = Guid.NewGuid(), Body = "<Body/>", EndPoint = "test", RetryLimit = 5 };
+            var entity2 = new MessageEntity { MessageId = Guid.NewGuid(), Body = "<Body/>", EndPoint = "test", RetryLimit = 5 };
+            _repository.Add(entity1);
+            _repository.Add(entity2);
+            entity1.RetryCount = 5;
+            entity2.RetryCount = 5;
+
+            _repository.UpdateRetry(entity1, entity2);
+
+            var entities = _repository.Get(entity1.MessageId, entity2.MessageId).ToList();
+            entity1 = entities.FirstOrDefault(me => me.MessageId == entity1.MessageId);
+            Assert.That(entity1, Is.Null);
+            entity2 = entities.FirstOrDefault(me => me.MessageId == entity2.MessageId);
+            Assert.That(entity2, Is.Null);
+        }
+
+        [Test]
+        public void CanDeadLetterMessagePutsMessageIntoDeadLetters()
+        {
+            var entity1 = new MessageEntity { MessageId = Guid.NewGuid(), Body = "<Body/>", EndPoint = "test", RetryLimit = 5 };
+            var entity2 = new MessageEntity { MessageId = Guid.NewGuid(), Body = "<Body/>", EndPoint = "test", RetryLimit = 5 };
+            _repository.Add(entity1);
+            _repository.Add(entity2);
+            entity1.RetryCount = 5;
+            entity2.RetryCount = 5;
+
+            _repository.UpdateRetry(entity1, entity2);
+
+            var entities = _repository.DeadLetters().ToList();
+            entity1 = entities.FirstOrDefault(me => me.MessageId == entity1.MessageId);
+            Assert.That(entity1, Is.Not.Null);
+            entity2 = entities.FirstOrDefault(me => me.MessageId == entity2.MessageId);
+            Assert.That(entity2, Is.Not.Null);
         }
     }
 }

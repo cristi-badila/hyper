@@ -76,9 +76,6 @@ namespace HyperMsg.Broker.Data.Repositories
                 columnDesc = Api.GetTableColumnid(session.SessionId, table, "EndPoint");
                 Api.SetColumn(session.SessionId, table, columnDesc, messageEntity.EndPoint, Encoding.Unicode);
 
-                columnDesc = Api.GetTableColumnid(session.SessionId, table, "Persistent");
-                Api.SetColumn(session.SessionId, table, columnDesc, messageEntity.Persistent);
-
                 columnDesc = Api.GetTableColumnid(session.SessionId, table, "RetryLimit");
                 Api.SetColumn(session.SessionId, table, columnDesc, messageEntity.RetryLimit);
 
@@ -110,22 +107,50 @@ namespace HyperMsg.Broker.Data.Repositories
             }
         }
 
-        public void Update(params MessageEntity[] entities)
+        public void UpdateRetry(params MessageEntity[] entities)
         {
             using (var session = _databaseFactory.OpenSession())
-            using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
+            using (var messagesTable = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
             {
                 foreach (var entity in entities)
                 {
-                    Api.JetSetCurrentIndex(session.SessionId, table, "UIX_MESSAGEID");
-                    Api.MakeKey(session.SessionId, table, entity.MessageId, MakeKeyGrbit.NewKey);
+                    Api.JetSetCurrentIndex(session.SessionId, messagesTable, "UIX_MESSAGEID");
+                    Api.MakeKey(session.SessionId, messagesTable, entity.MessageId, MakeKeyGrbit.NewKey);
 
-                    if (Api.TrySeek(session.SessionId, table, SeekGrbit.SeekEQ))
+                    if (Api.TrySeek(session.SessionId, messagesTable, SeekGrbit.SeekEQ))
                     {
-                        Api.JetPrepareUpdate(session.SessionId, table, JET_prep.Replace);
-                        var columnDesc = Api.GetTableColumnid(session.SessionId, table, "RetryCount");
-                        Api.SetColumn(session.SessionId, table, columnDesc, entity.RetryCount);
-                        Api.JetUpdate(session.SessionId, table);
+                        // If we have reached our limit then dead letter the message
+                        if (entity.RetryCount >= entity.RetryLimit)
+                        {
+                            // Delete from the messages
+                            Api.JetDelete(session.SessionId, messagesTable);
+
+                            // Add to the dead letter
+                            using (var deadLettersTable = new Table(session.SessionId, session.DatabaseId, "DeadLetters", OpenTableGrbit.None))
+                            using (var updater = new Update(session.SessionId, deadLettersTable, JET_prep.Insert))
+                            {
+                                var columnDesc = Api.GetTableColumnid(session.SessionId, deadLettersTable, "MessageId");
+                                Api.SetColumn(session.SessionId, deadLettersTable, columnDesc, entity.MessageId);
+
+                                columnDesc = Api.GetTableColumnid(session.SessionId, deadLettersTable, "Body");
+                                Api.SetColumn(session.SessionId, deadLettersTable, columnDesc, entity.Body, Encoding.Unicode);
+
+                                columnDesc = Api.GetTableColumnid(session.SessionId, deadLettersTable, "EndPoint");
+                                Api.SetColumn(session.SessionId, deadLettersTable, columnDesc, entity.EndPoint, Encoding.Unicode);
+
+                                columnDesc = Api.GetTableColumnid(session.SessionId, deadLettersTable, "RetryLimit");
+                                Api.SetColumn(session.SessionId, deadLettersTable, columnDesc, entity.RetryLimit);
+
+                                updater.Save();
+                            }
+                        }
+                        else
+                        {
+                            Api.JetPrepareUpdate(session.SessionId, messagesTable, JET_prep.Replace);
+                            var columnDesc = Api.GetTableColumnid(session.SessionId, messagesTable, "RetryCount");
+                            Api.SetColumn(session.SessionId, messagesTable, columnDesc, entity.RetryCount);
+                            Api.JetUpdate(session.SessionId, messagesTable);
+                        }
                     }
                 }
 
@@ -133,7 +158,27 @@ namespace HyperMsg.Broker.Data.Repositories
             }
         }
 
-        private static MessageEntity Create(Session sessionId, JET_TABLEID table)
+        public IEnumerable<MessageEntity> DeadLetters()
+        {
+            using (var session = _databaseFactory.OpenSession())
+            using (var table = new Table(session.SessionId, session.DatabaseId, "DeadLetters", OpenTableGrbit.None))
+            {
+                var entities = new List<MessageEntity>();
+
+                if (Api.TryMoveFirst(session.SessionId, table))
+                {
+                    do
+                    {
+                        entities.Add(Create(session.SessionId, table, true));
+                    }
+                    while (Api.TryMoveNext(session.SessionId, table));
+                }
+
+                return entities;
+            }
+        } 
+
+        private static MessageEntity Create(Session sessionId, JET_TABLEID table, bool deadLetter = false)
         {
             var entity = new MessageEntity();
 
@@ -149,14 +194,18 @@ namespace HyperMsg.Broker.Data.Repositories
             columnDesc = Api.GetTableColumnid(sessionId, table, "EndPoint");
             entity.EndPoint = Api.RetrieveColumnAsString(sessionId, table, columnDesc, Encoding.Unicode);
 
-            columnDesc = Api.GetTableColumnid(sessionId, table, "Persistent");
-            entity.Persistent = Api.RetrieveColumnAsBoolean(sessionId, table, columnDesc) ?? false;
-
             columnDesc = Api.GetTableColumnid(sessionId, table, "RetryLimit");
             entity.RetryLimit = Api.RetrieveColumnAsInt16(sessionId, table, columnDesc) ?? 5;
 
-            columnDesc = Api.GetTableColumnid(sessionId, table, "RetryCount");
-            entity.RetryCount = Api.RetrieveColumnAsInt16(sessionId, table, columnDesc) ?? 0;
+            if (!deadLetter)
+            {
+                columnDesc = Api.GetTableColumnid(sessionId, table, "RetryCount");
+                entity.RetryCount = Api.RetrieveColumnAsInt16(sessionId, table, columnDesc) ?? 0;
+            }
+            else
+            {
+                entity.RetryCount = entity.RetryLimit;
+            }
 
             return entity;
         }

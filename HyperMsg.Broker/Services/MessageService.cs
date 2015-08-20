@@ -33,8 +33,7 @@ namespace HyperMsg.Broker.Services
                 {
                     Id = entity.MessageId,
                     Body = entity.Body,
-                    EndPoint = entity.EndPoint,
-                    Persistent = entity.Persistent
+                    EndPoint = entity.EndPoint
                 };
                 messages.Add(message);
             }
@@ -48,8 +47,7 @@ namespace HyperMsg.Broker.Services
             {
                 MessageId = message.Id,
                 Body = message.Body,
-                EndPoint = message.EndPoint,
-                Persistent = message.Persistent
+                EndPoint = message.EndPoint
             };
             _messageRepository.Add(entity);
         }
@@ -60,10 +58,7 @@ namespace HyperMsg.Broker.Services
             {
                 var entities = _messageRepository.Get(acknowlege.MessageIds).ToList();
                 entities.ForEach(me => me.RetryCount++);
-
-                // TODO: If any of the entities have reached there retry count then we need to dead letter them
-
-                _messageRepository.Update(entities.ToArray());
+                _messageRepository.UpdateRetry(entities.ToArray());
             }
             else
             {

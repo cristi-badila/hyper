@@ -82,7 +82,8 @@ namespace HyperMsg.Broker.Data
             {
                 var existingTables = Api.GetTableNames(session.SessionId, session.DatabaseId).ToList();
 
-                if (existingTables.All(t => t != MessagesTable.TableName)) new MessagesTable().Build(session);
+                if (existingTables.All(t => t != Tables.Messages.TableName)) new Tables.Messages().Build(session);
+                if (existingTables.All(t => t != DeadLetters.TableName)) new DeadLetters().Build(session);
 
                 session.Complete();
             }

@@ -23,12 +23,6 @@ namespace HyperMsg.Messages
         public System.Guid Id { get; internal set; }
 
         /// <summary>
-        /// Gets or sets a flag indicating if the message is persistent.
-        /// </summary>
-        [DataMember]
-        public bool Persistent { get; set; }
-
-        /// <summary>
         /// Gets the message body to transport.
         /// </summary>
         [DataMember]

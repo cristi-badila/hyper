@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrokerManager.cs" />
+    <Compile Include="Data\Tables\DeadLetters.cs" />
     <Compile Include="IDependencyResolver.cs" />
     <Compile Include="Config\ConfigSettings.cs" />
     <Compile Include="Data\DatabaseFactory.cs" />
@@ -54,7 +55,7 @@
     <Compile Include="Data\IDatabaseFactory.cs" />
     <Compile Include="Data\Repositories\IMessageRepository.cs" />
     <Compile Include="Data\Repositories\MessageRepository.cs" />
-    <Compile Include="Data\Tables\MessagesTable.cs" />
+    <Compile Include="Data\Tables\Messages.cs" />
     <Compile Include="Data\Tables\TableBase.cs" />
     <Compile Include="Data\TransactionSession.cs" />
     <Compile Include="IBrokerManager.cs" />

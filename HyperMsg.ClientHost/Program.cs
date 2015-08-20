@@ -18,7 +18,7 @@ namespace HyperMsg.ClientHost
                 using (var provider = new RemoteMessageProvider(new ConfigSettings()))
                 {
                     Console.ReadLine();
-                    var message = new BrokeredMessage {EndPoint = "test", Persistent = true};
+                    var message = new BrokeredMessage {EndPoint = "test"};
                     message.SetBody(new User {Forename = "Homer", Surname = "Simpson"});
 
                     provider.Send(message);
