@@ -167,7 +167,7 @@ namespace Tests.HyperMsg.Broker.Data.Repositories
 
             _repository.UpdateRetry(entity1, entity2);
 
-            var entities = _repository.DeadLetters().ToList();
+            var entities = _repository.GetDeadLetters().ToList();
             entity1 = entities.FirstOrDefault(me => me.MessageId == entity1.MessageId);
             Assert.That(entity1, Is.Not.Null);
             entity2 = entities.FirstOrDefault(me => me.MessageId == entity2.MessageId);

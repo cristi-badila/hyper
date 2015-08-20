@@ -38,8 +38,16 @@ namespace HyperMsg.Providers
         IEnumerable<TMessage> ReceiveAndDelete<TMessage>(string endPoint, int count = 1) where TMessage : Message;
 
         /// <summary>
+        /// Abandons the selected messages.
+        /// </summary>
+        /// <typeparam name="TMessage">Message type</typeparam>
+        /// <param name="messages">List of messages</param>
+        void Abandon<TMessage>(params TMessage[] messages) where TMessage : Message;
+
+        /// <summary>
         /// Completes the processing of messages by acknowledging them.
         /// </summary>
+        /// <typeparam name="TMessage">Message type</typeparam>
         /// <param name="messages">List of messages</param>
         void Complete<TMessage>(params TMessage[] messages) where TMessage : Message;
     }

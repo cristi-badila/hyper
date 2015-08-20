@@ -47,6 +47,6 @@ namespace HyperMsg.Broker.Data.Repositories
         /// Gets a list of dead letters.
         /// </summary>
         /// <returns>List of dead lettered messages</returns>
-        IEnumerable<MessageEntity> DeadLetters();
+        IEnumerable<MessageEntity> GetDeadLetters();
     }
 }

@@ -33,7 +33,8 @@ namespace HyperMsg.Broker.Services
                 {
                     Id = entity.MessageId,
                     Body = entity.Body,
-                    EndPoint = entity.EndPoint
+                    EndPoint = entity.EndPoint,
+                    RetryLimit = entity.RetryLimit,
                 };
                 messages.Add(message);
             }
@@ -47,7 +48,8 @@ namespace HyperMsg.Broker.Services
             {
                 MessageId = message.Id,
                 Body = message.Body,
-                EndPoint = message.EndPoint
+                EndPoint = message.EndPoint,
+                RetryLimit = message.RetryLimit
             };
             _messageRepository.Add(entity);
         }

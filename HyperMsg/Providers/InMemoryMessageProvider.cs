@@ -50,6 +50,11 @@ namespace HyperMsg.Providers
             return messages;
         }
 
+        public void Abandon<TMessage>(params TMessage[] messages) where TMessage : Message
+        {
+            // Do nothing
+        }
+
         public void Complete<TMessage>(params TMessage[] messages) where TMessage : Message
         {
             messages.ToList().ForEach(m => _messages.Remove(m));

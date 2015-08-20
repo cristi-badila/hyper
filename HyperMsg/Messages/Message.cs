@@ -38,7 +38,7 @@ namespace HyperMsg.Messages
         /// Gets or set the number of retries if a message before dead lettering it. Default value is 5.
         /// </summary>
         [DataMember]
-        public int RetryLimit { get; set; }
+        public short RetryLimit { get; set; }
 
         /// <summary>
         /// Sets the body of the message.

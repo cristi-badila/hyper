@@ -9,7 +9,8 @@ namespace HyperMsg.Broker.Data.Repositories
     public class MessageRepository : IMessageRepository
     {
         private readonly IDatabaseFactory _databaseFactory;
-        private const string TableName = "Messages";
+        private const string MessagesTableName = "Messages";
+        private const string DeadLettersTableName = "DeadLetters";
 
         public MessageRepository(IDatabaseFactory databaseFactory)
         {
@@ -19,7 +20,7 @@ namespace HyperMsg.Broker.Data.Repositories
         public IEnumerable<MessageEntity> Get(params Guid[] messageIds)
         {
             using (var session = _databaseFactory.OpenSession())
-            using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
+            using (var table = new Table(session.SessionId, session.DatabaseId, MessagesTableName, OpenTableGrbit.None))
             {
                 var entities = new List<MessageEntity>();
 
@@ -41,7 +42,7 @@ namespace HyperMsg.Broker.Data.Repositories
         public IEnumerable<MessageEntity> Get(string endpoint, int count)
         {
             using (var session = _databaseFactory.OpenSession())
-            using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
+            using (var table = new Table(session.SessionId, session.DatabaseId, MessagesTableName, OpenTableGrbit.None))
             {
                 var entities = new List<MessageEntity>();
 
@@ -64,7 +65,7 @@ namespace HyperMsg.Broker.Data.Repositories
         public void Add(MessageEntity messageEntity)
         {
             using (var session = _databaseFactory.OpenSession())
-            using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
+            using (var table = new Table(session.SessionId, session.DatabaseId, MessagesTableName, OpenTableGrbit.None))
             using (var updater = new Update(session.SessionId, table, JET_prep.Insert))
             {
                 var columnDesc = Api.GetTableColumnid(session.SessionId, table, "MessageId");
@@ -90,7 +91,7 @@ namespace HyperMsg.Broker.Data.Repositories
         public void Remove(params Guid[] messageIds)
         {
             using (var session = _databaseFactory.OpenSession())
-            using (var table = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
+            using (var table = new Table(session.SessionId, session.DatabaseId, MessagesTableName, OpenTableGrbit.None))
             {
                 foreach (var messageId in messageIds)
                 {
@@ -110,7 +111,7 @@ namespace HyperMsg.Broker.Data.Repositories
         public void UpdateRetry(params MessageEntity[] entities)
         {
             using (var session = _databaseFactory.OpenSession())
-            using (var messagesTable = new Table(session.SessionId, session.DatabaseId, TableName, OpenTableGrbit.None))
+            using (var messagesTable = new Table(session.SessionId, session.DatabaseId, MessagesTableName, OpenTableGrbit.None))
             {
                 foreach (var entity in entities)
                 {
@@ -126,7 +127,8 @@ namespace HyperMsg.Broker.Data.Repositories
                             Api.JetDelete(session.SessionId, messagesTable);
 
                             // Add to the dead letter
-                            using (var deadLettersTable = new Table(session.SessionId, session.DatabaseId, "DeadLetters", OpenTableGrbit.None))
+                            using (var deadLettersTable = new Table(
+                                session.SessionId, session.DatabaseId, DeadLettersTableName, OpenTableGrbit.None))
                             using (var updater = new Update(session.SessionId, deadLettersTable, JET_prep.Insert))
                             {
                                 var columnDesc = Api.GetTableColumnid(session.SessionId, deadLettersTable, "MessageId");
@@ -158,10 +160,10 @@ namespace HyperMsg.Broker.Data.Repositories
             }
         }
 
-        public IEnumerable<MessageEntity> DeadLetters()
+        public IEnumerable<MessageEntity> GetDeadLetters()
         {
             using (var session = _databaseFactory.OpenSession())
-            using (var table = new Table(session.SessionId, session.DatabaseId, "DeadLetters", OpenTableGrbit.None))
+            using (var table = new Table(session.SessionId, session.DatabaseId, DeadLettersTableName, OpenTableGrbit.None))
             {
                 var entities = new List<MessageEntity>();
 

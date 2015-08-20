@@ -67,10 +67,17 @@ namespace HyperMsg.Providers
             return messages;
         }
 
+        public void Abandon<TMessage>(params TMessage[] messages) where TMessage : Message
+        {
+            var channel = _channelFactory.CreateChannel();
+            channel.Acknowledge(new Acknowledgement {IsAbandoned = true, MessageIds = messages.Select(m => m.Id).ToArray()});
+            CloseChannel(channel);
+        }
+
         public void Complete<TMessage>(params TMessage[] messages) where TMessage : Message
         {
             var channel = _channelFactory.CreateChannel();
-            channel.Acknowledge(new Acknowledgement {MessageIds = messages.Select(m => m.Id).ToArray()});
+            channel.Acknowledge(new Acknowledgement { MessageIds = messages.Select(m => m.Id).ToArray() });
             CloseChannel(channel);
         }
 
