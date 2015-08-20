@@ -52,16 +52,23 @@ namespace HyperMsg.Providers
             if (count < 1 || count > 100)
                 throw new ArgumentOutOfRangeException(nameof(count), ErrorResources.MessageCountOutOfRange);
 
-            var channel = _channelFactory.CreateChannel();
-            var response = channel.Get(endPoint, count.ToString());
+            IMessageService channel = null;
 
-            if (response.HasError)
-                throw new Exception(response.Error);
+            try
+            {
+                channel = _channelFactory.CreateChannel();
+                var response = channel.Get(endPoint, count.ToString());
 
-            var messages = response.Body.Cast<TMessage>().ToList();
-            CloseChannel(channel);
+                if (response.HasError)
+                    throw new MessageException(response.Error);
 
-            return messages;
+                var messages = response.Body.Cast<TMessage>().ToList();
+                return messages;
+            }
+            finally
+            {
+                CloseChannel(channel);
+            }
         }
 
         public IEnumerable<TMessage> ReceiveAndDelete<TMessage>(string endPoint, int count = 1) where TMessage : Message
@@ -75,16 +82,45 @@ namespace HyperMsg.Providers
 
         public void Abandon<TMessage>(params TMessage[] messages) where TMessage : Message
         {
-            var channel = _channelFactory.CreateChannel();
-            channel.Acknowledge(new Acknowledgement {IsAbandoned = true, MessageIds = messages.Select(m => m.Id).ToArray()});
-            CloseChannel(channel);
+            IMessageService channel = null;
+
+            try
+            {
+                channel = _channelFactory.CreateChannel();
+                var response = channel.Acknowledge(new Acknowledgement
+                    {
+                        IsAbandoned = true,
+                        MessageIds = messages.Select(m => m.Id).ToArray()
+                    });
+
+                if (response.HasError)
+                    throw new MessageException(response.Error);
+            }
+            finally
+            {
+                CloseChannel(channel);
+            }
         }
 
         public void Complete<TMessage>(params TMessage[] messages) where TMessage : Message
         {
-            var channel = _channelFactory.CreateChannel();
-            channel.Acknowledge(new Acknowledgement { MessageIds = messages.Select(m => m.Id).ToArray() });
-            CloseChannel(channel);
+            IMessageService channel = null;
+
+            try
+            {
+                channel = _channelFactory.CreateChannel();
+                var response = channel.Acknowledge(new Acknowledgement
+                {
+                    MessageIds = messages.Select(m => m.Id).ToArray()
+                });
+
+                if (response.HasError)
+                    throw new MessageException(response.Error);
+            }
+            finally
+            {
+                CloseChannel(channel);
+            }
         }
 
         public void Dispose()
@@ -105,6 +141,8 @@ namespace HyperMsg.Providers
 
         private static void CloseChannel(IMessageService service)
         {
+            if (service == null) return;
+
             // ReSharper disable SuspiciousTypeConversion.Global
             var clientChannel = service as IClientChannel;
             // ReSharper restore SuspiciousTypeConversion.Global
