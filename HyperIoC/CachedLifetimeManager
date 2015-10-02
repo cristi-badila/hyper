@@ -1,0 +1,41 @@
+public class CachedLifetimeManager : LifetimeManager
+    {
+        private readonly TimeSpan _liveFor;
+        private volatile object _instance;
+        private DateTime _expires;
+        private readonly object _syncRoot = new object();
+
+        public CachedLifetimeManager(TimeSpan liveFor)
+        {
+            _liveFor = liveFor;
+        }
+
+        public override object Get(Type type, IFactoryLocator locator, IFactoryResolver resolver)
+        {
+            if (_instance != null)
+            {
+                if (_expires < DateTime.Now)
+                {
+                    lock (_syncRoot)
+                    {
+                        _instance = null;
+                    }
+                }
+                else
+                {
+                    return _instance;
+                }
+            }
+
+            lock (_syncRoot)
+            {
+                if (_instance == null)
+                {
+                    _instance = CreateInstance(type, locator, resolver);
+                    _expires = DateTime.Now + _liveFor;
+                }
+            }
+
+            return _instance;
+        }
+    }
