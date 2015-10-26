@@ -3,14 +3,14 @@
   <metadata>
     <id>HyperIoC</id>
     <title>Hyperbolic IoC</title>
-    <version>1.0.3</version>
+    <version>1.0.5</version>
     <authors>Hyperbolic Solutions</authors>
     <owners>Hyperbolic Solutions</owners>
     <projectUrl>https://github.com/steve-hyperbolic/hyper/wiki/HyperIoC</projectUrl>
     <licenseUrl>https://github.com/steve-hyperbolic/hyper/blob/master/LICENSE.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Hyperbolic Solutions simple IoC framework</description>
-    <releaseNotes>Added self registration so you can use the IoC in dependency resolution in factories etc</releaseNotes>
+    <releaseNotes>Made the Item.SetLifetimeTo public</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>IoC .NET Dependency injection</tags>
     <dependencies/>
