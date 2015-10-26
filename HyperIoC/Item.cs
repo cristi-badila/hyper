@@ -28,9 +28,13 @@ namespace HyperIoC
             _currentTypeDetail.LifetimeManager = new SingletonLifetimeManager();
         }
 
-        internal void SetLifetimeTo(ILifetimeManager lifetimeManager)
+        /// <summary>
+        /// Allows specifying a custom lifetime manager for your objects.
+        /// </summary>
+        /// <param name="lifetimeManager">Lifetime manager</param>
+        public void SetLifetimeTo(ILifetimeManager lifetimeManager)
         {
-            if (_currentTypeDetail != null)
+            if (_currentTypeDetail != null && lifetimeManager != null)
                 _currentTypeDetail.LifetimeManager = lifetimeManager;
         }
 
