@@ -4,14 +4,14 @@ using System.Reflection;
 namespace HyperMock.Universal
 {
     /// <summary>
-    /// Entry point for creating proxies of interfaces and abstract classes.
+    /// Entry point for creating proxies of interfaces.
     /// </summary>
     public static class Mock
     {
         /// <summary>
-        /// Creates a proxy from a template interface or abstract class.
+        /// Creates a proxy from a template interface.
         /// </summary>
-        /// <typeparam name="T">Interface or abstract class type</typeparam>
+        /// <typeparam name="T">Interface type</typeparam>
         /// <returns>Proxy instance</returns>
         public static T Create<T>()
         {
@@ -19,9 +19,9 @@ namespace HyperMock.Universal
         }
 
         /// <summary>
-        /// Creates a proxy from an interface or abstract class type.
+        /// Creates a proxy from an interface type.
         /// </summary>
-        /// <param name="type">Interface or abstract class type</param>
+        /// <param name="type">Interface type</param>
         /// <returns>Proxy instance</returns>
         public static object Create(Type type)
         {
