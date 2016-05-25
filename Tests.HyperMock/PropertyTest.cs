@@ -1,10 +1,10 @@
-using HyperMock;
-using HyperMock.Exceptions;
-using HyperMock.Verification;
+using HyperMock.Universal;
+using HyperMock.Universal.Exceptions;
+using HyperMock.Universal.Verification;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Tests.HyperMock.Support;
+using Tests.HyperMock.Universal.Support;
 
-namespace Tests.HyperMock
+namespace Tests.HyperMock.Universal
 {
     [TestClass]
     public class PropertyTest : TestBase<UserController>

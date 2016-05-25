@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace HyperMock
+namespace HyperMock.Universal
 {
     internal class CallInfo
     {

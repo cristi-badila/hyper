@@ -1,4 +1,4 @@
-﻿namespace HyperMock
+﻿namespace HyperMock.Universal
 {
     /// <summary>
     /// Provides void method behaviours to be added.

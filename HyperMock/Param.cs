@@ -1,4 +1,4 @@
-namespace HyperMock
+namespace HyperMock.Universal
 {
     /// <summary>
     /// Mock helper for describing a parameter.

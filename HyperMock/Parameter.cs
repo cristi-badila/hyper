@@ -1,4 +1,4 @@
-namespace HyperMock
+namespace HyperMock.Universal
 {
     internal class Parameter
     {

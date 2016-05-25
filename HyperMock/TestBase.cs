@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace HyperMock
+namespace HyperMock.Universal
 {
     /// <summary>
     /// Helper base class that provides automatic initialisation of mock dependencies.

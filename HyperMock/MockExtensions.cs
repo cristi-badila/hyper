@@ -1,8 +1,8 @@
 using System;
 using System.Linq.Expressions;
-using HyperMock.Exceptions;
+using HyperMock.Universal.Exceptions;
 
-namespace HyperMock
+namespace HyperMock.Universal
 {
     /// <summary>
     /// Set of extensions on the proxy for setting up method and property behaviours.

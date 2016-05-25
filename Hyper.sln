@@ -31,9 +31,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperMsg.ClientHost", "Hype
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mock", "Mock", "{225F684C-978D-43E2-9652-FA8E208D24AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperMock", "HyperMock\HyperMock.csproj", "{80AF968A-4567-42D6-A72C-A32159E2A8EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperMock.Universal", "HyperMock\HyperMock.Universal.csproj", "{80AF968A-4567-42D6-A72C-A32159E2A8EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.HyperMock", "Tests.HyperMock\Tests.HyperMock.csproj", "{0C37F2DD-1383-482A-A024-F20F55D84C39}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.HyperMock.Universal", "Tests.HyperMock\Tests.HyperMock.Universal.csproj", "{0C37F2DD-1383-482A-A024-F20F55D84C39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

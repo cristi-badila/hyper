@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace HyperMock
+namespace HyperMock.Universal
 {
     /// <summary>
     /// Entry point for creating proxies of interfaces and abstract classes.

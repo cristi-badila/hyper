@@ -1,4 +1,4 @@
-﻿namespace HyperMock
+﻿namespace HyperMock.Universal
 {
     /// <summary>
     /// Provides return type behaviours to be added.

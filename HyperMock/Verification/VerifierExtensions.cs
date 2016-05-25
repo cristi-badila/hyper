@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
-using HyperMock.Exceptions;
+using HyperMock.Universal.Exceptions;
 
-namespace HyperMock.Verification
+namespace HyperMock.Universal.Verification
 {
     /// <summary>
     /// Set of extensions for verifying behaviours have occurred.

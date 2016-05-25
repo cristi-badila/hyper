@@ -1,6 +1,6 @@
-﻿using HyperMock.Exceptions;
+﻿using HyperMock.Universal.Exceptions;
 
-namespace HyperMock.Verification
+namespace HyperMock.Universal.Verification
 {
     public class ExactOccurred : Occurred
     {

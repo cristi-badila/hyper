@@ -1,6 +1,6 @@
 using System;
 
-namespace HyperMock.Exceptions
+namespace HyperMock.Universal.Exceptions
 {
     public class MockException : Exception
     {

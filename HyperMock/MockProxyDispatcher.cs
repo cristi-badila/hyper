@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using HyperMock.Exceptions;
+using HyperMock.Universal.Exceptions;
 
-namespace HyperMock
+namespace HyperMock.Universal
 {
     /// <summary>
     /// Instance of the dispatcher proxy. This acts like an interceptor for the mocking framework.

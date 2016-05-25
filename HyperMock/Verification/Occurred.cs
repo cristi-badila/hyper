@@ -1,4 +1,4 @@
-namespace HyperMock.Verification
+namespace HyperMock.Universal.Verification
 {
     public abstract class Occurred
     {

@@ -1,4 +1,4 @@
-namespace Tests.HyperMock.Support
+namespace Tests.HyperMock.Universal.Support
 {
     public class UserController
     {
