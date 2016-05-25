@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>HyperMock.Universal</id>
+    <title>Hyperbolic Mocking Framework - Universal</title>
+    <version>1.0.0</version>
+    <authors>Hyperbolic Solutions</authors>
+    <owners>Hyperbolic Solutions</owners>
+    <projectUrl>https://github.com/steve-hyperbolic/hyper/wiki/HyperMock</projectUrl>
+    <licenseUrl>https://github.com/steve-hyperbolic/hyper/blob/master/LICENSE.txt</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Hyperbolic Solutions simple mocking framework for unit testing</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>Universal Mocking Mock Unit Test</tags>
+    <dependencies/>
+  </metadata>
+  <files>
+    <file src="HyperMock\bin\Release\HyperMock.Universal.dll" target="lib/uap10.0" />
+  </files>
+</package>
