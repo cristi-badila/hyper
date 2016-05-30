@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using HyperMock.Universal;
 using HyperMock.Universal.Exceptions;
 using HyperMock.Universal.Verification;
@@ -126,6 +127,19 @@ namespace Tests.HyperMock.Universal
             controller.Save("Bart");
 
             proxy.Verify(p => p.Save("Bart"), Occurred.AtLeast(2));
+        }
+
+        [TestMethod]
+        public async Task ReturnsTrueForMatchingParameterAsync()
+        {
+            var proxy = Mock.Create<IUserService>();
+            proxy.Setup(p => p.SaveAsync("Homer")).Returns(Task.Run(() => true));
+
+            var controller = new UserController(proxy);
+
+            var result = await controller.SaveAsync("Homer");
+
+            Assert.IsTrue(result);
         }
     }
 }
