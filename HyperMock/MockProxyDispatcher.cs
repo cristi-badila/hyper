@@ -176,14 +176,13 @@ namespace HyperMock.Universal
             out string name,
             out ReadOnlyCollection<Expression> arguments)
         {
-            var ex = expression as LambdaExpression;
+            var lambda = (LambdaExpression)expression;
+            var body = lambda.Body as MethodCallExpression;
 
-            var y = ex.Body as MethodCallExpression;
-
-            if (y != null)
+            if (body != null)
             {
-                name = y.Method.Name;
-                arguments = y.Arguments;
+                name = body.Method.Name;
+                arguments = body.Arguments;
 
                 return true;
             }
@@ -191,44 +190,39 @@ namespace HyperMock.Universal
             name = null;
             arguments = new ReadOnlyCollection<Expression>(new List<Expression>());
             return false;
-            
         }
 
         internal bool TryGetReadPropertyNameAndArgs(Expression expression, out string name)
         {
-            var ex = expression as LambdaExpression;
-            var z = ex.Body as MemberExpression;
+            var lambda = (LambdaExpression)expression;
+            var body = lambda.Body as MemberExpression;
 
-            if (z != null)
+            if (body != null)
             {
-                var s = z.Member as PropertyInfo;
-                name = s.GetMethod.Name;
+                var propInfo = (PropertyInfo)body.Member;
+                name = propInfo.GetMethod.Name;
                 return true;
             }
 
             name = null;
             return false;
-
         }
 
         internal bool TryGetWritePropertyNameAndArgs(Expression expression, out string name)
         {
             name = null;
 
-            var ex = expression as LambdaExpression;
-            var z = ex.Body as MemberExpression;
+            var lambda = (LambdaExpression)expression;
+            var body = lambda.Body as MemberExpression;
 
-            if (z != null)
+            if (body != null)
             {
-                var s = z.Member as PropertyInfo;
-                name = s.SetMethod.Name;
+                var propInfo = (PropertyInfo)body.Member;
+                name = propInfo.SetMethod.Name;
                 return true;
             }
 
-            
-
             return false;
-
         }
 
         private static string CreateMissingMockMethodMessage(MethodInfo targetMethod, object[] args)
