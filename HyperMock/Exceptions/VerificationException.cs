@@ -6,7 +6,6 @@ namespace HyperMock.Universal.Exceptions
     {
         public VerificationException(string message) : base(message)
         {
-
         }
     }
 }

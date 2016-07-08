@@ -1,7 +1,7 @@
 ﻿namespace HyperMock.Universal
 {
     /// <summary>
-    /// Provides void method behaviours to be added.
+    ///     Provides void method behaviours to be added.
     /// </summary>
     public class VoidBehaviour
     {
@@ -13,7 +13,7 @@
         }
 
         /// <summary>
-        /// The mocked type method or parameter throws an excpetion.
+        ///     The mocked type method or parameter throws an excpetion.
         /// </summary>
         /// <typeparam name="TException">Exception type</typeparam>
         public void Throws<TException>()

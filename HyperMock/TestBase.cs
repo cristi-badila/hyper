@@ -6,7 +6,7 @@ using System.Reflection;
 namespace HyperMock.Universal
 {
     /// <summary>
-    /// Helper base class that provides automatic initialisation of mock dependencies.
+    ///     Helper base class that provides automatic initialisation of mock dependencies.
     /// </summary>
     /// <typeparam name="TSubject">Class under test</typeparam>
     public abstract class TestBase<TSubject>
@@ -23,7 +23,7 @@ namespace HyperMock.Universal
                 _mocks.Add(ctorParam.ParameterType, mock);
             }
 
-            Subject = (TSubject)ctor.Invoke(_mocks.Values.ToArray());
+            Subject = (TSubject) ctor.Invoke(_mocks.Values.ToArray());
         }
 
         protected TSubject Subject { get; private set; }
@@ -31,7 +31,7 @@ namespace HyperMock.Universal
         protected TInterface MockFor<TInterface>() where TInterface : class
         {
             if (_mocks.ContainsKey(typeof(TInterface)))
-                return (TInterface)_mocks[typeof(TInterface)];
+                return (TInterface) _mocks[typeof(TInterface)];
 
             throw new InvalidOperationException("Cannot find mock for type: " + typeof(TInterface).FullName);
         }

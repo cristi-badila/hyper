@@ -6,7 +6,6 @@ namespace HyperMock.Universal.Exceptions
     {
         public MockException(string message) : base(message)
         {
-            
         }
     }
 }

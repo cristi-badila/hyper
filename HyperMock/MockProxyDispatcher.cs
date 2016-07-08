@@ -9,7 +9,7 @@ using HyperMock.Universal.Exceptions;
 namespace HyperMock.Universal
 {
     /// <summary>
-    /// Instance of the dispatcher proxy. This acts like an interceptor for the mocking framework.
+    ///     Instance of the dispatcher proxy. This acts like an interceptor for the mocking framework.
     /// </summary>
     public class MockProxyDispatcher : DispatchProxy
     {
@@ -34,8 +34,7 @@ namespace HyperMock.Universal
 
             if (TryGetMethodNameAndArgs(expression, out name, out arguments))
             {
-                var callInfo = new CallInfo();
-                callInfo.Name = name;
+                var callInfo = new CallInfo {Name = name};
 
                 var parameters = new List<Parameter>();
 
@@ -44,7 +43,7 @@ namespace HyperMock.Universal
                     var lambda = Expression.Lambda(argument, expression.Parameters);
                     var compiledDelegate = lambda.Compile();
                     var value = compiledDelegate.DynamicInvoke(new object[1]);
-                    parameters.Add(new Parameter { Value = value, Type = FindParameterType(lambda) });
+                    parameters.Add(new Parameter {Value = value, Type = FindParameterType(lambda)});
                 }
 
                 callInfo.Parameters = parameters.ToArray();
@@ -60,11 +59,10 @@ namespace HyperMock.Universal
         {
             string name;
             ReadOnlyCollection<Expression> arguments;
-            
+
             if (TryGetMethodNameAndArgs(expression, out name, out arguments))
             {
-                var callInfo = new CallInfo();
-                callInfo.Name = name;
+                var callInfo = new CallInfo {Name = name};
 
                 var parameters = new List<Parameter>();
 
@@ -73,7 +71,7 @@ namespace HyperMock.Universal
                     var lambda = Expression.Lambda(argument, expression.Parameters);
                     var compiledDelegate = lambda.Compile();
                     var value = compiledDelegate.DynamicInvoke(new object[1]);
-                    parameters.Add(new Parameter { Value = value, Type = FindParameterType(lambda) });
+                    parameters.Add(new Parameter {Value = value, Type = FindParameterType(lambda)});
                 }
 
                 callInfo.Parameters = parameters.ToArray();
@@ -91,8 +89,7 @@ namespace HyperMock.Universal
 
             if (TryGetReadPropertyNameAndArgs(expression, out name))
             {
-                var callInfo = new CallInfo();
-                callInfo.Name = name;
+                var callInfo = new CallInfo {Name = name};
                 _callInfoList.Add(callInfo);
                 return callInfo;
             }
@@ -106,11 +103,9 @@ namespace HyperMock.Universal
 
             if (TryGetWritePropertyNameAndArgs(expression, out name))
             {
-                var callInfo = new CallInfo();
-                callInfo.Name = name;
+                var callInfo = new CallInfo {Name = name};
 
-                var parameters = new List<Parameter>();
-                parameters.Add(new Parameter { Value = null, Type = ParameterType.Anything });
+                var parameters = new List<Parameter> {new Parameter {Value = null, Type = ParameterType.Anything}};
 
                 callInfo.Parameters = parameters.ToArray();
 
@@ -148,7 +143,7 @@ namespace HyperMock.Universal
 
             if (matchedCallInfo.ExceptionType != null)
             {
-                var exception = (Exception)Activator.CreateInstance(matchedCallInfo.ExceptionType);
+                var exception = (Exception) Activator.CreateInstance(matchedCallInfo.ExceptionType);
                 matchedCallInfo.Visited++;
                 throw exception;
             }
@@ -162,7 +157,7 @@ namespace HyperMock.Universal
         {
             return method.DeclaringType.GetProperties().Any(p => p.SetMethod != null && p.SetMethod.Equals(method));
         }
-        
+
         private static ParameterType FindParameterType(LambdaExpression lambda)
         {
             var methodCall = lambda.Body as MethodCallExpression;
@@ -170,13 +165,13 @@ namespace HyperMock.Universal
                 ? ParameterType.Anything
                 : ParameterType.AsDefined;
         }
-        
+
         internal bool TryGetMethodNameAndArgs(
             Expression expression,
             out string name,
             out ReadOnlyCollection<Expression> arguments)
         {
-            var lambda = (LambdaExpression)expression;
+            var lambda = (LambdaExpression) expression;
             var body = lambda.Body as MethodCallExpression;
 
             if (body != null)
@@ -186,7 +181,7 @@ namespace HyperMock.Universal
 
                 return true;
             }
-            
+
             name = null;
             arguments = new ReadOnlyCollection<Expression>(new List<Expression>());
             return false;
@@ -194,12 +189,12 @@ namespace HyperMock.Universal
 
         internal bool TryGetReadPropertyNameAndArgs(Expression expression, out string name)
         {
-            var lambda = (LambdaExpression)expression;
+            var lambda = (LambdaExpression) expression;
             var body = lambda.Body as MemberExpression;
 
             if (body != null)
             {
-                var propInfo = (PropertyInfo)body.Member;
+                var propInfo = (PropertyInfo) body.Member;
                 name = propInfo.GetMethod.Name;
                 return true;
             }
@@ -212,12 +207,12 @@ namespace HyperMock.Universal
         {
             name = null;
 
-            var lambda = (LambdaExpression)expression;
+            var lambda = (LambdaExpression) expression;
             var body = lambda.Body as MemberExpression;
 
             if (body != null)
             {
-                var propInfo = (PropertyInfo)body.Member;
+                var propInfo = (PropertyInfo) body.Member;
                 name = propInfo.SetMethod.Name;
                 return true;
             }

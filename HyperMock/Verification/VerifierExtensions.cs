@@ -7,12 +7,12 @@ using HyperMock.Universal.Exceptions;
 namespace HyperMock.Universal.Verification
 {
     /// <summary>
-    /// Set of extensions for verifying behaviours have occurred.
+    ///     Set of extensions for verifying behaviours have occurred.
     /// </summary>
     public static class VerifierExtensions
     {
         /// <summary>
-        /// Verifies a method matching the expression occurred the correct number of times.
+        ///     Verifies a method matching the expression occurred the correct number of times.
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <param name="instance">Mocked instance</param>
@@ -51,7 +51,7 @@ namespace HyperMock.Universal.Verification
         }
 
         /// <summary>
-        /// Verifies a function matching the expression occurred the correct number of times.
+        ///     Verifies a function matching the expression occurred the correct number of times.
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <typeparam name="TReturn">Mocked expression return type</typeparam>
@@ -83,7 +83,7 @@ namespace HyperMock.Universal.Verification
                 if (callInfo == null && occurred.Count > 0)
                     throw new VerificationException(
                         $"Unable to verify that the action occurred '{occurred.Count} " +
-                        $"time{(occurred.Count == 1?"s":"")}.");
+                        $"time{(occurred.Count == 1 ? "s" : "")}.");
 
                 if (callInfo != null)
                     occurred.Assert(callInfo.Visited);
@@ -91,7 +91,7 @@ namespace HyperMock.Universal.Verification
         }
 
         /// <summary>
-        /// Verifies a read property matching the expression returns the expected value.
+        ///     Verifies a read property matching the expression returns the expected value.
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <typeparam name="TReturn">Mocked expression return type</typeparam>
@@ -116,7 +116,7 @@ namespace HyperMock.Universal.Verification
         }
 
         /// <summary>
-        /// Verifies a write property matching the expression sets the expected value.
+        ///     Verifies a write property matching the expression sets the expected value.
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <typeparam name="TReturn">Mocked expression return type</typeparam>

@@ -1,7 +1,7 @@
 ﻿namespace HyperMock.Universal
 {
     /// <summary>
-    /// Provides return type behaviours to be added.
+    ///     Provides return type behaviours to be added.
     /// </summary>
     /// <typeparam name="TMock">Mocked type</typeparam>
     /// <typeparam name="TReturn">Return type</typeparam>
@@ -15,7 +15,7 @@
         }
 
         /// <summary>
-        /// The mocked type method or property returns this value.
+        ///     The mocked type method or property returns this value.
         /// </summary>
         /// <param name="returnValue">Value to return</param>
         public void Returns(TReturn returnValue)
@@ -24,7 +24,7 @@
         }
 
         /// <summary>
-        /// The mocked type method or parameter throws an excpetion.
+        ///     The mocked type method or parameter throws an excpetion.
         /// </summary>
         /// <typeparam name="TException">Exception type</typeparam>
         public void Throws<TException>()

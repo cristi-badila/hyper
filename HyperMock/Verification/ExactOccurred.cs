@@ -6,7 +6,6 @@ namespace HyperMock.Universal.Verification
     {
         public ExactOccurred(int count) : base(count)
         {
-
         }
 
         public override void Assert(int actualCount)

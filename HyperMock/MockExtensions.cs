@@ -5,12 +5,12 @@ using HyperMock.Universal.Exceptions;
 namespace HyperMock.Universal
 {
     /// <summary>
-    /// Set of extensions on the proxy for setting up method and property behaviours.
+    ///     Set of extensions on the proxy for setting up method and property behaviours.
     /// </summary>
     public static class MockExtensions
     {
         /// <summary>
-        /// Setup of a method with no return.
+        ///     Setup of a method with no return.
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <param name="instance">Mocked instance</param>
@@ -27,7 +27,7 @@ namespace HyperMock.Universal
         }
 
         /// <summary>
-        /// Setup of a function with a return value.
+        ///     Setup of a function with a return value.
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <typeparam name="TReturn">Return type</typeparam>
@@ -45,7 +45,7 @@ namespace HyperMock.Universal
         }
 
         /// <summary>
-        /// Setup of a property read.
+        ///     Setup of a property read.
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <typeparam name="TReturn">Return type</typeparam>
@@ -61,8 +61,9 @@ namespace HyperMock.Universal
 
             return new ReturnBehaviour<TMock, TReturn>(callInfo);
         }
+
         /// <summary>
-        /// Setup of a property write.
+        ///     Setup of a property write.
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <typeparam name="TReturn">Return type</typeparam>
