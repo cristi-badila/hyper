@@ -17,7 +17,7 @@ namespace HyperMock.Universal.Verification
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <param name="instance">Mocked instance</param>
         /// <param name="expression">Expression</param>
-        /// <param name="occurred">Expected occurance</param>
+        /// <param name="occurred">Expected occurrence</param>
         public static void Verify<TMock>(
             this TMock instance, Expression<Action<TMock>> expression, Occurred occurred)
         {
