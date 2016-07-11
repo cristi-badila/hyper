@@ -15,6 +15,31 @@ namespace HyperMock.Universal
     {
         private readonly List<CallInfo> _callInfoList = new List<CallInfo>();
 
+        private static bool IsSetProperty(MethodBase method)
+        {
+            return method.DeclaringType.GetProperties().Any(p => p.SetMethod != null && p.SetMethod.Equals(method));
+        }
+
+        private static ParameterType FindParameterType(LambdaExpression lambda)
+        {
+            var methodCall = lambda.Body as MethodCallExpression;
+            return methodCall != null && methodCall.Method.DeclaringType == typeof(Param)
+                ? ParameterType.Anything
+                : ParameterType.AsDefined;
+        }
+
+        private static string CreateMissingMockMethodMessage(MethodInfo targetMethod, object[] args)
+        {
+            var name = targetMethod.Name;
+
+            if (name.StartsWith("get_")) name = name.Remove(0, 4);
+            if (name.StartsWith("set_")) name = name.Remove(0, 4);
+            if (args.Length == 0) return name;
+
+            var values = args.Select(p => p ?? "null");
+            return string.Format("{0}({1})", name, string.Join(", ", values));
+        }
+
         internal CallInfo FindByParameterMatch(string name, object[] args)
         {
             var callInfoListForName = _callInfoList.Where(ci => ci.Name == name).ToList();
@@ -115,56 +140,6 @@ namespace HyperMock.Universal
             return null;
         }
 
-        protected override object Invoke(MethodInfo targetMethod, object[] args)
-        {
-            var name = targetMethod.Name;
-
-            var callInfoListForName = _callInfoList.Where(ci => ci.Name == name).ToList();
-
-            var matchedCallInfo = callInfoListForName.FirstOrDefault(ci => ci.IsMatchFor(args));
-
-            if (matchedCallInfo == null)
-            {
-                if (IsSetProperty(targetMethod))
-                {
-                    _callInfoList.Add(new CallInfo
-                    {
-                        Name = name,
-                        Parameters = new ParameterCollection { new Parameter { Value = args[0], Type = ParameterType.AsDefined } },
-                        Visited = 1
-                    });
-
-                    return null;
-                }
-
-                throw new MockException(CreateMissingMockMethodMessage(targetMethod, args));
-            }
-
-            if (matchedCallInfo.ExceptionType != null)
-            {
-                var exception = (Exception)Activator.CreateInstance(matchedCallInfo.ExceptionType);
-                matchedCallInfo.Visited++;
-                throw exception;
-            }
-
-            matchedCallInfo.Visited++;
-
-            return matchedCallInfo.ReturnValue;
-        }
-
-        private static bool IsSetProperty(MethodBase method)
-        {
-            return method.DeclaringType.GetProperties().Any(p => p.SetMethod != null && p.SetMethod.Equals(method));
-        }
-
-        private static ParameterType FindParameterType(LambdaExpression lambda)
-        {
-            var methodCall = lambda.Body as MethodCallExpression;
-            return methodCall != null && methodCall.Method.DeclaringType == typeof(Param)
-                ? ParameterType.Anything
-                : ParameterType.AsDefined;
-        }
-
         internal bool TryGetMethodNameAndArgs(
             Expression expression,
             out string name,
@@ -219,16 +194,41 @@ namespace HyperMock.Universal
             return false;
         }
 
-        private static string CreateMissingMockMethodMessage(MethodInfo targetMethod, object[] args)
+        protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
             var name = targetMethod.Name;
 
-            if (name.StartsWith("get_")) name = name.Remove(0, 4);
-            if (name.StartsWith("set_")) name = name.Remove(0, 4);
-            if (args.Length == 0) return name;
+            var callInfoListForName = _callInfoList.Where(ci => ci.Name == name).ToList();
 
-            var values = args.Select(p => p ?? "null");
-            return string.Format("{0}({1})", name, string.Join(", ", values));
+            var matchedCallInfo = callInfoListForName.FirstOrDefault(ci => ci.IsMatchFor(args));
+
+            if (matchedCallInfo == null)
+            {
+                if (IsSetProperty(targetMethod))
+                {
+                    _callInfoList.Add(new CallInfo
+                    {
+                        Name = name,
+                        Parameters = new ParameterCollection { new Parameter { Value = args[0], Type = ParameterType.AsDefined } },
+                        Visited = 1
+                    });
+
+                    return null;
+                }
+
+                throw new MockException(CreateMissingMockMethodMessage(targetMethod, args));
+            }
+
+            if (matchedCallInfo.ExceptionType != null)
+            {
+                var exception = (Exception)Activator.CreateInstance(matchedCallInfo.ExceptionType);
+                matchedCallInfo.Visited++;
+                throw exception;
+            }
+
+            matchedCallInfo.Visited++;
+
+            return matchedCallInfo.ReturnValue;
         }
     }
 }
