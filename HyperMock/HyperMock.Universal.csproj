@@ -110,6 +110,7 @@
     <Compile Include="CallInfo.cs" />
     <Compile Include="Exceptions\MockException.cs" />
     <Compile Include="Exceptions\VerificationException.cs" />
+    <Compile Include="ExtensionMethods\LambdaExtensionMethods.cs" />
     <Compile Include="ExtensionMethods\ParameterCollectionExtensionMethods.cs" />
     <Compile Include="Mock.cs" />
     <Compile Include="MockExtensions.cs" />

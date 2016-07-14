@@ -16,18 +16,6 @@ namespace HyperMock.Universal
     {
         private readonly List<CallInfo> _callInfoList = new List<CallInfo>();
 
-        private static string CreateMissingMockMethodMessage(MemberInfo targetMethod, IReadOnlyCollection<object> args)
-        {
-            var name = targetMethod.Name;
-
-            if (name.StartsWith("get_")) name = name.Remove(0, 4);
-            if (name.StartsWith("set_")) name = name.Remove(0, 4);
-            if (args.Count == 0) return name;
-
-            var values = args.Select(p => p ?? "null");
-            return string.Format("{0}({1})", name, string.Join(", ", values));
-        }
-
         public CallInfo FindByParameterMatch(string name, object[] args)
         {
             var callInfoListForName = _callInfoList.Where(ci => ci.Name == name).ToList();
@@ -181,7 +169,7 @@ namespace HyperMock.Universal
             var matchedCallInfo = callInfoListForName.FirstOrDefault(ci => ci.IsMatchFor(args));
             if (matchedCallInfo == null)
             {
-                throw new MockException(CreateMissingMockMethodMessage(targetMethod, args));
+                throw new MockException(targetMethod, args);
             }
 
             if (matchedCallInfo.ExceptionType != null)
