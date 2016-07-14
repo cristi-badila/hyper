@@ -6,7 +6,7 @@ using System.Reflection;
 namespace HyperMock.Universal
 {
     /// <summary>
-    ///     Helper base class that provides automatic initialisation of mock dependencies.
+    ///     Helper base class that provides automatic initialization of mock dependencies.
     /// </summary>
     /// <typeparam name="TSubject">Class under test</typeparam>
     public abstract class TestBase<TSubject>

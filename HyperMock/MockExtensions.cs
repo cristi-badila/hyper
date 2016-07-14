@@ -80,6 +80,18 @@ namespace HyperMock.Universal
             return new VoidBehaviour(callInfo);
         }
 
+        public static VoidBehaviour SetupSet<TMock, TReturn>(
+            this TMock instance, Expression<Func<TMock, TReturn>> expression, TReturn value)
+        {
+            var dispatcher = GetDispatcher(instance);
+
+            var callInfo = dispatcher.CreateForWriteProperty(expression, value);
+
+            return new VoidBehaviour(callInfo);
+        }
+
+
+
         private static MockProxyDispatcher GetDispatcher<TMock>(TMock instance)
         {
             var dispatcher = instance as MockProxyDispatcher;

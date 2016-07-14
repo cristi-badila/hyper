@@ -43,18 +43,23 @@ namespace Tests.HyperMock.Universal
         [TestMethod]
         public void VerifyWriteProperty()
         {
+            var proxy = MockFor<IUserService>();
+            proxy.SetupSet(p => p.CurrentRole);
+
             Subject.SetCurrentRole("Manager");
 
-            MockFor<IUserService>().VerifySet(p => p.CurrentRole, "Manager");
+            proxy.VerifySet(p => p.CurrentRole, "Manager");
         }
 
         [TestMethod]
         public void VerifyThrowsExceptionInvalidWritePropertyValue()
         {
+            var proxy = MockFor<IUserService>();
+            proxy.SetupSet(p => p.CurrentRole, "Manager");
+
             Subject.SetCurrentRole("Manager");
 
-            Assert.ThrowsException<VerificationException>(
-                () => MockFor<IUserService>().VerifySet(p => p.CurrentRole, "Supervisor"));
+            Assert.ThrowsException<VerificationException>(() => proxy.VerifySet(p => p.CurrentRole, "Supervisor"));
         }
     }
 }

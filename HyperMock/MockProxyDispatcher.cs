@@ -15,9 +15,9 @@ namespace HyperMock.Universal
     {
         private readonly List<CallInfo> _callInfoList = new List<CallInfo>();
 
-        private static bool IsSetProperty(MethodBase method)
+        private static bool IsSetProperty(MemberInfo info)
         {
-            return method.DeclaringType.GetProperties().Any(p => p.SetMethod != null && p.SetMethod.Equals(method));
+            return info.DeclaringType.GetProperties().Any(p => Equals(p.SetMethod, info));
         }
 
         private static ParameterType FindParameterType(LambdaExpression lambda)
@@ -28,13 +28,13 @@ namespace HyperMock.Universal
                 : ParameterType.AsDefined;
         }
 
-        private static string CreateMissingMockMethodMessage(MethodInfo targetMethod, object[] args)
+        private static string CreateMissingMockMethodMessage(MemberInfo targetMethod, IReadOnlyCollection<object> args)
         {
             var name = targetMethod.Name;
 
             if (name.StartsWith("get_")) name = name.Remove(0, 4);
             if (name.StartsWith("set_")) name = name.Remove(0, 4);
-            if (args.Length == 0) return name;
+            if (args.Count == 0) return name;
 
             var values = args.Select(p => p ?? "null");
             return string.Format("{0}({1})", name, string.Join(", ", values));
@@ -124,21 +124,14 @@ namespace HyperMock.Universal
 
         internal CallInfo CreateForWriteProperty<TMock, TReturn>(Expression<Func<TMock, TReturn>> expression)
         {
-            string name;
-
-            if (TryGetWritePropertyNameAndArgs(expression, out name))
-            {
-                var callInfo = new CallInfo { Name = name };
-
-                var parameters = new ParameterCollection { new Parameter { Value = null, Type = ParameterType.Anything } };
-                callInfo.Parameters = parameters;
-
-                _callInfoList.Add(callInfo);
-                return callInfo;
-            }
-
-            return null;
+            return CreateForWritePropertyCore(expression, new Parameter { Value = null, Type = ParameterType.Anything });
         }
+
+        internal CallInfo CreateForWriteProperty<TMock, TReturn>(Expression<Func<TMock, TReturn>> expression, object value)
+        {
+            return CreateForWritePropertyCore(expression, new Parameter { Value = value, Type = ParameterType.AsDefined });
+        }
+
 
         internal bool TryGetMethodNameAndArgs(
             Expression expression,
@@ -197,25 +190,10 @@ namespace HyperMock.Universal
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
             var name = targetMethod.Name;
-
             var callInfoListForName = _callInfoList.Where(ci => ci.Name == name).ToList();
-
             var matchedCallInfo = callInfoListForName.FirstOrDefault(ci => ci.IsMatchFor(args));
-
             if (matchedCallInfo == null)
             {
-                if (IsSetProperty(targetMethod))
-                {
-                    _callInfoList.Add(new CallInfo
-                    {
-                        Name = name,
-                        Parameters = new ParameterCollection { new Parameter { Value = args[0], Type = ParameterType.AsDefined } },
-                        Visited = 1
-                    });
-
-                    return null;
-                }
-
                 throw new MockException(CreateMissingMockMethodMessage(targetMethod, args));
             }
 
@@ -230,5 +208,24 @@ namespace HyperMock.Universal
 
             return matchedCallInfo.ReturnValue;
         }
+
+        private CallInfo CreateForWritePropertyCore<TMock, TReturn>(Expression<Func<TMock, TReturn>> expression, Parameter parameter)
+        {
+            string name;
+
+            if (TryGetWritePropertyNameAndArgs(expression, out name))
+            {
+                var callInfo = new CallInfo { Name = name };
+
+                var parameters = new ParameterCollection { parameter };
+                callInfo.Parameters = parameters;
+
+                _callInfoList.Add(callInfo);
+                return callInfo;
+            }
+
+            return null;
+        }
+
     }
 }
