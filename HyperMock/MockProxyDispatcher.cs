@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using HyperMock.Universal.Exceptions;
+using HyperMock.Universal.ExtensionMethods;
 
 namespace HyperMock.Universal
 {
@@ -14,14 +15,6 @@ namespace HyperMock.Universal
     public class MockProxyDispatcher : DispatchProxy
     {
         private readonly List<CallInfo> _callInfoList = new List<CallInfo>();
-
-        private static ParameterType FindParameterType(LambdaExpression lambda)
-        {
-            var methodCall = lambda.Body as MethodCallExpression;
-            return methodCall != null && methodCall.Method.DeclaringType == typeof(Param)
-                ? ParameterType.Anything
-                : ParameterType.AsDefined;
-        }
 
         private static string CreateMissingMockMethodMessage(MemberInfo targetMethod, IReadOnlyCollection<object> args)
         {
@@ -63,7 +56,7 @@ namespace HyperMock.Universal
                     var lambda = Expression.Lambda(argument, expression.Parameters);
                     var compiledDelegate = lambda.Compile();
                     var value = compiledDelegate.DynamicInvoke(new object[1]);
-                    parameters.Add(new Parameter { Value = value, Type = FindParameterType(lambda) });
+                    parameters.Add(new Parameter { Value = value, Type = lambda.GetParameterType() });
                 }
 
                 callInfo.Parameters = parameters;
@@ -91,7 +84,7 @@ namespace HyperMock.Universal
                     var lambda = Expression.Lambda(argument, expression.Parameters);
                     var compiledDelegate = lambda.Compile();
                     var value = compiledDelegate.DynamicInvoke(new object[1]);
-                    parameters.Add(new Parameter { Value = value, Type = FindParameterType(lambda) });
+                    parameters.Add(new Parameter { Value = value, Type = lambda.GetParameterType() });
                 }
 
                 callInfo.Parameters = parameters;
