@@ -15,11 +15,6 @@ namespace HyperMock.Universal
     {
         private readonly List<CallInfo> _callInfoList = new List<CallInfo>();
 
-        private static bool IsSetProperty(MemberInfo info)
-        {
-            return info.DeclaringType.GetProperties().Any(p => Equals(p.SetMethod, info));
-        }
-
         private static ParameterType FindParameterType(LambdaExpression lambda)
         {
             var methodCall = lambda.Body as MethodCallExpression;
@@ -131,7 +126,6 @@ namespace HyperMock.Universal
         {
             return CreateForWritePropertyCore(expression, new Parameter { Value = value, Type = ParameterType.AsDefined });
         }
-
 
         public bool TryGetMethodNameAndArgs(
             Expression expression,
