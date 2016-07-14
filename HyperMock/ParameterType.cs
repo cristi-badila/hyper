@@ -1,6 +1,6 @@
 namespace HyperMock.Universal
 {
-    internal enum ParameterType
+    public enum ParameterType
     {
         AsDefined,
         Anything

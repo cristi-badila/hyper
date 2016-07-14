@@ -4,7 +4,7 @@ namespace HyperMock.Universal.ExtensionMethods
 {
     public static class ParameterCollectionExtensionMethods
     {
-        internal static bool Matches(this ParameterCollection expectedParams, object[] actualParams)
+        public static bool Matches(this ParameterCollection expectedParams, object[] actualParams)
         {
             return expectedParams.Count == actualParams.Length &&
                    expectedParams.Where((parameter, index) => ParameterMatches(parameter, actualParams[index])).Count() == expectedParams.Count;

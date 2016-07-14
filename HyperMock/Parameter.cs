@@ -1,8 +1,8 @@
 namespace HyperMock.Universal
 {
-    internal class Parameter
+    public class Parameter
     {
-        internal ParameterType Type { get; set; }
-        internal object Value { get; set; }
+        public ParameterType Type { get; set; }
+        public object Value { get; set; }
     }
 }

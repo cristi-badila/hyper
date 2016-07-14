@@ -7,7 +7,7 @@
     {
         private readonly CallInfo _callInfo;
 
-        internal VoidBehaviour(CallInfo callInfo)
+        public VoidBehaviour(CallInfo callInfo)
         {
             _callInfo = callInfo;
         }

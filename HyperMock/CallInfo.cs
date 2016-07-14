@@ -3,24 +3,24 @@ using HyperMock.Universal.ExtensionMethods;
 
 namespace HyperMock.Universal
 {
-    internal class CallInfo
+    public class CallInfo
     {
-        internal CallInfo()
+        public CallInfo()
         {
             Parameters = new ParameterCollection();
         }
 
-        internal string Name { get; set; }
+        public string Name { get; set; }
 
-        internal ParameterCollection Parameters { get; set; }
+        public ParameterCollection Parameters { get; set; }
 
-        internal object ReturnValue { get; set; }
+        public object ReturnValue { get; set; }
 
-        internal Type ExceptionType { get; set; }
+        public Type ExceptionType { get; set; }
 
-        internal int Visited { get; set; }
+        public int Visited { get; set; }
 
-        internal bool IsMatchFor(params object[] args)
+        public bool IsMatchFor(params object[] args)
         {
             return Parameters.Matches(args);
         }

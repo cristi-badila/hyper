@@ -2,7 +2,7 @@
 
 namespace HyperMock.Universal
 {
-    internal class ParameterCollection : List<Parameter>
+    public class ParameterCollection : List<Parameter>
     {
     }
 }

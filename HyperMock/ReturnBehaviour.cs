@@ -9,7 +9,7 @@
     {
         private readonly CallInfo _callInfo;
 
-        internal ReturnBehaviour(CallInfo callInfo)
+        public ReturnBehaviour(CallInfo callInfo)
         {
             _callInfo = callInfo;
         }

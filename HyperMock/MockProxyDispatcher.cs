@@ -40,19 +40,19 @@ namespace HyperMock.Universal
             return string.Format("{0}({1})", name, string.Join(", ", values));
         }
 
-        internal CallInfo FindByParameterMatch(string name, object[] args)
+        public CallInfo FindByParameterMatch(string name, object[] args)
         {
             var callInfoListForName = _callInfoList.Where(ci => ci.Name == name).ToList();
 
             return callInfoListForName.FirstOrDefault(ci => ci.IsMatchFor(args));
         }
 
-        internal CallInfo FindByReturnMatch(string name, object returnValue)
+        public CallInfo FindByReturnMatch(string name, object returnValue)
         {
             return _callInfoList.FirstOrDefault(ci => ci.Name == name && ci.ReturnValue == returnValue);
         }
 
-        internal CallInfo CreateForMethod<TMock>(Expression<Action<TMock>> expression)
+        public CallInfo CreateForMethod<TMock>(Expression<Action<TMock>> expression)
         {
             string name;
             ReadOnlyCollection<Expression> arguments;
@@ -80,7 +80,7 @@ namespace HyperMock.Universal
             return null;
         }
 
-        internal CallInfo CreateForFunction<TMock, TReturn>(Expression<Func<TMock, TReturn>> expression)
+        public CallInfo CreateForFunction<TMock, TReturn>(Expression<Func<TMock, TReturn>> expression)
         {
             string name;
             ReadOnlyCollection<Expression> arguments;
@@ -108,7 +108,7 @@ namespace HyperMock.Universal
             return null;
         }
 
-        internal CallInfo CreateForReadProperty<TMock, TReturn>(Expression<Func<TMock, TReturn>> expression)
+        public CallInfo CreateForReadProperty<TMock, TReturn>(Expression<Func<TMock, TReturn>> expression)
         {
             string name;
 
@@ -122,18 +122,18 @@ namespace HyperMock.Universal
             return null;
         }
 
-        internal CallInfo CreateForWriteProperty<TMock, TReturn>(Expression<Func<TMock, TReturn>> expression)
+        public CallInfo CreateForWriteProperty<TMock, TReturn>(Expression<Func<TMock, TReturn>> expression)
         {
             return CreateForWritePropertyCore(expression, new Parameter { Value = null, Type = ParameterType.Anything });
         }
 
-        internal CallInfo CreateForWriteProperty<TMock, TReturn>(Expression<Func<TMock, TReturn>> expression, object value)
+        public CallInfo CreateForWriteProperty<TMock, TReturn>(Expression<Func<TMock, TReturn>> expression, object value)
         {
             return CreateForWritePropertyCore(expression, new Parameter { Value = value, Type = ParameterType.AsDefined });
         }
 
 
-        internal bool TryGetMethodNameAndArgs(
+        public bool TryGetMethodNameAndArgs(
             Expression expression,
             out string name,
             out ReadOnlyCollection<Expression> arguments)
@@ -154,7 +154,7 @@ namespace HyperMock.Universal
             return false;
         }
 
-        internal bool TryGetReadPropertyNameAndArgs(Expression expression, out string name)
+        public bool TryGetReadPropertyNameAndArgs(Expression expression, out string name)
         {
             var lambda = (LambdaExpression)expression;
             var body = lambda.Body as MemberExpression;
@@ -170,7 +170,7 @@ namespace HyperMock.Universal
             return false;
         }
 
-        internal bool TryGetWritePropertyNameAndArgs(Expression expression, out string name)
+        public bool TryGetWritePropertyNameAndArgs(Expression expression, out string name)
         {
             name = null;
 
