@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 using HyperMock.Universal.Exceptions;
+using HyperMock.Universal.ExtensionMethods;
 
 namespace HyperMock.Universal.Verification
 {
@@ -138,6 +140,18 @@ namespace HyperMock.Universal.Verification
                     throw new VerificationException(
                         $"Unable to verify that the value '{expectedValue}' was set on the property.");
             }
+        }
+
+        public static CallInfo FindByParameterMatch(this MockProxyDispatcher mockProxyDispatcher, string name, object[] args)
+        {
+            var callInfoListForName = mockProxyDispatcher.RegisteredCallInfoList.Where(ci => ci.Name == name).ToList();
+
+            return callInfoListForName.FirstOrDefault(ci => ci.IsMatchFor(args));
+        }
+
+        public static CallInfo FindByReturnMatch(this MockProxyDispatcher mockProxyDispatcher, string name, object returnValue)
+        {
+            return mockProxyDispatcher.RegisteredCallInfoList.FirstOrDefault(ci => ci.Name == name && ci.ReturnValue == returnValue);
         }
 
         private static MockProxyDispatcher GetDispatcher<TMock>(TMock instance)

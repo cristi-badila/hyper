@@ -111,6 +111,7 @@
     <Compile Include="Exceptions\MockException.cs" />
     <Compile Include="Exceptions\VerificationException.cs" />
     <Compile Include="ExtensionMethods\LambdaExtensionMethods.cs" />
+    <Compile Include="Setup\SetupExtensionMethods.cs" />
     <Compile Include="ExtensionMethods\ParameterCollectionExtensionMethods.cs" />
     <Compile Include="Mock.cs" />
     <Compile Include="MockExtensions.cs" />
