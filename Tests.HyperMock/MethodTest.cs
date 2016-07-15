@@ -76,5 +76,18 @@ namespace Tests.HyperMock.Universal
 
             proxy.Verify(p => p.DeleteAsync("Homer"), Occurred.Once());
         }
+
+        [TestMethod]
+        public void VerifyMatchesSingleVisitForPartialMatchParameter()
+        {
+            var proxy = Mock.Create<IUserService>();
+            proxy.Setup(p => p.Delete(Param.IsAny<string>()));
+
+            var controller = new UserController(proxy.Object);
+
+            controller.Delete("Homer");
+
+            proxy.Verify(p => p.Delete(Param.Is<string>(s => s == "Homer")), Occurred.Once());
+        }
     }
 }

@@ -112,6 +112,10 @@
     <Compile Include="Exceptions\VerificationException.cs" />
     <Compile Include="ExtensionMethods\LambdaExtensionMethods.cs" />
     <Compile Include="ExtensionMethods\MockProxyDispatcherExtensionMethods.cs" />
+    <Compile Include="ParameterMatcherAttribute.cs" />
+    <Compile Include="ParameterMatchers\AnyMatcher.cs" />
+    <Compile Include="ParameterMatchers\ExactMatcher.cs" />
+    <Compile Include="ParameterMatchers\PartialMatcher.cs" />
     <Compile Include="Setup\SetupExtensionMethods.cs" />
     <Compile Include="ExtensionMethods\ParameterCollectionExtensionMethods.cs" />
     <Compile Include="Mock.cs" />
@@ -120,7 +124,6 @@
     <Compile Include="Param.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="ParameterCollection.cs" />
-    <Compile Include="ParameterType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReturnBehaviour.cs" />
     <Compile Include="TestBase.cs" />
@@ -131,6 +134,7 @@
     <Compile Include="VoidBehaviour.cs" />
     <EmbeddedResource Include="Properties\HyperMock.rd.xml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

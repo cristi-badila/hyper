@@ -1,16 +1,18 @@
+using System;
+using HyperMock.Universal.ParameterMatchers;
+
 namespace HyperMock.Universal
 {
-    /// <summary>
-    ///     Mock helper for describing a parameter.
-    /// </summary>
-    public class Param
+    public static class Param
     {
-        /// <summary>
-        ///     Indicates that any value of the type is allowed and will resolve.
-        /// </summary>
-        /// <typeparam name="T">Parameter type</typeparam>
-        /// <returns></returns>
+        [ParameterMatcher(typeof(AnyMatcher))]
         public static T IsAny<T>()
+        {
+            return default(T);
+        }
+
+        [ParameterMatcher(typeof(PartialMatcher<>))]
+        public static T Is<T>(Func<T, bool> comparer)
         {
             return default(T);
         }

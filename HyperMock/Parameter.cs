@@ -1,8 +1,7 @@
 namespace HyperMock.Universal
 {
-    public class Parameter
+    public abstract class Parameter
     {
-        public ParameterType Type { get; set; }
-        public object Value { get; set; }
+        public abstract bool Matches(object argument);
     }
 }

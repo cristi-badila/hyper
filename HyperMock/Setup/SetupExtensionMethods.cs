@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 using HyperMock.Universal.ExtensionMethods;
+using HyperMock.Universal.ParameterMatchers;
 
 namespace HyperMock.Universal.Setup
 {
@@ -18,14 +20,7 @@ namespace HyperMock.Universal.Setup
                 var callInfo = new CallInfo { Name = name };
 
                 var parameters = new ParameterCollection();
-
-                foreach (var argument in arguments)
-                {
-                    var lambda = Expression.Lambda(argument, expression.Parameters);
-                    var compiledDelegate = lambda.Compile();
-                    var value = compiledDelegate.DynamicInvoke(new object[1]);
-                    parameters.Add(new Parameter { Value = value, Type = lambda.GetParameterType() });
-                }
+                parameters.AddRange(arguments.Select(argument => Expression.Lambda(argument, expression.Parameters)).Select(LambdaExtensionMethods.GetParameter));
 
                 callInfo.Parameters = parameters;
 
@@ -47,14 +42,7 @@ namespace HyperMock.Universal.Setup
                 var callInfo = new CallInfo { Name = name };
 
                 var parameters = new ParameterCollection();
-
-                foreach (var argument in arguments)
-                {
-                    var lambda = Expression.Lambda(argument, expression.Parameters);
-                    var compiledDelegate = lambda.Compile();
-                    var value = compiledDelegate.DynamicInvoke(new object[1]);
-                    parameters.Add(new Parameter { Value = value, Type = lambda.GetParameterType() });
-                }
+                parameters.AddRange(arguments.Select(argument => Expression.Lambda(argument, expression.Parameters)).Select(LambdaExtensionMethods.GetParameter));
 
                 callInfo.Parameters = parameters;
 
@@ -80,16 +68,16 @@ namespace HyperMock.Universal.Setup
             return null;
         }
 
-        public static CallInfo AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, object value)
-            where TMock : class
-        {
-            return mockProxyDispatcher.AddHandlingPropertySet(expression, new Parameter { Value = value, Type = ParameterType.AsDefined });
-        }
-
         public static CallInfo AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            return mockProxyDispatcher.AddHandlingPropertySet(expression, new Parameter { Value = null, Type = ParameterType.Anything });
+            return mockProxyDispatcher.AddHandlingPropertySet(expression, new AnyMatcher());
+        }
+
+        public static CallInfo AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, object value)
+            where TMock : class
+        {
+            return mockProxyDispatcher.AddHandlingPropertySet(expression, new ExactMatcher(value));
         }
 
         public static CallInfo AddHandlingPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, Parameter parameter)
