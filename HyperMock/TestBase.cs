@@ -28,10 +28,10 @@ namespace HyperMock.Universal
 
         protected TSubject Subject { get; private set; }
 
-        protected TInterface MockFor<TInterface>() where TInterface : class
+        protected Mock<TInterface> MockFor<TInterface>() where TInterface : class
         {
             if (_mocks.ContainsKey(typeof(TInterface)))
-                return (TInterface) _mocks[typeof(TInterface)];
+                return (Mock<TInterface>) _mocks[typeof(TInterface)];
 
             throw new InvalidOperationException("Cannot find mock for type: " + typeof(TInterface).FullName);
         }

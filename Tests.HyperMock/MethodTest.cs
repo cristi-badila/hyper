@@ -15,7 +15,7 @@ namespace Tests.HyperMock.Universal
             var proxy = Mock.Create<IUserService>();
             proxy.Setup(p => p.Delete("Homer"));
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             controller.Delete("Homer");
 
@@ -29,7 +29,7 @@ namespace Tests.HyperMock.Universal
             proxy.Setup(p => p.Delete("Homer"));
             proxy.Setup(p => p.Delete("Marge"));
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             controller.Delete("Homer");
 
@@ -42,7 +42,7 @@ namespace Tests.HyperMock.Universal
             var proxy = Mock.Create<IUserService>();
             proxy.Setup(p => p.Delete("Homer"));
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             controller.Delete("Homer");
             controller.Delete("Homer");
@@ -57,7 +57,7 @@ namespace Tests.HyperMock.Universal
             var proxy = Mock.Create<IUserService>();
             proxy.Setup(p => p.Delete(Param.IsAny<string>()));
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             controller.Delete("Homer");
 
@@ -70,7 +70,7 @@ namespace Tests.HyperMock.Universal
             var proxy = Mock.Create<IUserService>();
             proxy.Setup(p => p.DeleteAsync("Homer")).Returns(Task.Delay(0));
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             await controller.DeleteAsync("Homer");
 

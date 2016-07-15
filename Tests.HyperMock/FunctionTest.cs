@@ -17,7 +17,7 @@ namespace Tests.HyperMock.Universal
             var proxy = Mock.Create<IUserService>();
             proxy.Setup(p => p.Save("Homer")).Returns(true);
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             var result = controller.Save("Homer");
 
@@ -30,7 +30,7 @@ namespace Tests.HyperMock.Universal
             var proxy = Mock.Create<IUserService>();
             proxy.Setup(p => p.Save(Param.IsAny<string>())).Returns(true);
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             var result = controller.Save("Homer");
 
@@ -44,7 +44,7 @@ namespace Tests.HyperMock.Universal
             proxy.Setup(p => p.Save("Homer")).Returns(false); // Set to check overload works!
             proxy.Setup(p => p.Save("Homer", Param.IsAny<string>())).Returns(true);
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             var result = controller.SaveWithRole("Homer", "Manager");
 
@@ -58,7 +58,7 @@ namespace Tests.HyperMock.Universal
             proxy.Setup(p => p.Save("Marge")).Returns(true);
             proxy.Setup(p => p.Save("Homer")).Returns(true);
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             var result = controller.Save("Homer");
 
@@ -71,7 +71,7 @@ namespace Tests.HyperMock.Universal
             var proxy = Mock.Create<IUserService>();
             proxy.Setup(p => p.Save("Homer")).Returns(true);
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             Assert.ThrowsException<MockException>(() => controller.Save("Marge"));
         }
@@ -82,7 +82,7 @@ namespace Tests.HyperMock.Universal
             var proxy = Mock.Create<IUserService>();
             proxy.Setup(p => p.Save("Bart")).Throws<InvalidOperationException>();
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             Assert.ThrowsException<InvalidOperationException>(() => controller.Save("Bart"));
         }
@@ -93,7 +93,7 @@ namespace Tests.HyperMock.Universal
             var proxy = Mock.Create<IUserService>();
             proxy.Setup(p => p.Save("Bart")).Returns(true);
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             controller.Save("Bart");
 
@@ -107,7 +107,7 @@ namespace Tests.HyperMock.Universal
             proxy.Setup(p => p.Save("Bart")).Returns(true);
             proxy.Setup(p => p.Save("Marge")).Returns(false);
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             controller.Save("Bart");
 
@@ -120,7 +120,7 @@ namespace Tests.HyperMock.Universal
             var proxy = Mock.Create<IUserService>();
             proxy.Setup(p => p.Save("Bart")).Returns(true);
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             controller.Save("Bart");
             controller.Save("Bart");
@@ -135,7 +135,7 @@ namespace Tests.HyperMock.Universal
             var proxy = Mock.Create<IUserService>();
             proxy.Setup(p => p.SaveAsync("Homer")).Returns(Task.Run(() => true));
 
-            var controller = new UserController(proxy);
+            var controller = new UserController(proxy.Object);
 
             var result = await controller.SaveAsync("Homer");
 

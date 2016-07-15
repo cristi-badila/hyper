@@ -7,12 +7,13 @@ namespace HyperMock.Universal.Setup
 {
     public static class SetupExtensionMethods
     {
-        public static CallInfo CreateForMethod<TMock>(this MockProxyDispatcher mockProxyDispatcher, Expression<Action<TMock>> expression)
+        public static CallInfo CreateForMethod<TMock>(this Mock<TMock> mockProxyDispatcher, Expression<Action<TMock>> expression)
+            where TMock : class
         {
             string name;
             ReadOnlyCollection<Expression> arguments;
 
-            if (mockProxyDispatcher.TryGetMethodNameAndArgs(expression, out name, out arguments))
+            if (mockProxyDispatcher.Dispatcher.TryGetMethodNameAndArgs(expression, out name, out arguments))
             {
                 var callInfo = new CallInfo { Name = name };
 
@@ -28,19 +29,20 @@ namespace HyperMock.Universal.Setup
 
                 callInfo.Parameters = parameters;
 
-                mockProxyDispatcher.RegisteredCallInfoList.Add(callInfo);
+                mockProxyDispatcher.Dispatcher.RegisteredCallInfoList.Add(callInfo);
                 return callInfo;
             }
 
             return null;
         }
 
-        public static CallInfo CreateForFunction<TMock, TReturn>(this MockProxyDispatcher mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
+        public static CallInfo CreateForFunction<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
+            where TMock : class
         {
             string name;
             ReadOnlyCollection<Expression> arguments;
 
-            if (mockProxyDispatcher.TryGetMethodNameAndArgs(expression, out name, out arguments))
+            if (mockProxyDispatcher.Dispatcher.TryGetMethodNameAndArgs(expression, out name, out arguments))
             {
                 var callInfo = new CallInfo { Name = name };
 
@@ -56,41 +58,45 @@ namespace HyperMock.Universal.Setup
 
                 callInfo.Parameters = parameters;
 
-                mockProxyDispatcher.RegisteredCallInfoList.Add(callInfo);
+                mockProxyDispatcher.Dispatcher.RegisteredCallInfoList.Add(callInfo);
                 return callInfo;
             }
 
             return null;
         }
 
-        public static CallInfo CreateForReadProperty<TMock, TReturn>(this MockProxyDispatcher mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
+        public static CallInfo CreateForReadProperty<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
+            where TMock : class
         {
             string name;
 
-            if (mockProxyDispatcher.TryGetReadPropertyNameAndArgs(expression, out name))
+            if (mockProxyDispatcher.Dispatcher.TryGetReadPropertyNameAndArgs(expression, out name))
             {
                 var callInfo = new CallInfo { Name = name };
-                mockProxyDispatcher.RegisteredCallInfoList.Add(callInfo);
+                mockProxyDispatcher.Dispatcher.RegisteredCallInfoList.Add(callInfo);
                 return callInfo;
             }
 
             return null;
         }
 
-        public static CallInfo CreateForWriteProperty<TMock, TReturn>(this MockProxyDispatcher mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, object value)
+        public static CallInfo CreateForWriteProperty<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, object value)
+            where TMock : class
         {
             return mockProxyDispatcher.CreateForWritePropertyCore(expression, new Parameter { Value = value, Type = ParameterType.AsDefined });
         }
 
-        public static CallInfo CreateForWriteProperty<TMock, TReturn>(this MockProxyDispatcher mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
+        public static CallInfo CreateForWriteProperty<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
+            where TMock : class
         {
             return mockProxyDispatcher.CreateForWritePropertyCore(expression, new Parameter { Value = null, Type = ParameterType.Anything });
         }
 
-        public static CallInfo CreateForWritePropertyCore<TMock, TReturn>(this MockProxyDispatcher mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, Parameter parameter)
+        public static CallInfo CreateForWritePropertyCore<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, Parameter parameter)
+            where TMock : class
         {
             string name;
-            if (!mockProxyDispatcher.TryGetWritePropertyNameAndArgs(expression, out name))
+            if (!mockProxyDispatcher.Dispatcher.TryGetWritePropertyNameAndArgs(expression, out name))
             {
                 return null;
             }
@@ -100,7 +106,7 @@ namespace HyperMock.Universal.Setup
             var parameters = new ParameterCollection { parameter };
             callInfo.Parameters = parameters;
 
-            mockProxyDispatcher.RegisteredCallInfoList.Add(callInfo);
+            mockProxyDispatcher.Dispatcher.RegisteredCallInfoList.Add(callInfo);
             return callInfo;
         }
     }

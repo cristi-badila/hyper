@@ -17,18 +17,17 @@ namespace HyperMock.Universal.Verification
         ///     Verifies a method matching the expression occurred the correct number of times.
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
-        /// <param name="instance">Mocked instance</param>
+        /// <param name="mock">Mocked instance</param>
         /// <param name="expression">Expression</param>
         /// <param name="occurred">Expected occurrence</param>
         public static void Verify<TMock>(
-            this TMock instance, Expression<Action<TMock>> expression, Occurred occurred)
+            this Mock<TMock> mock, Expression<Action<TMock>> expression, Occurred occurred) 
+            where TMock : class
         {
-            var dispatcher = GetDispatcher(instance);
-
             string name;
             ReadOnlyCollection<Expression> arguments;
 
-            if (dispatcher.TryGetMethodNameAndArgs(expression, out name, out arguments))
+            if (mock.Dispatcher.TryGetMethodNameAndArgs(expression, out name, out arguments))
             {
                 var values = new List<object>();
 
@@ -40,7 +39,7 @@ namespace HyperMock.Universal.Verification
                     values.Add(value);
                 }
 
-                var callInfo = dispatcher.FindByParameterMatch(name, values.ToArray());
+                var callInfo = mock.Dispatcher.FindByParameterMatch(name, values.ToArray());
 
                 if (callInfo == null && occurred.Count > 0)
                     throw new VerificationException(
@@ -57,18 +56,17 @@ namespace HyperMock.Universal.Verification
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <typeparam name="TReturn">Mocked expression return type</typeparam>
-        /// <param name="instance">Mocked instance</param>
+        /// <param name="mock">Mocked instance</param>
         /// <param name="expression">Expression</param>
-        /// <param name="occurred">Expected occurance</param>
+        /// <param name="occurred">Expected occurrence</param>
         public static void Verify<TMock, TReturn>(
-            this TMock instance, Expression<Func<TMock, TReturn>> expression, Occurred occurred)
+            this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, Occurred occurred) 
+            where TMock : class
         {
-            var dispatcher = GetDispatcher(instance);
-
             string name;
             ReadOnlyCollection<Expression> arguments;
 
-            if (dispatcher.TryGetMethodNameAndArgs(expression, out name, out arguments))
+            if (mock.Dispatcher.TryGetMethodNameAndArgs(expression, out name, out arguments))
             {
                 var values = new List<object>();
 
@@ -80,7 +78,7 @@ namespace HyperMock.Universal.Verification
                     values.Add(value);
                 }
 
-                var callInfo = dispatcher.FindByParameterMatch(name, values.ToArray());
+                var callInfo = mock.Dispatcher.FindByParameterMatch(name, values.ToArray());
 
                 if (callInfo == null && occurred.Count > 0)
                     throw new VerificationException(
@@ -97,19 +95,18 @@ namespace HyperMock.Universal.Verification
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <typeparam name="TReturn">Mocked expression return type</typeparam>
-        /// <param name="instance">Mocked instance</param>
+        /// <param name="mock">Mocked instance</param>
         /// <param name="expression">Expression</param>
         /// <param name="expectedValue">Expected return value</param>
         public static void VerifyGet<TMock, TReturn>(
-            this TMock instance, Expression<Func<TMock, TReturn>> expression, TReturn expectedValue)
+            this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, TReturn expectedValue) 
+            where TMock : class
         {
-            var dispatcher = GetDispatcher(instance);
-
             string name;
 
-            if (dispatcher.TryGetReadPropertyNameAndArgs(expression, out name))
+            if (mock.Dispatcher.TryGetReadPropertyNameAndArgs(expression, out name))
             {
-                var callInfo = dispatcher.FindByReturnMatch(name, expectedValue);
+                var callInfo = mock.Dispatcher.FindByReturnMatch(name, expectedValue);
 
                 if (callInfo == null || callInfo.Visited == 0)
                     throw new VerificationException(
@@ -122,19 +119,18 @@ namespace HyperMock.Universal.Verification
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <typeparam name="TReturn">Mocked expression return type</typeparam>
-        /// <param name="instance">Mocked instance</param>
+        /// <param name="mock">Mocked instance</param>
         /// <param name="expression">Expression</param>
         /// <param name="expectedValue">Expected set value</param>
         public static void VerifySet<TMock, TReturn>(
-            this TMock instance, Expression<Func<TMock, TReturn>> expression, TReturn expectedValue)
+            this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, TReturn expectedValue) 
+            where TMock : class
         {
-            var dispatcher = GetDispatcher(instance);
-
             string name;
 
-            if (dispatcher.TryGetWritePropertyNameAndArgs(expression, out name))
+            if (mock.Dispatcher.TryGetWritePropertyNameAndArgs(expression, out name))
             {
-                var callInfo = dispatcher.FindByParameterMatch(name, new object[] {expectedValue});
+                var callInfo = mock.Dispatcher.FindByParameterMatch(name, new object[] {expectedValue});
 
                 if (callInfo == null || callInfo.Visited == 0)
                     throw new VerificationException(
@@ -152,16 +148,6 @@ namespace HyperMock.Universal.Verification
         public static CallInfo FindByReturnMatch(this MockProxyDispatcher mockProxyDispatcher, string name, object returnValue)
         {
             return mockProxyDispatcher.RegisteredCallInfoList.FirstOrDefault(ci => ci.Name == name && ci.ReturnValue == returnValue);
-        }
-
-        private static MockProxyDispatcher GetDispatcher<TMock>(TMock instance)
-        {
-            var dispatcher = instance as MockProxyDispatcher;
-
-            if (dispatcher == null)
-                throw new MockException("Unable to get the dispatcher from the instance.");
-
-            return dispatcher;
         }
     }
 }

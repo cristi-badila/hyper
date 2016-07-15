@@ -1,6 +1,6 @@
 using System;
 using System.Linq.Expressions;
-using HyperMock.Universal.Exceptions;
+using HyperMock.Universal.Setup;
 
 namespace HyperMock.Universal
 {
@@ -17,13 +17,10 @@ namespace HyperMock.Universal
         /// <param name="expression">Method expression</param>
         /// <returns>Method behaviour</returns>
         public static VoidBehaviour Setup<TMock>(
-            this TMock instance, Expression<Action<TMock>> expression)
+            this Mock<TMock> instance, Expression<Action<TMock>> expression) 
+            where TMock : class
         {
-            var dispatcher = GetDispatcher(instance);
-
-            var callInfo = dispatcher.CreateForMethod(expression);
-
-            return new VoidBehaviour(callInfo);
+            return new VoidBehaviour(instance.CreateForMethod(expression));
         }
 
         /// <summary>
@@ -35,13 +32,10 @@ namespace HyperMock.Universal
         /// <param name="expression">Function expression</param>
         /// <returns>Function behaviours</returns>
         public static ReturnBehaviour<TMock, TReturn> Setup<TMock, TReturn>(
-            this TMock instance, Expression<Func<TMock, TReturn>> expression)
+            this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression) 
+            where TMock : class
         {
-            var dispatcher = GetDispatcher(instance);
-
-            var callInfo = dispatcher.CreateForFunction(expression);
-
-            return new ReturnBehaviour<TMock, TReturn>(callInfo);
+            return new ReturnBehaviour<TMock, TReturn>(instance.CreateForFunction(expression));
         }
 
         /// <summary>
@@ -53,13 +47,10 @@ namespace HyperMock.Universal
         /// <param name="expression">Read property expression</param>
         /// <returns>Read property behaviours</returns>
         public static ReturnBehaviour<TMock, TReturn> SetupGet<TMock, TReturn>(
-            this TMock instance, Expression<Func<TMock, TReturn>> expression)
+            this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression)
+            where TMock : class
         {
-            var dispatcher = GetDispatcher(instance);
-
-            var callInfo = dispatcher.CreateForReadProperty(expression);
-
-            return new ReturnBehaviour<TMock, TReturn>(callInfo);
+            return new ReturnBehaviour<TMock, TReturn>(instance.CreateForReadProperty(expression));
         }
 
         /// <summary>
@@ -71,35 +62,17 @@ namespace HyperMock.Universal
         /// <param name="expression">Write property expression</param>
         /// <returns>Write property behaviours</returns>
         public static VoidBehaviour SetupSet<TMock, TReturn>(
-            this TMock instance, Expression<Func<TMock, TReturn>> expression)
+            this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression) 
+            where TMock : class
         {
-            var dispatcher = GetDispatcher(instance);
-
-            var callInfo = dispatcher.CreateForWriteProperty(expression);
-
-            return new VoidBehaviour(callInfo);
+            return new VoidBehaviour(instance.CreateForWriteProperty(expression));
         }
 
         public static VoidBehaviour SetupSet<TMock, TReturn>(
-            this TMock instance, Expression<Func<TMock, TReturn>> expression, TReturn value)
+            this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression, TReturn value) 
+            where TMock : class
         {
-            var dispatcher = GetDispatcher(instance);
-
-            var callInfo = dispatcher.CreateForWriteProperty(expression, value);
-
-            return new VoidBehaviour(callInfo);
-        }
-
-
-
-        private static MockProxyDispatcher GetDispatcher<TMock>(TMock instance)
-        {
-            var dispatcher = instance as MockProxyDispatcher;
-
-            if (dispatcher == null)
-                throw new MockException("Unable to get the dispatcher from the instance.");
-
-            return dispatcher;
+            return new VoidBehaviour(instance.CreateForWriteProperty(expression, value));
         }
     }
 }
