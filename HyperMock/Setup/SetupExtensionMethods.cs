@@ -7,7 +7,7 @@ namespace HyperMock.Universal.Setup
 {
     public static class SetupExtensionMethods
     {
-        public static CallInfo CreateForMethod<TMock>(this Mock<TMock> mockProxyDispatcher, Expression<Action<TMock>> expression)
+        public static CallInfo AddHandlingForAction<TMock>(this Mock<TMock> mockProxyDispatcher, Expression<Action<TMock>> expression)
             where TMock : class
         {
             string name;
@@ -36,7 +36,7 @@ namespace HyperMock.Universal.Setup
             return null;
         }
 
-        public static CallInfo CreateForFunction<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
+        public static CallInfo AddHandlingForFunction<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
             string name;
@@ -65,7 +65,7 @@ namespace HyperMock.Universal.Setup
             return null;
         }
 
-        public static CallInfo CreateForReadProperty<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
+        public static CallInfo AddHandlingPropertyGet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
             string name;
@@ -80,19 +80,19 @@ namespace HyperMock.Universal.Setup
             return null;
         }
 
-        public static CallInfo CreateForWriteProperty<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, object value)
+        public static CallInfo AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, object value)
             where TMock : class
         {
-            return mockProxyDispatcher.CreateForWritePropertyCore(expression, new Parameter { Value = value, Type = ParameterType.AsDefined });
+            return mockProxyDispatcher.AddHandlingPropertySet(expression, new Parameter { Value = value, Type = ParameterType.AsDefined });
         }
 
-        public static CallInfo CreateForWriteProperty<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
+        public static CallInfo AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            return mockProxyDispatcher.CreateForWritePropertyCore(expression, new Parameter { Value = null, Type = ParameterType.Anything });
+            return mockProxyDispatcher.AddHandlingPropertySet(expression, new Parameter { Value = null, Type = ParameterType.Anything });
         }
 
-        public static CallInfo CreateForWritePropertyCore<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, Parameter parameter)
+        public static CallInfo AddHandlingPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, Parameter parameter)
             where TMock : class
         {
             string name;

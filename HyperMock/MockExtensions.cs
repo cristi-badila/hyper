@@ -20,7 +20,7 @@ namespace HyperMock.Universal
             this Mock<TMock> instance, Expression<Action<TMock>> expression) 
             where TMock : class
         {
-            return new VoidBehaviour(instance.CreateForMethod(expression));
+            return new VoidBehaviour(instance.AddHandlingForAction(expression));
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace HyperMock.Universal
             this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression) 
             where TMock : class
         {
-            return new ReturnBehaviour<TMock, TReturn>(instance.CreateForFunction(expression));
+            return new ReturnBehaviour<TMock, TReturn>(instance.AddHandlingForFunction(expression));
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace HyperMock.Universal
             this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            return new ReturnBehaviour<TMock, TReturn>(instance.CreateForReadProperty(expression));
+            return new ReturnBehaviour<TMock, TReturn>(instance.AddHandlingPropertyGet(expression));
         }
 
         /// <summary>
@@ -65,14 +65,23 @@ namespace HyperMock.Universal
             this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression) 
             where TMock : class
         {
-            return new VoidBehaviour(instance.CreateForWriteProperty(expression));
+            return new VoidBehaviour(instance.AddHandlingForPropertySet(expression));
         }
 
+        /// <summary>
+        ///     Setup of a property write.
+        /// </summary>
+        /// <typeparam name="TMock">Mocked type</typeparam>
+        /// <typeparam name="TReturn">Return type</typeparam>
+        /// <param name="instance">Mocked instance</param>
+        /// <param name="expression">Write property expression</param>
+        /// <param name="value">The expected value to be set</param>
+        /// <returns>Write property behaviours</returns>
         public static VoidBehaviour SetupSet<TMock, TReturn>(
             this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression, TReturn value) 
             where TMock : class
         {
-            return new VoidBehaviour(instance.CreateForWriteProperty(expression, value));
+            return new VoidBehaviour(instance.AddHandlingForPropertySet(expression, value));
         }
     }
 }
