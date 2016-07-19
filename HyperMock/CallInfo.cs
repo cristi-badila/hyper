@@ -7,12 +7,12 @@ namespace HyperMock.Universal
     {
         public CallInfo()
         {
-            Parameters = new ParameterCollection();
+            Parameters = new ParameterMatchersCollection();
         }
 
         public string Name { get; set; }
 
-        public ParameterCollection Parameters { get; set; }
+        public ParameterMatchersCollection Parameters { get; set; }
 
         public object ReturnValue { get; set; }
 

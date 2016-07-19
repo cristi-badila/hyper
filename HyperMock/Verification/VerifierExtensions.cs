@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using HyperMock.Universal.Exceptions;
@@ -24,31 +22,7 @@ namespace HyperMock.Universal.Verification
             this Mock<TMock> mock, Expression<Action<TMock>> expression, Occurred occurred) 
             where TMock : class
         {
-            string name;
-            ReadOnlyCollection<Expression> arguments;
-
-            if (mock.Dispatcher.TryGetMethodNameAndArgs(expression, out name, out arguments))
-            {
-                var values = new List<object>();
-
-                foreach (var argument in arguments)
-                {
-                    var lambda = Expression.Lambda(argument, expression.Parameters);
-                    var compiledDelegate = lambda.Compile();
-                    var value = compiledDelegate.DynamicInvoke(new object[1]);
-                    values.Add(value);
-                }
-
-                var callInfo = mock.Dispatcher.FindByParameterMatch(name, values.ToArray());
-
-                if (callInfo == null && occurred.Count > 0)
-                    throw new VerificationException(
-                        $"Unable to verify that the action occurred '{occurred.Count} " +
-                        $"time{(occurred.Count == 1 ? "s" : "")}.");
-
-                if (callInfo != null)
-                    occurred.Assert(callInfo.Visited);
-            }
+            mock.Verify<TMock, Action<TMock>>(expression, occurred);
         }
 
         /// <summary>
@@ -63,31 +37,7 @@ namespace HyperMock.Universal.Verification
             this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, Occurred occurred) 
             where TMock : class
         {
-            string name;
-            ReadOnlyCollection<Expression> arguments;
-
-            if (mock.Dispatcher.TryGetMethodNameAndArgs(expression, out name, out arguments))
-            {
-                var values = new List<object>();
-
-                foreach (var argument in arguments)
-                {
-                    var lambda = Expression.Lambda(argument, expression.Parameters);
-                    var compiledDelegate = lambda.Compile();
-                    var value = compiledDelegate.DynamicInvoke(new object[1]);
-                    values.Add(value);
-                }
-
-                var callInfo = mock.Dispatcher.FindByParameterMatch(name, values.ToArray());
-
-                if (callInfo == null && occurred.Count > 0)
-                    throw new VerificationException(
-                        $"Unable to verify that the action occurred '{occurred.Count} " +
-                        $"time{(occurred.Count == 1 ? "s" : "")}.");
-
-                if (callInfo != null)
-                    occurred.Assert(callInfo.Visited);
-            }
+            mock.Verify<TMock, Func<TMock, TReturn>>(expression, occurred);
         }
 
         /// <summary>
@@ -103,14 +53,16 @@ namespace HyperMock.Universal.Verification
             where TMock : class
         {
             string name;
-
-            if (mock.Dispatcher.TryGetReadPropertyNameAndArgs(expression, out name))
+            if (!mock.Dispatcher.TryGetReadPropertyName(expression, out name))
             {
-                var callInfo = mock.Dispatcher.FindByReturnMatch(name, expectedValue);
+                throw new UnknownDispatchParamsException(expression);
+            }
 
-                if (callInfo == null || callInfo.Visited == 0)
-                    throw new VerificationException(
-                        $"Unable to verify that the value '{expectedValue}' was returned on the property.");
+            var callInfo = mock.Dispatcher.FindByReturnMatch(name, expectedValue);
+            if (callInfo == null || callInfo.Visited == 0)
+            {
+                throw new VerificationException(
+                    $"Unable to verify that the value '{expectedValue}' was returned on the property.");
             }
         }
 
@@ -128,7 +80,7 @@ namespace HyperMock.Universal.Verification
         {
             string name;
 
-            if (mock.Dispatcher.TryGetWritePropertyNameAndArgs(expression, out name))
+            if (mock.Dispatcher.TryGetWritePropertyName(expression, out name))
             {
                 var callInfo = mock.Dispatcher.FindByParameterMatch(name, new object[] {expectedValue});
 
@@ -148,6 +100,33 @@ namespace HyperMock.Universal.Verification
         public static CallInfo FindByReturnMatch(this MockProxyDispatcher mockProxyDispatcher, string name, object returnValue)
         {
             return mockProxyDispatcher.RegisteredCallInfoList.FirstOrDefault(ci => ci.Name == name && ci.ReturnValue == returnValue);
+        }
+
+        public static void Verify<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression, Occurred occurred)
+            where TMock : class 
+        {
+            DispatchParams dispatchParams;
+            if (!mock.Dispatcher.TryGetDispatchParams(expression, out dispatchParams))
+            {
+                throw new UnknownDispatchParamsException(expression);
+            }
+
+            var actualParams = dispatchParams.Arguments.Select(
+                argument => Expression.Lambda(argument, expression.Parameters))
+                .Select(lambda => lambda.Compile())
+                .Select(compiledDelegate => compiledDelegate.DynamicInvoke(new object[1]))
+                .ToArray();
+            var callInfo = mock.Dispatcher.FindByParameterMatch(dispatchParams.Name, actualParams);
+
+            if (callInfo == null && occurred.Count > 0)
+                throw new VerificationException(
+                    $"Unable to verify that the action occurred '{occurred.Count} " +
+                    $"time{(occurred.Count == 1 ? "s" : "")}.");
+
+            if (callInfo != null)
+            {
+                occurred.Assert(callInfo.Visited);
+            }
         }
     }
 }

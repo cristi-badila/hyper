@@ -18,11 +18,10 @@ namespace HyperMock.Universal
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
             var name = targetMethod.Name;
-            var callInfoListForName = _callInfoList.Where(ci => ci.Name == name).ToList();
-            var matchedCallInfo = callInfoListForName.FirstOrDefault(ci => ci.IsMatchFor(args));
+            var matchedCallInfo = _callInfoList.Where(ci => ci.Name == name).FirstOrDefault(ci => ci.IsMatchFor(args));
             if (matchedCallInfo == null)
             {
-                throw new MockException(targetMethod, args);
+                return GetDefault(targetMethod.ReturnType);
             }
 
             if (matchedCallInfo.ExceptionType != null)
@@ -35,6 +34,11 @@ namespace HyperMock.Universal
             matchedCallInfo.Visited++;
 
             return matchedCallInfo.ReturnValue;
+        }
+
+        private static object GetDefault(Type type)
+        {
+            return type.GetTypeInfo().IsValueType ? Activator.CreateInstance(type) : null;
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace HyperMock.Universal.ParameterMatchers
 {
     public class PartialMatcher<T> : Parameter
-        where T : class 
+        where T : class
     {
         private readonly Func<T, bool> _comparer;
 

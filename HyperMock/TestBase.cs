@@ -11,7 +11,7 @@ namespace HyperMock.Universal
     /// <typeparam name="TSubject">Class under test</typeparam>
     public abstract class TestBase<TSubject>
     {
-        private readonly Dictionary<Type, object> _mocks = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, IMock> _mocks = new Dictionary<Type, IMock>();
 
         protected TestBase()
         {
@@ -23,7 +23,7 @@ namespace HyperMock.Universal
                 _mocks.Add(ctorParam.ParameterType, mock);
             }
 
-            Subject = (TSubject) ctor.Invoke(_mocks.Values.ToArray());
+            Subject = (TSubject) ctor.Invoke(_mocks.Values.Select(mock => mock.Object).ToArray());
         }
 
         protected TSubject Subject { get; private set; }

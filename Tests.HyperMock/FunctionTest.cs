@@ -66,14 +66,14 @@ namespace Tests.HyperMock.Universal
         }
 
         [TestMethod]
-        public void UnmatchedThrowsException()
+        public void UnmatchedReturnsDefaultValue()
         {
             var proxy = Mock.Create<IUserService>();
             proxy.Setup(p => p.Save("Homer")).Returns(true);
 
             var controller = new UserController(proxy.Object);
 
-            Assert.ThrowsException<MockException>(() => controller.Save("Marge"));
+            Assert.IsFalse(controller.Save("Marge"));
         }
 
         [TestMethod]

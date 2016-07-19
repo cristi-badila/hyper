@@ -20,7 +20,7 @@ namespace HyperMock.Universal
             this Mock<TMock> instance, Expression<Action<TMock>> expression) 
             where TMock : class
         {
-            return new VoidBehaviour(instance.AddHandlingForAction(expression));
+            return new VoidBehaviour(instance.AddHandling(expression));
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace HyperMock.Universal
             this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression) 
             where TMock : class
         {
-            return new ReturnBehaviour<TMock, TReturn>(instance.AddHandlingForFunction(expression));
+            return new ReturnBehaviour<TMock, TReturn>(instance.AddHandling(expression));
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace HyperMock.Universal
             this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            return new ReturnBehaviour<TMock, TReturn>(instance.AddHandlingPropertyGet(expression));
+            return new ReturnBehaviour<TMock, TReturn>(instance.AddHandlingForPropertyGet(expression));
         }
 
         /// <summary>

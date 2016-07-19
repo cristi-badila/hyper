@@ -1,13 +1,29 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 
 namespace HyperMock.Universal.ExtensionMethods
 {
     public static class MockProxyDispatcherExtensionMethods
     {
-        public static bool TryGetWritePropertyNameAndArgs(this MockProxyDispatcher mockProxyDispatcher, Expression expression, out string name)
+        public static bool TryGetDispatchParams(
+            this MockProxyDispatcher mockProxyDispatcher,
+            Expression expression,
+            out DispatchParams dispatchParams)
+        {
+            var lambda = (LambdaExpression) expression;
+            var body = lambda.Body as MethodCallExpression;
+
+            if (body != null)
+            {
+                dispatchParams = new DispatchParams(body.Method.Name, body.Arguments);
+                return true;
+            }
+
+            dispatchParams = new DispatchParams();
+            return false;
+        }
+
+        public static bool TryGetWritePropertyName(this MockProxyDispatcher mockProxyDispatcher, Expression expression, out string name)
         {
             name = null;
             var lambda = (LambdaExpression)expression;
@@ -23,29 +39,7 @@ namespace HyperMock.Universal.ExtensionMethods
             return true;
         }
 
-        public static bool TryGetMethodNameAndArgs(
-            this MockProxyDispatcher mockProxyDispatcher,
-            Expression expression,
-            out string name,
-            out ReadOnlyCollection<Expression> arguments)
-        {
-            var lambda = (LambdaExpression) expression;
-            var body = lambda.Body as MethodCallExpression;
-
-            if (body != null)
-            {
-                name = body.Method.Name;
-                arguments = body.Arguments;
-
-                return true;
-            }
-
-            name = null;
-            arguments = new ReadOnlyCollection<Expression>(new List<Expression>());
-            return false;
-        }
-
-        public static bool TryGetReadPropertyNameAndArgs(this MockProxyDispatcher mockProxyDispatcher, Expression expression, out string name)
+        public static bool TryGetReadPropertyName(this MockProxyDispatcher mockProxyDispatcher, Expression expression, out string name)
         {
             var lambda = (LambdaExpression)expression;
             var body = lambda.Body as MemberExpression;

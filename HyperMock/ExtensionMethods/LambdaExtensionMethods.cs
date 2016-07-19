@@ -9,18 +9,18 @@ namespace HyperMock.Universal.ExtensionMethods
 {
     public static class LambdaExtensionMethods
     {
-        public static Parameter GetParameter(this LambdaExpression lambda)
+        public static Parameter GetParameterMatcher(this LambdaExpression lambda)
         {
-            return lambda.IsParameterMatcher() ? lambda.GetParameterMatcher() : lambda.GetDefaultParameterMatcher();
+            return lambda.UsesParameterMatcher() ? lambda.GetContainedParameterMatcher() : lambda.GetDefaultParameterMatcher();
         }
 
-        public static bool IsParameterMatcher(this LambdaExpression lambda)
+        public static bool UsesParameterMatcher(this LambdaExpression lambda)
         {
             var methodCall = lambda.Body as MethodCallExpression;
             return methodCall != null && typeof(Param).IsAssignableFrom(methodCall.Method.DeclaringType);
         }
 
-        public static Parameter GetParameterMatcher(this LambdaExpression lambda)
+        public static Parameter GetContainedParameterMatcher(this LambdaExpression lambda)
         {
             var methodCall = (MethodCallExpression)lambda.Body;
             var matcherType = GetMatcherType(methodCall);

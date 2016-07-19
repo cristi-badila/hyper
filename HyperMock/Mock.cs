@@ -6,12 +6,14 @@ namespace HyperMock.Universal
     /// <summary>
     ///     Entry point for creating proxies of interfaces.
     /// </summary>
-    public class Mock<T>
+    public class Mock<T> : IMock
         where T : class
     {
         public T Object { get; }
 
         public MockProxyDispatcher Dispatcher { get; }
+
+        object IMock.Object => Object;
 
         public Mock()
             : this(DispatchProxy.Create<T, MockProxyDispatcher>() as MockProxyDispatcher)
@@ -32,10 +34,10 @@ namespace HyperMock.Universal
         /// </summary>
         /// <param name="type">Interface type</param>
         /// <returns>Proxy instance</returns>
-        public static object Create(Type type)
+        public static IMock Create(Type type)
         {
             var constructedType = typeof(Mock<>).MakeGenericType(type);
-            return Activator.CreateInstance(constructedType, new object[] { });
+            return Activator.CreateInstance(constructedType, new object[] { }) as IMock;
         }
 
         /// <summary>
