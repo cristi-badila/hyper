@@ -2,13 +2,13 @@
 {
     using System.Collections.Generic;
 
-    public class ParameterMatchersCollection : List<Parameter>
+    public class ParameterMatchersCollection : List<ParameterMatcher>
     {
         public ParameterMatchersCollection()
         {
         }
 
-        public ParameterMatchersCollection(IEnumerable<Parameter> collection)
+        public ParameterMatchersCollection(IEnumerable<ParameterMatcher> collection)
             : base(collection)
         {
         }

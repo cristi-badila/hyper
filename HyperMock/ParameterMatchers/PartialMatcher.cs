@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class PartialMatcher<T> : Parameter
+    public class PartialMatcher<T> : ParameterMatcher
         where T : class
     {
         private readonly Func<T, bool> _comparer;

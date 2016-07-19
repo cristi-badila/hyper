@@ -1,6 +1,6 @@
 ﻿namespace HyperMock.Universal.ParameterMatchers
 {
-    public class AnyMatcher : Parameter
+    public class AnyMatcher : ParameterMatcher
     {
         public override bool Matches(object argument)
         {

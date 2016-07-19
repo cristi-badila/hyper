@@ -120,7 +120,7 @@
     <Compile Include="IMock.cs" />
     <Compile Include="MockExtensions.cs" />
     <Compile Include="Param.cs" />
-    <Compile Include="Parameter.cs" />
+    <Compile Include="ParameterMatcher.cs" />
     <Compile Include="ParameterMatcherAttribute.cs" />
     <Compile Include="ParameterMatchers\AnyMatcher.cs" />
     <Compile Include="ParameterMatchers\ExactMatcher.cs" />
@@ -140,7 +140,9 @@
     <Compile Include="VoidBehaviour.cs" />
     <EmbeddedResource Include="Properties\HyperMock.rd.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Language\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

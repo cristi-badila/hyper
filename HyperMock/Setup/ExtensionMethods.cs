@@ -35,7 +35,7 @@
             return mockProxyDispatcher.AddHandlingForPropertySet(expression, new ExactMatcher(value));
         }
 
-        public static CallInfo AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, Parameter parameter)
+        public static CallInfo AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, ParameterMatcher parameterMatcher)
             where TMock : class
         {
             string name;
@@ -47,7 +47,7 @@
             var callInfo = new CallInfo
             {
                 Name = name,
-                Parameters = new ParameterMatchersCollection { parameter }
+                Parameters = new ParameterMatchersCollection { parameterMatcher }
             };
 
             mockProxyDispatcher.Dispatcher.RegisteredCallInfoList.Add(callInfo);

@@ -9,9 +9,13 @@
 
     public static class LambdaExtensionMethods
     {
-        public static Parameter GetParameterMatcher(this LambdaExpression lambda)
+        public static ParameterMatcher GetParameterMatcher(this LambdaExpression lambda)
         {
-            return lambda.UsesParameterMatcher() ? lambda.GetContainedParameterMatcher() : lambda.GetDefaultParameterMatcher();
+            var methodCall = lambda.Body as MethodCallExpression;
+            var matcherType = GetMatcherType(methodCall);
+            return matcherType == null
+                ? lambda.GetDefaultParameterMatcher()
+                : CreateMathcerInstance(methodCall, matcherType) as ParameterMatcher;
         }
 
         public static bool UsesParameterMatcher(this LambdaExpression lambda)
@@ -20,15 +24,7 @@
             return methodCall != null && typeof(Param).IsAssignableFrom(methodCall.Method.DeclaringType);
         }
 
-        public static Parameter GetContainedParameterMatcher(this LambdaExpression lambda)
-        {
-            var methodCall = (MethodCallExpression)lambda.Body;
-            var matcherType = GetMatcherType(methodCall);
-
-            return CreateMathcerInstance(methodCall, matcherType) as Parameter;
-        }
-
-        public static Parameter GetDefaultParameterMatcher(this LambdaExpression lambda)
+        public static ParameterMatcher GetDefaultParameterMatcher(this LambdaExpression lambda)
         {
             var compiledDelegate = lambda.Compile();
             var value = compiledDelegate.DynamicInvoke(new object[1]);
@@ -38,7 +34,7 @@
         public static object CreateMathcerInstance(MethodCallExpression methodCall, Type matcherType)
         {
             var ctorArguments = methodCall.Arguments
-                .Select(ResolveExpression)
+                .Select(ResolveArgumentExpression)
                 .ToArray();
             var createInstanceArguments = new List<object>(ctorArguments);
             createInstanceArguments.Insert(0, matcherType);
@@ -47,7 +43,7 @@
                 : Activator.CreateInstance(matcherType, ctorArguments);
         }
 
-        public static object ResolveExpression(Expression expression)
+        public static object ResolveArgumentExpression(Expression expression)
         {
             object result;
             var constantExpression = expression as ConstantExpression;
@@ -69,7 +65,7 @@
 
         public static Type GetMatcherType(MethodCallExpression methodCall)
         {
-            var attribute = methodCall.Method.GetCustomAttribute<ParameterMatcherAttribute>();
+            var attribute = methodCall?.Method.GetCustomAttribute<ParameterMatcherAttribute>();
             if (attribute == null)
             {
                 return null;
@@ -86,7 +82,7 @@
             }
             catch (Exception)
             {
-                // Could not identify any way of previously determining if a type is actually a generic type
+                // Could not identify any way of determining if a type is actually a generic type
                 // before invoking GetGenericTypeDefinition
             }
 
