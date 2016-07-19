@@ -1,5 +1,6 @@
 ﻿namespace HyperMock.Universal.Tests.Support
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public class UserController
@@ -44,6 +45,11 @@
         public async Task DeleteAsync(string name)
         {
             await _userService.DeleteAsync(name);
+        }
+
+        public bool ToggleEnabled(IList<string> nameList)
+        {
+            return _userService.ToggleEnabled(nameList);
         }
     }
 }

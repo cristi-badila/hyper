@@ -1,5 +1,6 @@
 ﻿namespace HyperMock.Universal.Tests.Support
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface IUserService
@@ -17,5 +18,7 @@
         void Delete(string name);
 
         Task DeleteAsync(string name);
+
+        bool ToggleEnabled(IList<string> nameList);
     }
 }

@@ -75,5 +75,29 @@
 
             proxy.Verify(p => p.Delete(It.Is<string>(s => s == "Homer")), Occurred.Once());
         }
+
+        [TestMethod]
+        public void SetupIsAbleToHandleEquivalentCollection()
+        {
+            var proxy = MockFor<IUserService>();
+            var expectedList = new List<string> { "NameB", "NameC", "NameA" };
+            proxy.Setup(p => p.ToggleEnabled(Collection.IsEquivalentTo(expectedList))).Returns(true);
+
+            var actualList = new List<string> { "NameA", "NameB", "NameC" };
+            Assert.IsTrue(proxy.Object.ToggleEnabled(actualList));
+        }
+
+        [TestMethod]
+        public void VerifyIsAbleToHandleEquivalentCollection()
+        {
+            var proxy = MockFor<IUserService>();
+            var expectedList = new List<string> { "NameB", "NameC", "NameA" };
+            proxy.Setup(p => p.ToggleEnabled(Collection.IsEquivalentTo(expectedList)));
+
+            var actualList = new List<string> { "NameA", "NameB", "NameC" };
+            Subject.ToggleEnabled(actualList);
+
+            proxy.Verify(p => p.ToggleEnabled(Collection.IsEquivalentTo(expectedList)), Occurred.Once());
+        }
     }
 }
