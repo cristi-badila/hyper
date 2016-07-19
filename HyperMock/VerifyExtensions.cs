@@ -1,15 +1,16 @@
-﻿namespace HyperMock.Universal.Verification
+﻿namespace HyperMock.Universal
 {
     using System;
     using System.Linq;
     using System.Linq.Expressions;
     using Exceptions;
     using ExtensionMethods;
+    using Verification;
 
     /// <summary>
     ///     Set of extensions for verifying behaviours have occurred.
     /// </summary>
-    public static class VerifierExtensions
+    public static class VerifyExtensions
     {
         /// <summary>
         ///     Verifies a method matching the expression occurred the correct number of times.

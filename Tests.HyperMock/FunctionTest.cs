@@ -4,20 +4,16 @@
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
     using Support;
-    using Verification;
 
     [TestClass]
-    public class FunctionTest
+    public class FunctionTest : TestBase<UserController>
     {
         [TestMethod]
         public void ReturnsTrueForMatchingParameter()
         {
-            var proxy = Mock.Create<IUserService>();
-            proxy.Setup(p => p.Save("Homer")).Returns(true);
+            MockFor<IUserService>().Setup(p => p.Save("Homer")).Returns(true);
 
-            var controller = new UserController(proxy.Object);
-
-            var result = controller.Save("Homer");
+            var result = Subject.Save("Homer");
 
             Assert.IsTrue(result);
         }
@@ -25,12 +21,9 @@
         [TestMethod]
         public void ReturnsTrueForAnyParameter()
         {
-            var proxy = Mock.Create<IUserService>();
-            proxy.Setup(p => p.Save(Param.IsAny<string>())).Returns(true);
+            MockFor<IUserService>().Setup(p => p.Save(It.IsAny<string>())).Returns(true);
 
-            var controller = new UserController(proxy.Object);
-
-            var result = controller.Save("Homer");
+            var result = Subject.Save("Homer");
 
             Assert.IsTrue(result);
         }
@@ -38,13 +31,11 @@
         [TestMethod]
         public void ReturnsTrueForOverloadWithAnyParameter()
         {
-            var proxy = Mock.Create<IUserService>();
+            var proxy = MockFor<IUserService>();
             proxy.Setup(p => p.Save("Homer")).Returns(false); // Set to check overload works!
-            proxy.Setup(p => p.Save("Homer", Param.IsAny<string>())).Returns(true);
+            proxy.Setup(p => p.Save("Homer", It.IsAny<string>())).Returns(true);
 
-            var controller = new UserController(proxy.Object);
-
-            var result = controller.SaveWithRole("Homer", "Manager");
+            var result = Subject.SaveWithRole("Homer", "Manager");
 
             Assert.IsTrue(result);
         }
@@ -52,13 +43,11 @@
         [TestMethod]
         public void ReturnsTrueForMatchingParameterWithMultiSetups()
         {
-            var proxy = Mock.Create<IUserService>();
+            var proxy = MockFor<IUserService>();
             proxy.Setup(p => p.Save("Marge")).Returns(true);
             proxy.Setup(p => p.Save("Homer")).Returns(true);
 
-            var controller = new UserController(proxy.Object);
-
-            var result = controller.Save("Homer");
+            var result = Subject.Save("Homer");
 
             Assert.IsTrue(result);
         }
@@ -66,34 +55,28 @@
         [TestMethod]
         public void UnmatchedReturnsDefaultValue()
         {
-            var proxy = Mock.Create<IUserService>();
+            var proxy = MockFor<IUserService>();
             proxy.Setup(p => p.Save("Homer")).Returns(true);
 
-            var controller = new UserController(proxy.Object);
-
-            Assert.IsFalse(controller.Save("Marge"));
+            Assert.IsFalse(Subject.Save("Marge"));
         }
 
         [TestMethod]
         public void MatchThrowsException()
         {
-            var proxy = Mock.Create<IUserService>();
+            var proxy = MockFor<IUserService>();
             proxy.Setup(p => p.Save("Bart")).Throws<InvalidOperationException>();
 
-            var controller = new UserController(proxy.Object);
-
-            Assert.ThrowsException<InvalidOperationException>(() => controller.Save("Bart"));
+            Assert.ThrowsException<InvalidOperationException>(() => Subject.Save("Bart"));
         }
 
         [TestMethod]
         public void VerifyMatchesExpectedSingleVisit()
         {
-            var proxy = Mock.Create<IUserService>();
+            var proxy = MockFor<IUserService>();
             proxy.Setup(p => p.Save("Bart")).Returns(true);
 
-            var controller = new UserController(proxy.Object);
-
-            controller.Save("Bart");
+            Subject.Save("Bart");
 
             proxy.Verify(p => p.Save("Bart"), Occurred.Once());
         }
@@ -101,13 +84,11 @@
         [TestMethod]
         public void VerifyMatchesExpectedZeroVisits()
         {
-            var proxy = Mock.Create<IUserService>();
+            var proxy = MockFor<IUserService>();
             proxy.Setup(p => p.Save("Bart")).Returns(true);
             proxy.Setup(p => p.Save("Marge")).Returns(false);
 
-            var controller = new UserController(proxy.Object);
-
-            controller.Save("Bart");
+            Subject.Save("Bart");
 
             proxy.Verify(p => p.Save("Marge"), Occurred.Never());
         }
@@ -115,14 +96,12 @@
         [TestMethod]
         public void VerifyMatchesExpectedAtLeastVisits()
         {
-            var proxy = Mock.Create<IUserService>();
+            var proxy = MockFor<IUserService>();
             proxy.Setup(p => p.Save("Bart")).Returns(true);
 
-            var controller = new UserController(proxy.Object);
-
-            controller.Save("Bart");
-            controller.Save("Bart");
-            controller.Save("Bart");
+            Subject.Save("Bart");
+            Subject.Save("Bart");
+            Subject.Save("Bart");
 
             proxy.Verify(p => p.Save("Bart"), Occurred.AtLeast(2));
         }
@@ -130,12 +109,10 @@
         [TestMethod]
         public async Task ReturnsTrueForMatchingParameterAsync()
         {
-            var proxy = Mock.Create<IUserService>();
+            var proxy = MockFor<IUserService>();
             proxy.Setup(p => p.SaveAsync("Homer")).Returns(Task.Run(() => true));
 
-            var controller = new UserController(proxy.Object);
-
-            var result = await controller.SaveAsync("Homer");
+            var result = await Subject.SaveAsync("Homer");
 
             Assert.IsTrue(result);
         }

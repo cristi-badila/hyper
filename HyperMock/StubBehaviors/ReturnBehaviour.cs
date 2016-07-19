@@ -1,11 +1,10 @@
-﻿namespace HyperMock.Universal
+﻿namespace HyperMock.Universal.StubBehaviors
 {
     /// <summary>
     ///     Provides return type behaviours to be added.
     /// </summary>
-    /// <typeparam name="TMock">Mocked type</typeparam>
     /// <typeparam name="TReturn">Return type</typeparam>
-    public class ReturnBehaviour<TMock, TReturn>
+    public class ReturnBehaviour<TReturn>
     {
         private readonly CallInfo _callInfo;
 

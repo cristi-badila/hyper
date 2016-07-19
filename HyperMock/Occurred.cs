@@ -1,5 +1,7 @@
-﻿namespace HyperMock.Universal.Verification
+﻿namespace HyperMock.Universal
 {
+    using Verification;
+
     public abstract class Occurred
     {
         protected Occurred(int count)

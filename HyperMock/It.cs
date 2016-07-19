@@ -3,7 +3,7 @@
     using System;
     using ParameterMatchers;
 
-    public static class Param
+    public static class It
     {
         [ParameterMatcher(typeof(AnyMatcher))]
         public static T IsAny<T>()

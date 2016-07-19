@@ -21,7 +21,7 @@
         public static bool UsesParameterMatcher(this LambdaExpression lambda)
         {
             var methodCall = lambda.Body as MethodCallExpression;
-            return methodCall != null && typeof(Param).IsAssignableFrom(methodCall.Method.DeclaringType);
+            return methodCall != null && typeof(It).IsAssignableFrom(methodCall.Method.DeclaringType);
         }
 
         public static ParameterMatcher GetDefaultParameterMatcher(this LambdaExpression lambda)
@@ -36,8 +36,6 @@
             var ctorArguments = methodCall.Arguments
                 .Select(ResolveArgumentExpression)
                 .ToArray();
-            var createInstanceArguments = new List<object>(ctorArguments);
-            createInstanceArguments.Insert(0, matcherType);
             return ctorArguments.Length == 0
                 ? Activator.CreateInstance(matcherType)
                 : Activator.CreateInstance(matcherType, ctorArguments);
@@ -51,13 +49,20 @@
             {
                 result = constantExpression.Value;
             }
+            else if (expression is MemberExpression)
+            {
+                var objectMember = Expression.Convert(expression, typeof(object));
+                var getterLambda = Expression.Lambda<Func<object>>(objectMember);
+                var getter = getterLambda.Compile();
+                result = getter();
+            }
             else if (expression is LambdaExpression)
             {
                 result = ((LambdaExpression)expression).Compile();
             }
             else
             {
-                throw new Exception("Could not parse argument exception");
+                result = expression;
             }
 
             return result;

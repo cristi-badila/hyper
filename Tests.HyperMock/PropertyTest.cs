@@ -3,7 +3,6 @@
     using Exceptions;
     using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
     using Support;
-    using Verification;
 
     [TestClass]
     public class PropertyTest : TestBase<UserController>

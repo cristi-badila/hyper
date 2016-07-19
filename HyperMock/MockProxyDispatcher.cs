@@ -37,7 +37,7 @@
 
         private static object GetDefault(Type type)
         {
-            return type.GetTypeInfo().IsValueType ? Activator.CreateInstance(type) : null;
+            return type != typeof(void) && type.GetTypeInfo().IsValueType ? Activator.CreateInstance(type) : null;
         }
     }
 }

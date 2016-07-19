@@ -3,11 +3,12 @@
     using System;
     using System.Linq.Expressions;
     using Setup;
+    using StubBehaviors;
 
     /// <summary>
     ///     Set of extensions on the proxy for setting up method and property behaviours.
     /// </summary>
-    public static class MockExtensions
+    public static class SetupExtensions
     {
         /// <summary>
         ///     Setup of a method with no return.
@@ -31,11 +32,11 @@
         /// <param name="instance">Mocked instance</param>
         /// <param name="expression">Function expression</param>
         /// <returns>Function behaviours</returns>
-        public static ReturnBehaviour<TMock, TReturn> Setup<TMock, TReturn>(
+        public static ReturnBehaviour<TReturn> Setup<TMock, TReturn>(
             this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            return new ReturnBehaviour<TMock, TReturn>(instance.AddHandling(expression));
+            return new ReturnBehaviour<TReturn>(instance.AddHandling(expression));
         }
 
         /// <summary>
@@ -46,11 +47,11 @@
         /// <param name="instance">Mocked instance</param>
         /// <param name="expression">Read property expression</param>
         /// <returns>Read property behaviours</returns>
-        public static ReturnBehaviour<TMock, TReturn> SetupGet<TMock, TReturn>(
+        public static ReturnBehaviour<TReturn> SetupGet<TMock, TReturn>(
             this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            return new ReturnBehaviour<TMock, TReturn>(instance.AddHandlingForPropertyGet(expression));
+            return new ReturnBehaviour<TReturn>(instance.AddHandlingForPropertyGet(expression));
         }
 
         /// <summary>
