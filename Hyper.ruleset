@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Rules for Hyper Mocking Library" Description="Code analysis rules for HyperMock" ToolsVersion="14.0">
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
+    <Rule Id="CS0067" Action="None" />
+    <Rule Id="CS1591" Action="None" />
+    <Rule Id="CS8019" Action="None" />
+    <Rule Id="CS8020" Action="Warning" />
+    <Rule Id="CS8040" Action="Warning" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.EditorFeatures" RuleNamespace="Microsoft.CodeAnalysis.CSharp.EditorFeatures">
+    <Rule Id="UseAutoProperty" Action="Info" />
+    <Rule Id="UseAutoPropertyFadedToken" Action="Info" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
+    <Rule Id="IDE0001" Action="Warning" />
+    <Rule Id="IDE0002" Action="Warning" />
+    <Rule Id="IDE0003" Action="Warning" />
+    <Rule Id="IDE0004" Action="Warning" />
+    <Rule Id="IDE0005" Action="None" />
+    <Rule Id="IDE1005" Action="Warning" />
+  </Rules>
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1101" Action="None" />
+    <Rule Id="SA1305" Action="Warning" />
+    <Rule Id="SA1309" Action="None" />
+    <Rule Id="SA1412" Action="Warning" />
+    <Rule Id="SA1600" Action="None" />
+    <Rule Id="SA1609" Action="Warning" />
+    <Rule Id="SA1618" Action="None" />
+    <Rule Id="SA1619" Action="None" />
+    <Rule Id="SA1629" Action="Warning" />
+    <Rule Id="SA1633" Action="None" />
+    <Rule Id="SA1639" Action="Warning" />
+    <Rule Id="SA1644" Action="Warning" />
+    <Rule Id="SA1652" Action="None" />
+    <Rule Id="SX1101" Action="Warning" />
+    <Rule Id="SX1309" Action="Warning" />
+    <Rule Id="SX1309S" Action="Warning" />
+  </Rules>
+</RuleSet>

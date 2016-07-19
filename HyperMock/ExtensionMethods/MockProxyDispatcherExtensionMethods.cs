@@ -1,8 +1,8 @@
-﻿using System.Linq.Expressions;
-using System.Reflection;
-
-namespace HyperMock.Universal.ExtensionMethods
+﻿namespace HyperMock.Universal.ExtensionMethods
 {
+    using System.Linq.Expressions;
+    using System.Reflection;
+
     public static class MockProxyDispatcherExtensionMethods
     {
         public static bool TryGetDispatchParams(
@@ -10,7 +10,7 @@ namespace HyperMock.Universal.ExtensionMethods
             Expression expression,
             out DispatchParams dispatchParams)
         {
-            var lambda = (LambdaExpression) expression;
+            var lambda = (LambdaExpression)expression;
             var body = lambda.Body as MethodCallExpression;
 
             if (body != null)

@@ -1,8 +1,8 @@
-using System;
-using HyperMock.Universal.ParameterMatchers;
-
-namespace HyperMock.Universal
+﻿namespace HyperMock.Universal
 {
+    using System;
+    using ParameterMatchers;
+
     public static class Param
     {
         [ParameterMatcher(typeof(AnyMatcher))]

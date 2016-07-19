@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace HyperMock.Universal.Exceptions
+﻿namespace HyperMock.Universal.Exceptions
 {
+    using System;
+
     public class UnableToSetupException : Exception
     {
         public UnableToSetupException(string expression)

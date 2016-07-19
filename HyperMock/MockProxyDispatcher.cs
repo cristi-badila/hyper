@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using HyperMock.Universal.Exceptions;
-
-namespace HyperMock.Universal
+﻿namespace HyperMock.Universal
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+
     /// <summary>
     ///     Instance of the dispatcher proxy. This acts like an interceptor for the mocking framework.
     /// </summary>

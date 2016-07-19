@@ -1,7 +1,7 @@
-﻿using System.Linq;
-
-namespace HyperMock.Universal.ExtensionMethods
+﻿namespace HyperMock.Universal.ExtensionMethods
 {
+    using System.Linq;
+
     public static class ParameterCollectionExtensionMethods
     {
         public static bool Matches(this ParameterMatchersCollection expectedParams, object[] actualParams)

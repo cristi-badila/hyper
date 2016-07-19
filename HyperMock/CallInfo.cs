@@ -1,8 +1,8 @@
-using System;
-using HyperMock.Universal.ExtensionMethods;
-
-namespace HyperMock.Universal
+﻿namespace HyperMock.Universal
 {
+    using System;
+    using ExtensionMethods;
+
     public class CallInfo
     {
         public CallInfo()

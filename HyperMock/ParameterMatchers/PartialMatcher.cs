@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace HyperMock.Universal.ParameterMatchers
+﻿namespace HyperMock.Universal.ParameterMatchers
 {
+    using System;
+
     public class PartialMatcher<T> : Parameter
         where T : class
     {

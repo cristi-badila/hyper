@@ -1,31 +1,7 @@
-﻿using System;
-using System.Reflection;
-
-namespace HyperMock.Universal
+﻿namespace HyperMock.Universal
 {
-    /// <summary>
-    ///     Entry point for creating proxies of interfaces.
-    /// </summary>
-    public class Mock<T> : IMock
-        where T : class
-    {
-        public T Object { get; }
-
-        public MockProxyDispatcher Dispatcher { get; }
-
-        object IMock.Object => Object;
-
-        public Mock()
-            : this(DispatchProxy.Create<T, MockProxyDispatcher>() as MockProxyDispatcher)
-        {
-        }
-
-        public Mock(MockProxyDispatcher dispatcher)
-        {
-            Dispatcher = dispatcher;
-            Object = dispatcher as T;
-        }
-    }
+    using System;
+    using System.Reflection;
 
     public static class Mock
     {
@@ -45,9 +21,36 @@ namespace HyperMock.Universal
         /// </summary>
         /// <typeparam name="T">Interface type</typeparam>
         /// <returns>Proxy instance</returns>
-        public static Mock<T> Create<T>() where T : class
+        public static Mock<T> Create<T>()
+            where T : class
         {
             return new Mock<T>();
         }
+    }
+
+#pragma warning disable SA1402 // File may only contain a single class
+    /// <summary>
+    ///     Entry point for creating proxies of interfaces.
+    /// </summary>
+    public class Mock<T> : IMock
+#pragma warning restore SA1402 // File may only contain a single class
+        where T : class
+    {
+        public Mock()
+            : this(DispatchProxy.Create<T, MockProxyDispatcher>() as MockProxyDispatcher)
+        {
+        }
+
+        public Mock(MockProxyDispatcher dispatcher)
+        {
+            Dispatcher = dispatcher;
+            Object = dispatcher as T;
+        }
+
+        public T Object { get; }
+
+        public MockProxyDispatcher Dispatcher { get; }
+
+        object IMock.Object => Object;
     }
 }

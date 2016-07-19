@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-
-namespace HyperMock.Universal
+﻿namespace HyperMock.Universal
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+
     /// <summary>
     ///     Helper base class that provides automatic initialization of mock dependencies.
     /// </summary>
@@ -23,15 +23,18 @@ namespace HyperMock.Universal
                 _mocks.Add(ctorParam.ParameterType, mock);
             }
 
-            Subject = (TSubject) ctor.Invoke(_mocks.Values.Select(mock => mock.Object).ToArray());
+            Subject = (TSubject)ctor.Invoke(_mocks.Values.Select(mock => mock.Object).ToArray());
         }
 
         protected TSubject Subject { get; private set; }
 
-        protected Mock<TInterface> MockFor<TInterface>() where TInterface : class
+        protected Mock<TInterface> MockFor<TInterface>()
+            where TInterface : class
         {
             if (_mocks.ContainsKey(typeof(TInterface)))
-                return (Mock<TInterface>) _mocks[typeof(TInterface)];
+            {
+                return (Mock<TInterface>)_mocks[typeof(TInterface)];
+            }
 
             throw new InvalidOperationException("Cannot find mock for type: " + typeof(TInterface).FullName);
         }

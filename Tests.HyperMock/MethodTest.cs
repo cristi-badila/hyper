@@ -1,11 +1,10 @@
-using System.Threading.Tasks;
-using HyperMock.Universal;
-using HyperMock.Universal.Verification;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using Tests.HyperMock.Universal.Support;
-
-namespace Tests.HyperMock.Universal
+﻿namespace HyperMock.Universal.Tests
 {
+    using System.Threading.Tasks;
+    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+    using Support;
+    using Verification;
+
     [TestClass]
     public class MethodTest
     {

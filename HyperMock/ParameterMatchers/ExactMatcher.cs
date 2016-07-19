@@ -2,12 +2,12 @@
 {
     public class ExactMatcher : Parameter
     {
-        public object Value { get; }
-
         public ExactMatcher(object value)
         {
             Value = value;
         }
+
+        public object Value { get; }
 
         public override bool Matches(object argument)
         {

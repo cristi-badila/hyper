@@ -1,23 +1,19 @@
-﻿using System;
-using System.Diagnostics;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using Microsoft.VisualStudio.TestPlatform.TestExecutor;
-
-namespace Tests.HyperMock.Universal
+﻿namespace HyperMock.Universal.Tests
 {
+    using System;
+    using System.Diagnostics;
+    using Microsoft.VisualStudio.TestPlatform.TestExecutor;
+    using Windows.ApplicationModel;
+    using Windows.ApplicationModel.Activation;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Navigation;
+
     /// <summary>
     ///     Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     internal sealed partial class App
     {
-        /// <summary>
-        ///     Initializes the singleton application object.  This is the first line of authored code
-        ///     executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
         public App()
         {
             InitializeComponent();
@@ -51,7 +47,7 @@ namespace Tests.HyperMock.Universal
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    //TODO: Load state from previously suspended application
+                    // TODO: Load state from previously suspended application
                 }
 
                 // Place the frame in the current Window
@@ -86,7 +82,8 @@ namespace Tests.HyperMock.Universal
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
+
+            // TODO: Save application state and stop any background activity
             deferral.Complete();
         }
     }

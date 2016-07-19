@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using HyperMock.Universal.Exceptions;
-using HyperMock.Universal.ExtensionMethods;
-using HyperMock.Universal.ParameterMatchers;
-
-namespace HyperMock.Universal.Setup
+﻿namespace HyperMock.Universal.Setup
 {
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using Exceptions;
+    using ParameterMatchers;
+    using Universal.ExtensionMethods;
+
     public static class ExtensionMethods
     {
         public static CallInfo AddHandlingForPropertyGet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)

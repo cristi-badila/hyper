@@ -1,9 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
-using System.Linq.Expressions;
-
-namespace HyperMock.Universal
+﻿namespace HyperMock.Universal
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+
     public class DispatchParams
     {
         public DispatchParams()
@@ -11,7 +11,7 @@ namespace HyperMock.Universal
             Arguments = new Expression[0];
         }
 
-        public DispatchParams(string name, ReadOnlyCollection<Expression> arguments)
+        public DispatchParams(string name, IEnumerable<Expression> arguments)
         {
             Name = name;
             Arguments = arguments.ToArray();

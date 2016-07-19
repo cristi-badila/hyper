@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using HyperMock.Universal.ParameterMatchers;
-
-namespace HyperMock.Universal.ExtensionMethods
+﻿namespace HyperMock.Universal.ExtensionMethods
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Reflection;
+    using ParameterMatchers;
+
     public static class LambdaExtensionMethods
     {
         public static Parameter GetParameterMatcher(this LambdaExpression lambda)
@@ -57,7 +57,7 @@ namespace HyperMock.Universal.ExtensionMethods
             }
             else if (expression is LambdaExpression)
             {
-                result = ((LambdaExpression) expression).Compile();
+                result = ((LambdaExpression)expression).Compile();
             }
             else
             {

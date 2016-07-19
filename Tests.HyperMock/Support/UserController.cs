@@ -1,7 +1,7 @@
-using System.Threading.Tasks;
-
-namespace Tests.HyperMock.Universal.Support
+﻿namespace HyperMock.Universal.Tests.Support
 {
+    using System.Threading.Tasks;
+
     public class UserController
     {
         private readonly IUserService _userService;
