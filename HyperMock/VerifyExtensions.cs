@@ -1,11 +1,11 @@
 ﻿namespace HyperMock.Universal
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using Exceptions;
     using ExtensionMethods;
-    using Verification;
 
     /// <summary>
     ///     Set of extensions for verifying behaviours have occurred.
@@ -54,7 +54,7 @@
             where TMock : class
         {
             string name;
-            if (!mock.Dispatcher.TryGetReadPropertyName(expression, out name))
+            if (!expression.TryGetReadPropertyName(out name))
             {
                 throw new UnknownDispatchParamsException(expression);
             }
@@ -81,7 +81,7 @@
         {
             string name;
 
-            if (!mock.Dispatcher.TryGetWritePropertyName(expression, out name))
+            if (!expression.TryGetWritePropertyName(out name))
             {
                 throw new UnknownDispatchParamsException(expression);
             }
@@ -95,32 +95,16 @@
             }
         }
 
-        public static CallInfo FindByParameterMatch(this MockProxyDispatcher mockProxyDispatcher, string name, object[] args)
-        {
-            var callInfoListForName = mockProxyDispatcher.RegisteredCallInfoList.Where(ci => ci.Name == name).ToList();
-
-            return callInfoListForName.FirstOrDefault(ci => ci.IsMatchFor(args));
-        }
-
-        public static CallInfo FindByReturnMatch(this MockProxyDispatcher mockProxyDispatcher, string name, object returnValue)
-        {
-            return mockProxyDispatcher.RegisteredCallInfoList.FirstOrDefault(ci => ci.Name == name && ci.ReturnValue == returnValue);
-        }
-
         public static void Verify<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression, Occurred occurred)
             where TMock : class
         {
             DispatchParams dispatchParams;
-            if (!mock.Dispatcher.TryGetDispatchParams(expression, out dispatchParams))
+            if (!expression.TryGetDispatchParams(out dispatchParams))
             {
                 throw new UnknownDispatchParamsException(expression);
             }
 
-            var actualParams = dispatchParams.Arguments.Select(
-                argument => Expression.Lambda(argument, expression.Parameters))
-                .Select(lambda => lambda.Compile())
-                .Select(compiledDelegate => compiledDelegate.DynamicInvoke(new object[1]))
-                .ToArray();
+            var actualParams = GetActualParams(expression, dispatchParams.Arguments);
             var callInfo = mock.Dispatcher.FindByParameterMatch(dispatchParams.Name, actualParams);
 
             if (callInfo == null && occurred.Count > 0)
@@ -134,6 +118,26 @@
             {
                 occurred.Assert(callInfo.Visited);
             }
+        }
+
+        public static CallInfo FindByParameterMatch(this MockProxyDispatcher mockProxyDispatcher, string name, object[] args)
+        {
+            return mockProxyDispatcher.RegisteredCallInfoList.FirstOrDefault(ci => ci.Name == name && ci.IsMatchFor(args));
+        }
+
+        public static CallInfo FindByReturnMatch(this MockProxyDispatcher mockProxyDispatcher, string name, object returnValue)
+        {
+            return mockProxyDispatcher.RegisteredCallInfoList.FirstOrDefault(ci => ci.Name == name && ci.ReturnValue == returnValue);
+        }
+
+        private static object[] GetActualParams<TLambda>(Expression<TLambda> expression, IEnumerable<Expression> expressionArguments)
+        {
+            var actualParams = expressionArguments.Select(
+                argument => Expression.Lambda(argument, expression.Parameters))
+                .Select(lambda => lambda.Compile())
+                .Select(compiledDelegate => compiledDelegate.DynamicInvoke(new object[1]))
+                .ToArray();
+            return actualParams;
         }
     }
 }

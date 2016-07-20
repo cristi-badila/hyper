@@ -1,7 +1,6 @@
 ﻿namespace HyperMock.Universal.ExtensionMethods
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -92,6 +91,52 @@
             }
 
             return matcherType;
+        }
+
+        public static bool TryGetDispatchParams(
+            this LambdaExpression expression,
+            out DispatchParams dispatchParams)
+        {
+            var body = expression.Body as MethodCallExpression;
+
+            if (body == null)
+            {
+                dispatchParams = new DispatchParams();
+                return false;
+            }
+
+            dispatchParams = new DispatchParams(body.Method.Name, body.Arguments);
+            return true;
+        }
+
+        public static bool TryGetWritePropertyName(this LambdaExpression expression, out string name)
+        {
+            name = null;
+            var body = expression.Body as MemberExpression;
+
+            if (body == null)
+            {
+                return false;
+            }
+
+            var propInfo = (PropertyInfo)body.Member;
+            name = propInfo.SetMethod.Name;
+            return true;
+        }
+
+        public static bool TryGetReadPropertyName(this LambdaExpression expression, out string name)
+        {
+            var body = expression.Body as MemberExpression;
+
+            if (body == null)
+            {
+                name = null;
+                return false;
+            }
+
+            var propInfo = (PropertyInfo)body.Member;
+            name = propInfo.GetMethod.Name;
+            return true;
         }
     }
 }
