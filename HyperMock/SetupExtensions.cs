@@ -68,21 +68,5 @@
         {
             return new VoidBehaviour(instance.AddHandlingForPropertySet(expression));
         }
-
-        /// <summary>
-        ///     Setup of a property write.
-        /// </summary>
-        /// <typeparam name="TMock">Mocked type</typeparam>
-        /// <typeparam name="TReturn">Return type</typeparam>
-        /// <param name="instance">Mocked instance</param>
-        /// <param name="expression">Write property expression</param>
-        /// <param name="value">The expected value to be set</param>
-        /// <returns>Write property behaviours</returns>
-        public static VoidBehaviour SetupSet<TMock, TReturn>(
-            this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression, TReturn value)
-            where TMock : class
-        {
-            return new VoidBehaviour(instance.AddHandlingForPropertySet(expression, value));
-        }
     }
 }

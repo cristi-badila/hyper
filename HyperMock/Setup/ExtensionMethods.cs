@@ -12,13 +12,13 @@
         public static CallInfo AddHandlingForPropertyGet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            string name;
-            if (!mockProxyDispatcher.Dispatcher.TryGetReadPropertyName(expression, out name))
+            var dispatchParams = expression.GetDispatchParamsForGet();
+            if (dispatchParams == null)
             {
                 throw new UnableToSetupException(Convert.ToString(expression));
             }
 
-            var callInfo = new CallInfo { Name = name };
+            var callInfo = new CallInfo { Name = dispatchParams.Name };
             mockProxyDispatcher.Dispatcher.RegisteredCallInfoList.Add(callInfo);
             return callInfo;
         }
@@ -38,15 +38,15 @@
         public static CallInfo AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, ParameterMatcher parameterMatcher)
             where TMock : class
         {
-            string name;
-            if (!mockProxyDispatcher.Dispatcher.TryGetWritePropertyName(expression, out name))
+            var dispatchParams = expression.GetDispatchParamsForSet();
+            if (dispatchParams == null)
             {
                 throw new UnableToSetupException(Convert.ToString(expression));
             }
 
             var callInfo = new CallInfo
             {
-                Name = name,
+                Name = dispatchParams.Name,
                 Parameters = new ParameterMatchersCollection { parameterMatcher }
             };
 
@@ -57,8 +57,8 @@
         public static CallInfo AddHandling<TMock, TLambda>(this Mock<TMock> mockProxyDispatcher, Expression<TLambda> expression)
             where TMock : class
         {
-            DispatchParams dispatchParams;
-            if (!mockProxyDispatcher.Dispatcher.TryGetDispatchParams(expression, out dispatchParams))
+            var dispatchParams = expression.GetDispatchParamsForMethod();
+            if (dispatchParams == null)
             {
                 throw new UnableToSetupException(Convert.ToString(expression));
             }

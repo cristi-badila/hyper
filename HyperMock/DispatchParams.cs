@@ -12,9 +12,10 @@
         }
 
         public DispatchParams(string name, IEnumerable<Expression> arguments)
+            : this()
         {
             Name = name;
-            Arguments = arguments.ToArray();
+            Arguments = arguments == null ? Arguments : arguments.ToArray();
         }
 
         public string Name { get; set; }

@@ -13,7 +13,7 @@
         {
             if (Count != actualCount)
             {
-                throw new VerificationException($"Verification mismatch: Expected {Count}; Actual {actualCount}");
+                throw new VerificationException($"Verification mismatch: Expected {Count} call(s); Actual {actualCount}");
             }
         }
     }

@@ -1,6 +1,5 @@
 ﻿namespace HyperMock.Universal.Tests
 {
-    using Exceptions;
     using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
     using Support;
 
@@ -20,22 +19,12 @@
         [TestMethod]
         public void VerifyReadProperty()
         {
-            MockFor<IUserService>().SetupGet(p => p.Help).Returns("Some help");
+            var proxy = MockFor<IUserService>();
+            proxy.SetupGet(p => p.Help).Returns("Some help");
 
             Subject.GetHelp();
 
-            MockFor<IUserService>().VerifyGet(p => p.Help, "Some help");
-        }
-
-        [TestMethod]
-        public void VerifyThrowsExceptionInvalidReadPropertyValue()
-        {
-            MockFor<IUserService>().SetupGet(p => p.Help).Returns("Some help");
-
-            Subject.GetHelp();
-
-            Assert.ThrowsException<VerificationException>(
-                () => MockFor<IUserService>().VerifyGet(p => p.CurrentRole, "No help"));
+            proxy.VerifyGet(p => p.Help, Occurred.Once());
         }
 
         [TestMethod]
@@ -50,14 +39,14 @@
         }
 
         [TestMethod]
-        public void VerifyThrowsExceptionInvalidWritePropertyValue()
+        public void VerifyWritePropertyWithNotUsedValueWorks()
         {
             var proxy = MockFor<IUserService>();
-            proxy.SetupSet(p => p.CurrentRole, "Manager");
+            proxy.SetupSet(p => p.CurrentRole);
 
             Subject.SetCurrentRole("Manager");
 
-            Assert.ThrowsException<VerificationException>(() => proxy.VerifySet(p => p.CurrentRole, "Supervisor"));
+            proxy.VerifySet(p => p.CurrentRole, "Supervisor", Occurred.Never());
         }
     }
 }

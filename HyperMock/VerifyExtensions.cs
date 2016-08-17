@@ -48,23 +48,18 @@
         /// <typeparam name="TReturn">Mocked expression return type</typeparam>
         /// <param name="mock">Mocked instance</param>
         /// <param name="expression">Expression</param>
-        /// <param name="expectedValue">Expected return value</param>
+        /// <param name="occurred">Occurrence matcher</param>
         public static void VerifyGet<TMock, TReturn>(
-            this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, TReturn expectedValue)
+            this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, Occurred occurred)
             where TMock : class
         {
-            string name;
-            if (!expression.TryGetReadPropertyName(out name))
+            var dispatchParams = expression.GetDispatchParamsForGet();
+            if (dispatchParams == null)
             {
                 throw new UnknownDispatchParamsException(expression);
             }
 
-            var callInfo = mock.Dispatcher.FindByReturnMatch(name, expectedValue);
-            if (callInfo == null || callInfo.Visited == 0)
-            {
-                throw new VerificationException(
-                    $"Unable to verify that the value '{expectedValue}' was returned on the property.");
-            }
+            mock.AssertCallOccurance(occurred, dispatchParams);
         }
 
         /// <summary>
@@ -75,59 +70,54 @@
         /// <param name="mock">Mocked instance</param>
         /// <param name="expression">Expression</param>
         /// <param name="expectedValue">Expected set value</param>
+        /// <param name="occurred">Expected occurrence count</param>
         public static void VerifySet<TMock, TReturn>(
-            this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, TReturn expectedValue)
+            this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, TReturn expectedValue, Occurred occurred = null)
             where TMock : class
         {
-            string name;
-
-            if (!expression.TryGetWritePropertyName(out name))
+            occurred = occurred ?? Occurred.AtLeast(1);
+            var dispatchParams = expression.GetDispatchParamsForSet();
+            if (dispatchParams == null)
             {
                 throw new UnknownDispatchParamsException(expression);
             }
 
-            var callInfo = mock.Dispatcher.FindByParameterMatch(name, new object[] { expectedValue });
-
-            if (callInfo == null || callInfo.Visited == 0)
-            {
-                throw new VerificationException(
-                    $"Unable to verify that the value '{expectedValue}' was set on the property.");
-            }
+            mock.AssertCallOccurance(occurred, dispatchParams, new object[] { expectedValue });
         }
 
         public static void Verify<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression, Occurred occurred)
             where TMock : class
         {
-            DispatchParams dispatchParams;
-            if (!expression.TryGetDispatchParams(out dispatchParams))
+            var dispatchParams = expression.GetDispatchParamsForMethod();
+            if (dispatchParams == null)
             {
                 throw new UnknownDispatchParamsException(expression);
             }
 
             var actualParams = GetActualParams(expression, dispatchParams.Arguments);
-            var callInfo = mock.Dispatcher.FindByParameterMatch(dispatchParams.Name, actualParams);
-
-            if (callInfo == null && occurred.Count > 0)
-            {
-                throw new VerificationException(
-                    $"Unable to verify that the action occurred '{occurred.Count} " +
-                    $"time{(occurred.Count == 1 ? "s" : string.Empty)}.");
-            }
-
-            if (callInfo != null)
-            {
-                occurred.Assert(callInfo.Visited);
-            }
+            mock.AssertCallOccurance(occurred, dispatchParams, actualParams);
         }
 
-        public static CallInfo FindByParameterMatch(this MockProxyDispatcher mockProxyDispatcher, string name, object[] args)
+        public static CallInfo FindCall(this MockProxyDispatcher mockProxyDispatcher, string name, object[] args = null)
         {
-            return mockProxyDispatcher.RegisteredCallInfoList.FirstOrDefault(ci => ci.Name == name && ci.IsMatchFor(args));
+            var filteredCalls = mockProxyDispatcher.RegisteredCallInfoList.Where(ci => ci.Name == name);
+            if (args != null)
+            {
+                filteredCalls = filteredCalls.Where(ci => ci.IsMatchFor(args));
+            }
+
+            return filteredCalls.FirstOrDefault();
         }
 
-        public static CallInfo FindByReturnMatch(this MockProxyDispatcher mockProxyDispatcher, string name, object returnValue)
+        private static void AssertCallOccurance(this IMock mock, Occurred occurred, DispatchParams dispatchParams, object[] actualParams = null)
         {
-            return mockProxyDispatcher.RegisteredCallInfoList.FirstOrDefault(ci => ci.Name == name && ci.ReturnValue == returnValue);
+            var callInfo = mock.Dispatcher.FindCall(dispatchParams.Name, actualParams);
+            if (callInfo == null)
+            {
+                throw new NoMatchingCallFoundException(dispatchParams.Name);
+            }
+
+            occurred.Assert(callInfo.Visited);
         }
 
         private static object[] GetActualParams<TLambda>(Expression<TLambda> expression, IEnumerable<Expression> expressionArguments)

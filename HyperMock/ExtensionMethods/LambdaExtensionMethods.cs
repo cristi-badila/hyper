@@ -93,50 +93,34 @@
             return matcherType;
         }
 
-        public static bool TryGetDispatchParams(
-            this LambdaExpression expression,
-            out DispatchParams dispatchParams)
+        public static DispatchParams GetDispatchParamsForMethod(this LambdaExpression expression)
         {
             var body = expression.Body as MethodCallExpression;
-
-            if (body == null)
-            {
-                dispatchParams = new DispatchParams();
-                return false;
-            }
-
-            dispatchParams = new DispatchParams(body.Method.Name, body.Arguments);
-            return true;
+            return body == null ? null : new DispatchParams(body.Method.Name, body.Arguments);
         }
 
-        public static bool TryGetWritePropertyName(this LambdaExpression expression, out string name)
+        public static DispatchParams GetDispatchParamsForGet(this LambdaExpression expression)
         {
-            name = null;
             var body = expression.Body as MemberExpression;
-
             if (body == null)
             {
-                return false;
+                return null;
             }
 
             var propInfo = (PropertyInfo)body.Member;
-            name = propInfo.SetMethod.Name;
-            return true;
+            return new DispatchParams(propInfo.GetMethod.Name, null);
         }
 
-        public static bool TryGetReadPropertyName(this LambdaExpression expression, out string name)
+        public static DispatchParams GetDispatchParamsForSet(this LambdaExpression expression)
         {
             var body = expression.Body as MemberExpression;
-
             if (body == null)
             {
-                name = null;
-                return false;
+                return null;
             }
 
             var propInfo = (PropertyInfo)body.Member;
-            name = propInfo.GetMethod.Name;
-            return true;
+            return new DispatchParams(propInfo.SetMethod.Name, null);
         }
     }
 }

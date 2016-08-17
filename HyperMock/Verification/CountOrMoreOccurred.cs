@@ -14,7 +14,7 @@
             if (actualCount < Count)
             {
                 throw new VerificationException(
-                    $"Verification mismatch: Expected at least {Count}; Actual {actualCount}");
+                    $"Verification mismatch: Expected at least {Count} call(s); Actual {actualCount}");
             }
         }
     }
