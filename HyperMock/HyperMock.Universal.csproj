@@ -109,7 +109,10 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CallInfo.cs" />
+    <Compile Include="CallDescriptor.cs" />
+    <Compile Include="CallRecordings.cs" />
+    <Compile Include="CallRecording.cs" />
+    <Compile Include="CallDescriptors.cs" />
     <Compile Include="Collection.cs" />
     <Compile Include="DispatchParams.cs" />
     <Compile Include="Exceptions\MockException.cs" />

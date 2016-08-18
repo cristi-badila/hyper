@@ -6,11 +6,11 @@
     /// <typeparam name="TReturn">Return type</typeparam>
     public class ReturnBehaviour<TReturn>
     {
-        private readonly CallInfo _callInfo;
+        private readonly CallDescriptor _callDescriptor;
 
-        public ReturnBehaviour(CallInfo callInfo)
+        public ReturnBehaviour(CallDescriptor callDescriptor)
         {
-            _callInfo = callInfo;
+            _callDescriptor = callDescriptor;
         }
 
         /// <summary>
@@ -19,7 +19,7 @@
         /// <param name="returnValue">Value to return</param>
         public void Returns(TReturn returnValue)
         {
-            _callInfo.ReturnValue = returnValue;
+            _callDescriptor.ReturnValue = returnValue;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@
         /// <typeparam name="TException">Exception type</typeparam>
         public void Throws<TException>()
         {
-            _callInfo.ExceptionType = typeof(TException);
+            _callDescriptor.ExceptionType = typeof(TException);
         }
     }
 }

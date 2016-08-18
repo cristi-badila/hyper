@@ -9,7 +9,7 @@
 
     public static class ExtensionMethods
     {
-        public static CallInfo AddHandlingForPropertyGet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
+        public static CallDescriptor AddHandlingForPropertyGet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
             var dispatchParams = expression.GetDispatchParamsForGet();
@@ -18,24 +18,24 @@
                 throw new UnableToSetupException(Convert.ToString(expression));
             }
 
-            var callInfo = new CallInfo { Name = dispatchParams.Name };
-            mockProxyDispatcher.Dispatcher.RegisteredCallInfoList.Add(callInfo);
+            var callInfo = new CallDescriptor { MemberName = dispatchParams.Name };
+            mockProxyDispatcher.Dispatcher.RegisteredCalls.Add(callInfo);
             return callInfo;
         }
 
-        public static CallInfo AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
+        public static CallDescriptor AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
             return mockProxyDispatcher.AddHandlingForPropertySet(expression, new AnyMatcher());
         }
 
-        public static CallInfo AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, object value)
+        public static CallDescriptor AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, object value)
             where TMock : class
         {
             return mockProxyDispatcher.AddHandlingForPropertySet(expression, new ExactMatcher(value));
         }
 
-        public static CallInfo AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, ParameterMatcher parameterMatcher)
+        public static CallDescriptor AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, ParameterMatcher parameterMatcher)
             where TMock : class
         {
             var dispatchParams = expression.GetDispatchParamsForSet();
@@ -44,17 +44,17 @@
                 throw new UnableToSetupException(Convert.ToString(expression));
             }
 
-            var callInfo = new CallInfo
+            var callInfo = new CallDescriptor
             {
-                Name = dispatchParams.Name,
+                MemberName = dispatchParams.Name,
                 Parameters = new ParameterMatchersCollection { parameterMatcher }
             };
 
-            mockProxyDispatcher.Dispatcher.RegisteredCallInfoList.Add(callInfo);
+            mockProxyDispatcher.Dispatcher.RegisteredCalls.Add(callInfo);
             return callInfo;
         }
 
-        public static CallInfo AddHandling<TMock, TLambda>(this Mock<TMock> mockProxyDispatcher, Expression<TLambda> expression)
+        public static CallDescriptor AddHandling<TMock, TLambda>(this Mock<TMock> mockProxyDispatcher, Expression<TLambda> expression)
             where TMock : class
         {
             var dispatchParams = expression.GetDispatchParamsForMethod();
@@ -63,15 +63,15 @@
                 throw new UnableToSetupException(Convert.ToString(expression));
             }
 
-            var callInfo = new CallInfo
+            var callInfo = new CallDescriptor
             {
-                Name = dispatchParams.Name,
+                MemberName = dispatchParams.Name,
                 Parameters = new ParameterMatchersCollection(dispatchParams.Arguments
                     .Select(argument => Expression.Lambda(argument, expression.Parameters))
                     .Select(LambdaExtensionMethods.GetParameterMatcher))
             };
 
-            mockProxyDispatcher.Dispatcher.RegisteredCallInfoList.Add(callInfo);
+            mockProxyDispatcher.Dispatcher.RegisteredCalls.Add(callInfo);
             return callInfo;
         }
     }

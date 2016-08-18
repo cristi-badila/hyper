@@ -5,11 +5,11 @@
     /// </summary>
     public class VoidBehaviour
     {
-        private readonly CallInfo _callInfo;
+        private readonly CallDescriptor _callDescriptor;
 
-        public VoidBehaviour(CallInfo callInfo)
+        public VoidBehaviour(CallDescriptor callDescriptor)
         {
-            _callInfo = callInfo;
+            _callDescriptor = callDescriptor;
         }
 
         /// <summary>
@@ -18,7 +18,7 @@
         /// <typeparam name="TException">Exception type</typeparam>
         public void Throws<TException>()
         {
-            _callInfo.ExceptionType = typeof(TException);
+            _callDescriptor.ExceptionType = typeof(TException);
         }
     }
 }

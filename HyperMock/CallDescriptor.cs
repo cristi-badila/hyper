@@ -3,26 +3,19 @@
     using System;
     using ExtensionMethods;
 
-    public class CallInfo
+    public class CallDescriptor
     {
-        public CallInfo()
+        public CallDescriptor()
         {
             Parameters = new ParameterMatchersCollection();
         }
 
-        public string Name { get; set; }
+        public string MemberName { get; set; }
 
         public ParameterMatchersCollection Parameters { get; set; }
 
         public object ReturnValue { get; set; }
 
         public Type ExceptionType { get; set; }
-
-        public int Visited { get; set; }
-
-        public bool IsMatchFor(params object[] args)
-        {
-            return Parameters.Matches(args);
-        }
     }
 }

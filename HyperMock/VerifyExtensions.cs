@@ -1,4 +1,6 @@
-﻿namespace HyperMock.Universal
+﻿using HyperMock.Universal.ParameterMatchers;
+
+namespace HyperMock.Universal
 {
     using System;
     using System.Collections.Generic;
@@ -59,7 +61,7 @@
                 throw new UnknownDispatchParamsException(expression);
             }
 
-            mock.AssertCallOccurance(occurred, dispatchParams);
+            mock.AssertCallOccurance(occurred, dispatchParams.Name, new ParameterMatchersCollection());
         }
 
         /// <summary>
@@ -82,7 +84,11 @@
                 throw new UnknownDispatchParamsException(expression);
             }
 
-            mock.AssertCallOccurance(occurred, dispatchParams, new object[] { expectedValue });
+            var parameterMatchers = new ParameterMatchersCollection
+            {
+                new ExactMatcher(expectedValue)
+            };
+            mock.AssertCallOccurance(occurred, dispatchParams.Name, parameterMatchers);
         }
 
         public static void Verify<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression, Occurred occurred)
@@ -94,40 +100,29 @@
                 throw new UnknownDispatchParamsException(expression);
             }
 
-            var actualParams = GetActualParams(expression, dispatchParams.Arguments);
-            mock.AssertCallOccurance(occurred, dispatchParams, actualParams);
+            var parameters = new ParameterMatchersCollection(dispatchParams.Arguments
+                    .Select(argument => Expression.Lambda(argument, expression.Parameters))
+                    .Select(LambdaExtensionMethods.GetParameterMatcher));
+            mock.AssertCallOccurance(occurred, dispatchParams.Name, parameters);
         }
 
-        public static CallInfo FindCall(this MockProxyDispatcher mockProxyDispatcher, string name, object[] args = null)
+        public static IEnumerable<CallRecording> FindCalls(
+            this MockProxyDispatcher mockProxyDispatcher,
+            string memberName,
+            ParameterMatchersCollection parameterMatchers)
         {
-            var filteredCalls = mockProxyDispatcher.RegisteredCallInfoList.Where(ci => ci.Name == name);
-            if (args != null)
+            var filteredCalls = mockProxyDispatcher.RecordedCalls.Where(ci => ci.MemberName == memberName);
+            if (parameterMatchers.Any())
             {
-                filteredCalls = filteredCalls.Where(ci => ci.IsMatchFor(args));
+                filteredCalls = filteredCalls.Where(callRecording => parameterMatchers.Match(callRecording.Arguments));
             }
 
-            return filteredCalls.FirstOrDefault();
+            return filteredCalls;
         }
 
-        private static void AssertCallOccurance(this IMock mock, Occurred occurred, DispatchParams dispatchParams, object[] actualParams = null)
+        private static void AssertCallOccurance(this IMock mock, Occurred occurred, string memberName, ParameterMatchersCollection parameterMatchers)
         {
-            var callInfo = mock.Dispatcher.FindCall(dispatchParams.Name, actualParams);
-            if (callInfo == null)
-            {
-                throw new NoMatchingCallFoundException(dispatchParams.Name);
-            }
-
-            occurred.Assert(callInfo.Visited);
-        }
-
-        private static object[] GetActualParams<TLambda>(Expression<TLambda> expression, IEnumerable<Expression> expressionArguments)
-        {
-            var actualParams = expressionArguments.Select(
-                argument => Expression.Lambda(argument, expression.Parameters))
-                .Select(lambda => lambda.Compile())
-                .Select(compiledDelegate => compiledDelegate.DynamicInvoke(new object[1]))
-                .ToArray();
-            return actualParams;
+            occurred.Assert(mock.Dispatcher.FindCalls(memberName, parameterMatchers).Count());
         }
     }
 }

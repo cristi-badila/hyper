@@ -8,18 +8,18 @@
     {
         public DispatchParams()
         {
-            Arguments = new Expression[0];
+            Arguments = new List<Expression>();
         }
 
         public DispatchParams(string name, IEnumerable<Expression> arguments)
             : this()
         {
             Name = name;
-            Arguments = arguments == null ? Arguments : arguments.ToArray();
+            Arguments = arguments == null ? Arguments : arguments.ToList();
         }
 
         public string Name { get; set; }
 
-        public Expression[] Arguments { get; set; }
+        public List<Expression> Arguments { get; set; }
     }
 }
