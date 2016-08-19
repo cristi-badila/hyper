@@ -17,7 +17,7 @@
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
             var name = targetMethod.Name;
-            var matchedCallInfo = KnownCallDescriptors.Where(ci => ci.MemberName == name).FirstOrDefault(ci => ci.ParameterMatchers.Match(args));
+            var matchedCallInfo = KnownCallDescriptors.LastOrDefault(ci => ci.MemberName == name && ci.ParameterMatchers.Match(args));
             RecordCall(targetMethod, args);
             return matchedCallInfo == null
                 ? HandleUnmatchedCall(targetMethod)
