@@ -1,4 +1,4 @@
-﻿namespace HyperMock.Universal.Tests
+﻿namespace HyperMock.Universal.Tests.IntegrationTests
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -7,7 +7,7 @@
     using Syntax;
 
     [TestClass]
-    public class MethodTest : TestBase<UserController>
+    public class MethodTests : TestBase<UserController>
     {
         [TestMethod]
         public void VerifyMatchesExpectedSingleVisit()

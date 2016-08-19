@@ -1,12 +1,12 @@
-﻿namespace HyperMock.Universal.Tests
+﻿namespace HyperMock.Universal.Tests.Core
 {
     using System;
     using System.Linq.Expressions;
-    using Core;
     using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+    using Universal.Core;
 
     [TestClass]
-    public class ExpressionInfoTest
+    public class ExpressionInfoTests
     {
         [TestMethod]
         public void Constructor_WithoutParams_HasNonEmptyArguments()

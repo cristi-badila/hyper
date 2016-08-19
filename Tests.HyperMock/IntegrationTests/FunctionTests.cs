@@ -1,4 +1,4 @@
-﻿namespace HyperMock.Universal.Tests
+﻿namespace HyperMock.Universal.Tests.IntegrationTests
 {
     using System;
     using System.Threading.Tasks;
@@ -7,7 +7,7 @@
     using Syntax;
 
     [TestClass]
-    public class FunctionTest : TestBase<UserController>
+    public class FunctionTests : TestBase<UserController>
     {
         [TestMethod]
         public void ReturnsTrueForMatchingParameter()

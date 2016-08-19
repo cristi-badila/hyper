@@ -1,11 +1,11 @@
-﻿namespace HyperMock.Universal.Tests
+﻿namespace HyperMock.Universal.Tests.IntegrationTests
 {
     using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
     using Support;
     using Syntax;
 
     [TestClass]
-    public class PropertyTest : TestBase<UserController>
+    public class PropertyTests : TestBase<UserController>
     {
         [TestMethod]
         public void CanReadMockProperty()

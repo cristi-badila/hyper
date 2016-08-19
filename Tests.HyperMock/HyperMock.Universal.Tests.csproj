@@ -97,7 +97,7 @@
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExpressionInfoTest.cs" />
+    <Compile Include="Core\ExpressionInfoTests.cs" />
     <Compile Include="FunctionTest.cs" />
     <Compile Include="MethodTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -138,6 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IntegrationTests\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
