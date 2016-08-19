@@ -1,7 +1,6 @@
 ﻿namespace HyperMock.Universal
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using Exceptions;
@@ -9,12 +8,12 @@
     using ParameterMatchers;
 
     /// <summary>
-    ///     Set of extensions for verifying behaviours have occurred.
+    ///     Set of extensions for verifying that calls have occurred.
     /// </summary>
     public static class VerifyExtensions
     {
         /// <summary>
-        ///     Verifies a method matching the expression occurred the correct number of times.
+        ///     Verifies a method matching the expression was called the given number of times.
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <param name="mock">Mocked instance</param>
@@ -28,7 +27,7 @@
         }
 
         /// <summary>
-        ///     Verifies a function matching the expression occurred the correct number of times.
+        ///     Verifies a method matching the expression was called the given number of times.
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <typeparam name="TReturn">Mocked expression return type</typeparam>
@@ -43,7 +42,28 @@
         }
 
         /// <summary>
-        ///     Verifies a read property matching the expression returns the expected value.
+        ///     Verifies a method matching the expression was called the given number of times.
+        /// </summary>
+        /// <typeparam name="TMock">Mocked type</typeparam>
+        /// <typeparam name="TLambda">The type of the expression to analyze</typeparam>
+        /// <param name="mock">Mocked instance</param>
+        /// <param name="expression">Expression containing the method call</param>
+        /// <param name="occurred">Expected occurrence</param>
+        public static void Verify<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression, Occurred occurred)
+            where TMock : class
+        {
+            var expressionInfo = expression.GetExpressionInfoForMethod();
+            if (expressionInfo == null)
+            {
+                throw new UnknownExpressionException(expression);
+            }
+
+            var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters);
+            occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(expressionInfo.Name, parameterMatchers).Count());
+        }
+
+        /// <summary>
+        ///     Verifies a read property matching the expression was called a given number of times.
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <typeparam name="TReturn">Mocked expression return type</typeparam>
@@ -60,11 +80,11 @@
                 throw new UnknownExpressionException(expression);
             }
 
-            mock.AssertCallOccurance(occurred, expressionInfo.Name, new ParameterMatchersCollection());
+            occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(expressionInfo.Name).Count());
         }
 
         /// <summary>
-        ///     Verifies a write property matching the expression sets the expected value.
+        ///     Verifies a write property matching the expression was called a given number of times
         /// </summary>
         /// <typeparam name="TMock">Mocked type</typeparam>
         /// <typeparam name="TReturn">Mocked expression return type</typeparam>
@@ -83,43 +103,8 @@
                 throw new UnknownExpressionException(expression);
             }
 
-            var parameterMatchers = new ParameterMatchersCollection
-            {
-                new ExactMatcher(expectedValue)
-            };
-            mock.AssertCallOccurance(occurred, expressionInfo.Name, parameterMatchers);
-        }
-
-        public static void Verify<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression, Occurred occurred)
-            where TMock : class
-        {
-            var expressionInfo = expression.GetExpressionInfoForMethod();
-            if (expressionInfo == null)
-            {
-                throw new UnknownExpressionException(expression);
-            }
-
-            var parameters = expressionInfo.GetParameterMatchers(expression.Parameters);
-            mock.AssertCallOccurance(occurred, expressionInfo.Name, parameters);
-        }
-
-        public static IEnumerable<CallRecording> FindCalls(
-            this MockProxyDispatcher mockProxyDispatcher,
-            string memberName,
-            ParameterMatchersCollection parameterMatchers)
-        {
-            var filteredCalls = mockProxyDispatcher.RecordedCalls.Where(ci => ci.MemberName == memberName);
-            if (parameterMatchers.Any())
-            {
-                filteredCalls = filteredCalls.Where(callRecording => parameterMatchers.Match(callRecording.Arguments));
-            }
-
-            return filteredCalls;
-        }
-
-        private static void AssertCallOccurance(this IMock mock, Occurred occurred, string memberName, ParameterMatchersCollection parameterMatchers)
-        {
-            occurred.Assert(mock.Dispatcher.FindCalls(memberName, parameterMatchers).Count());
+            var parameterMatcher = new ExactMatcher(expectedValue);
+            occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(expressionInfo.Name, parameterMatcher).Count());
         }
     }
 }

@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Linq.Expressions;
 
-    public static class ExpressionExtensionMethods
+    public static class ExpressionInfoExtensionMethods
     {
         public static ParameterMatchersCollection GetParameterMatchers(
             this ExpressionInfo expressionInfo,

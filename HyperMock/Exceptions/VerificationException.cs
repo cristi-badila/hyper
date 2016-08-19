@@ -1,8 +1,6 @@
 ﻿namespace HyperMock.Universal.Exceptions
 {
-    using System;
-
-    public class VerificationException : Exception
+    public class VerificationException : HyperMockException
     {
         public VerificationException(string message)
             : base(message)

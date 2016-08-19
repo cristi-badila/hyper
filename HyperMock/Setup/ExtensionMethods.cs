@@ -8,39 +8,39 @@
 
     public static class ExtensionMethods
     {
-        public static CallDescriptor AddHandlingForPropertyGet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
+        public static CallDescriptor AddHandlingForPropertyGet<TMock, TReturn>(this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
             var expressionInfo = expression.GetExpressionInfoForGet();
             if (expressionInfo == null)
             {
-                throw new UnableToSetupException(Convert.ToString(expression));
+                throw new UnknownExpressionException(expression);
             }
 
             var callDescriptor = new CallDescriptor { MemberName = expressionInfo.Name };
-            mockProxyDispatcher.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
+            mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
             return callDescriptor;
         }
 
-        public static CallDescriptor AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
+        public static CallDescriptor AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            return mockProxyDispatcher.AddHandlingForPropertySet(expression, new AnyMatcher());
+            return mock.AddHandlingForPropertySet(expression, new AnyMatcher());
         }
 
-        public static CallDescriptor AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, object value)
+        public static CallDescriptor AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, object value)
             where TMock : class
         {
-            return mockProxyDispatcher.AddHandlingForPropertySet(expression, new ExactMatcher(value));
+            return mock.AddHandlingForPropertySet(expression, new ExactMatcher(value));
         }
 
-        public static CallDescriptor AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, ParameterMatcher parameterMatcher)
+        public static CallDescriptor AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, ParameterMatcher parameterMatcher)
             where TMock : class
         {
             var expressionInfo = expression.GetExpressionInfoForSet();
             if (expressionInfo == null)
             {
-                throw new UnableToSetupException(Convert.ToString(expression));
+                throw new UnknownExpressionException(expression);
             }
 
             var callDescriptor = new CallDescriptor
@@ -49,17 +49,17 @@
                 ParameterMatchers = new ParameterMatchersCollection { parameterMatcher }
             };
 
-            mockProxyDispatcher.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
+            mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
             return callDescriptor;
         }
 
-        public static CallDescriptor AddHandling<TMock, TLambda>(this Mock<TMock> mockProxyDispatcher, Expression<TLambda> expression)
+        public static CallDescriptor AddHandling<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression)
             where TMock : class
         {
             var expressionInfo = expression.GetExpressionInfoForMethod();
             if (expressionInfo == null)
             {
-                throw new UnableToSetupException(Convert.ToString(expression));
+                throw new UnknownExpressionException(expression);
             }
 
             var callDescriptor = new CallDescriptor
@@ -68,7 +68,7 @@
                 ParameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters)
             };
 
-            mockProxyDispatcher.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
+            mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
             return callDescriptor;
         }
     }
