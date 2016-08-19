@@ -1,7 +1,6 @@
 ﻿namespace HyperMock.Universal.Setup
 {
     using System;
-    using System.Linq;
     using System.Linq.Expressions;
     using Exceptions;
     using ParameterMatchers;
@@ -18,9 +17,9 @@
                 throw new UnableToSetupException(Convert.ToString(expression));
             }
 
-            var callInfo = new CallDescriptor { MemberName = expressionInfo.Name };
-            mockProxyDispatcher.Dispatcher.RegisteredCalls.Add(callInfo);
-            return callInfo;
+            var callDescriptor = new CallDescriptor { MemberName = expressionInfo.Name };
+            mockProxyDispatcher.Dispatcher.RegisteredCalls.Add(callDescriptor);
+            return callDescriptor;
         }
 
         public static CallDescriptor AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
@@ -44,14 +43,14 @@
                 throw new UnableToSetupException(Convert.ToString(expression));
             }
 
-            var callInfo = new CallDescriptor
+            var callDescriptor = new CallDescriptor
             {
                 MemberName = expressionInfo.Name,
                 Parameters = new ParameterMatchersCollection { parameterMatcher }
             };
 
-            mockProxyDispatcher.Dispatcher.RegisteredCalls.Add(callInfo);
-            return callInfo;
+            mockProxyDispatcher.Dispatcher.RegisteredCalls.Add(callDescriptor);
+            return callDescriptor;
         }
 
         public static CallDescriptor AddHandling<TMock, TLambda>(this Mock<TMock> mockProxyDispatcher, Expression<TLambda> expression)
@@ -63,16 +62,14 @@
                 throw new UnableToSetupException(Convert.ToString(expression));
             }
 
-            var callInfo = new CallDescriptor
+            var callDescriptor = new CallDescriptor
             {
                 MemberName = expressionInfo.Name,
-                Parameters = new ParameterMatchersCollection(expressionInfo.Arguments
-                    .Select(argument => Expression.Lambda(argument, expression.Parameters))
-                    .Select(LambdaExtensionMethods.GetParameterMatcher))
+                Parameters = expressionInfo.GetParameterMatchers(expression.Parameters)
             };
 
-            mockProxyDispatcher.Dispatcher.RegisteredCalls.Add(callInfo);
-            return callInfo;
+            mockProxyDispatcher.Dispatcher.RegisteredCalls.Add(callDescriptor);
+            return callDescriptor;
         }
     }
 }

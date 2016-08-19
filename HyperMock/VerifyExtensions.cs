@@ -99,9 +99,7 @@
                 throw new UnknownExpressionException(expression);
             }
 
-            var parameters = new ParameterMatchersCollection(expressionInfo.Arguments
-                    .Select(argument => Expression.Lambda(argument, expression.Parameters))
-                    .Select(LambdaExtensionMethods.GetParameterMatcher));
+            var parameters = expressionInfo.GetParameterMatchers(expression.Parameters);
             mock.AssertCallOccurance(occurred, expressionInfo.Name, parameters);
         }
 
