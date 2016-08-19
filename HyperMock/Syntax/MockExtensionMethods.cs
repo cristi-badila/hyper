@@ -174,7 +174,7 @@
             this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            var expressionInfo = expression.GetExpressionInfoForSet();
+            var expressionInfo = expression.GetExpressionInfoForGet();
             if (expressionInfo == null)
             {
                 throw new UnknownExpressionException(expression);
