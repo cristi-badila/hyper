@@ -1,6 +1,7 @@
-﻿namespace HyperMock.Universal.Verification
+﻿namespace HyperMock.Universal.OccuredMatchers
 {
     using Exceptions;
+    using Syntax;
 
     public class ExactOccurred : Occurred
     {

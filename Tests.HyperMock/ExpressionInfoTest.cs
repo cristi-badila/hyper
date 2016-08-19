@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq.Expressions;
+    using Core;
     using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
     [TestClass]

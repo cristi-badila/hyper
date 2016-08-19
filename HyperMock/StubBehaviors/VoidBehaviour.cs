@@ -1,5 +1,7 @@
 ﻿namespace HyperMock.Universal.StubBehaviors
 {
+    using Core;
+
     /// <summary>
     ///     Provides void method behaviours to be added.
     /// </summary>

@@ -1,4 +1,4 @@
-﻿namespace HyperMock.Universal
+﻿namespace HyperMock.Universal.Core
 {
     public abstract class ParameterMatcher
     {

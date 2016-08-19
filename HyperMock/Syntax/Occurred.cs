@@ -1,6 +1,6 @@
-﻿namespace HyperMock.Universal
+﻿namespace HyperMock.Universal.Syntax
 {
-    using Verification;
+    using OccuredMatchers;
 
     public abstract class Occurred
     {

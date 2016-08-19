@@ -1,6 +1,7 @@
-﻿namespace HyperMock.Universal
+﻿namespace HyperMock.Universal.Syntax
 {
     using System;
+    using Core;
     using ParameterMatchers;
 
     public static class It

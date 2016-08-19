@@ -1,4 +1,4 @@
-﻿namespace HyperMock.Universal
+﻿namespace HyperMock.Universal.Core
 {
     using System;
     using System.Collections.Generic;

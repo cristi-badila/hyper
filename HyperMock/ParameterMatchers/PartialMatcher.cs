@@ -1,6 +1,7 @@
 ﻿namespace HyperMock.Universal.ParameterMatchers
 {
     using System;
+    using Core;
 
     public class PartialMatcher<T> : ParameterMatcher
         where T : class

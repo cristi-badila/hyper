@@ -1,16 +1,15 @@
-﻿namespace HyperMock.Universal
+﻿namespace HyperMock.Universal.Syntax
 {
     using System;
     using System.Linq;
     using System.Linq.Expressions;
     using Exceptions;
     using ExtensionMethods;
+    using Core;
     using ParameterMatchers;
+    using StubBehaviors;
 
-    /// <summary>
-    ///     Set of extensions for verifying that calls have occurred.
-    /// </summary>
-    public static class VerifyExtensions
+    public static class MockExtensionMethods
     {
         /// <summary>
         ///     Verifies a method matching the expression was called the given number of times.
@@ -105,6 +104,113 @@
 
             var parameterMatcher = new ExactMatcher(expectedValue);
             occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(expressionInfo.Name, parameterMatcher).Count());
+        }
+
+        /// <summary>
+        ///     Setup of a method with no return.
+        /// </summary>
+        /// <typeparam name="TMock">Mocked type</typeparam>
+        /// <param name="instance">Mocked instance</param>
+        /// <param name="expression">Method expression</param>
+        /// <returns>Method behavior</returns>
+        public static VoidBehaviour Setup<TMock>(
+            this Mock<TMock> instance, Expression<Action<TMock>> expression)
+            where TMock : class
+        {
+            return new VoidBehaviour(instance.Setup<TMock, Action<TMock>>(expression));
+        }
+
+        /// <summary>
+        ///     Setup of a function with a return value.
+        /// </summary>
+        /// <typeparam name="TMock">Mocked type</typeparam>
+        /// <typeparam name="TReturn">Return type</typeparam>
+        /// <param name="instance">Mocked instance</param>
+        /// <param name="expression">Function expression</param>
+        /// <returns>Function behaviours</returns>
+        public static ReturnBehaviour<TReturn> Setup<TMock, TReturn>(
+            this Mock<TMock> instance, Expression<Func<TMock, TReturn>> expression)
+            where TMock : class
+        {
+            return new ReturnBehaviour<TReturn>(instance.Setup<TMock, Func<TMock, TReturn>>(expression));
+        }
+
+        /// <summary>
+        ///     Setup of a method call with a default return behavior.
+        /// </summary>
+        /// <typeparam name="TMock">Mocked type</typeparam>
+        /// <typeparam name="TLambda">The expression containing the method call</typeparam>
+        /// <param name="mock">Mocked instance</param>
+        /// <param name="expression">Function expression</param>
+        /// <returns>Function behaviours</returns>
+        public static CallDescriptor Setup<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression)
+            where TMock : class
+        {
+            var expressionInfo = expression.GetExpressionInfoForMethod();
+            if (expressionInfo == null)
+            {
+                throw new UnknownExpressionException(expression);
+            }
+
+            var callDescriptor = new CallDescriptor
+            {
+                MemberName = expressionInfo.Name,
+                ParameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters)
+            };
+
+            mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
+            return callDescriptor;
+        }
+
+        /// <summary>
+        ///     Setup of a property read.
+        /// </summary>
+        /// <typeparam name="TMock">Mocked type</typeparam>
+        /// <typeparam name="TReturn">Return type</typeparam>
+        /// <param name="mock">Mocked instance</param>
+        /// <param name="expression">Read property expression</param>
+        /// <returns>Read property behaviours</returns>
+        public static ReturnBehaviour<TReturn> SetupGet<TMock, TReturn>(
+            this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression)
+            where TMock : class
+        {
+            var expressionInfo = expression.GetExpressionInfoForSet();
+            if (expressionInfo == null)
+            {
+                throw new UnknownExpressionException(expression);
+            }
+
+            var callDescriptor = new CallDescriptor
+            {
+                MemberName = expressionInfo.Name,
+                ParameterMatchers = new ParameterMatchersList { new AnyMatcher() }
+            };
+
+            mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
+            return new ReturnBehaviour<TReturn>(callDescriptor);
+        }
+
+        /// <summary>
+        ///     Setup of a property write.
+        /// </summary>
+        /// <typeparam name="TMock">Mocked type</typeparam>
+        /// <typeparam name="TReturn">Return type</typeparam>
+        /// <param name="mock">Mocked instance</param>
+        /// <param name="expression">Write property expression</param>
+        /// <returns>Write property behaviours</returns>
+        public static VoidBehaviour SetupSet<TMock, TReturn>(
+            this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression)
+            where TMock : class
+        {
+            var expressionInfo = expression.GetExpressionInfoForGet();
+            if (expressionInfo == null)
+            {
+                throw new UnknownExpressionException(expression);
+            }
+
+            var callDescriptor = new CallDescriptor { MemberName = expressionInfo.Name };
+            mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
+            return new VoidBehaviour(callDescriptor);
         }
     }
 }

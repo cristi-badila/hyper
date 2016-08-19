@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
     using Support;
+    using Syntax;
 
     [TestClass]
     public class MethodTest : TestBase<UserController>

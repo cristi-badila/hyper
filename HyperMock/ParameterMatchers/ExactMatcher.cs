@@ -1,5 +1,7 @@
 ﻿namespace HyperMock.Universal.ParameterMatchers
 {
+    using Core;
+
     public class ExactMatcher : ParameterMatcher
     {
         public ExactMatcher(object value)

@@ -1,5 +1,7 @@
 ﻿namespace HyperMock.Universal.StubBehaviors
 {
+    using Core;
+
     /// <summary>
     ///     Provides return type behaviours to be added.
     /// </summary>

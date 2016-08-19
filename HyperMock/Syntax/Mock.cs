@@ -1,7 +1,8 @@
-﻿namespace HyperMock.Universal
+﻿namespace HyperMock.Universal.Syntax
 {
     using System;
     using System.Reflection;
+    using Core;
 
     public static class Mock
     {
