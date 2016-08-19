@@ -11,13 +11,13 @@
         {
             var methodCallExpression = lambda.Body as MethodCallExpression;
             return methodCallExpression == null
-                ? lambda.GetDefaultParameterMatcher()
+                ? lambda.GetExactValueMatcher()
                 : ParameterMatcherActivator.CreateInstance(methodCallExpression.GetMatcherType(), methodCallExpression.Arguments);
         }
 
-        public static ParameterMatcher GetDefaultParameterMatcher(this LambdaExpression lambda)
+        public static ParameterMatcher GetExactValueMatcher(this LambdaExpression lambda)
         {
-            return new ExactMatcher(lambda.Compile().DynamicInvoke());
+            return new ExactMatcher(lambda.Compile().DynamicInvoke(new object[1]));
         }
 
         public static ExpressionInfo GetExpressionInfoForMethod(this LambdaExpression expression)
