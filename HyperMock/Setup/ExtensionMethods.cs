@@ -18,7 +18,7 @@
             }
 
             var callDescriptor = new CallDescriptor { MemberName = expressionInfo.Name };
-            mockProxyDispatcher.Dispatcher.RegisteredCalls.Add(callDescriptor);
+            mockProxyDispatcher.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
             return callDescriptor;
         }
 
@@ -46,10 +46,10 @@
             var callDescriptor = new CallDescriptor
             {
                 MemberName = expressionInfo.Name,
-                Parameters = new ParameterMatchersCollection { parameterMatcher }
+                ParameterMatchers = new ParameterMatchersCollection { parameterMatcher }
             };
 
-            mockProxyDispatcher.Dispatcher.RegisteredCalls.Add(callDescriptor);
+            mockProxyDispatcher.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
             return callDescriptor;
         }
 
@@ -65,10 +65,10 @@
             var callDescriptor = new CallDescriptor
             {
                 MemberName = expressionInfo.Name,
-                Parameters = expressionInfo.GetParameterMatchers(expression.Parameters)
+                ParameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters)
             };
 
-            mockProxyDispatcher.Dispatcher.RegisteredCalls.Add(callDescriptor);
+            mockProxyDispatcher.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
             return callDescriptor;
         }
     }

@@ -7,12 +7,12 @@
     {
         public CallDescriptor()
         {
-            Parameters = new ParameterMatchersCollection();
+            ParameterMatchers = new ParameterMatchersCollection();
         }
 
         public string MemberName { get; set; }
 
-        public ParameterMatchersCollection Parameters { get; set; }
+        public ParameterMatchersCollection ParameterMatchers { get; set; }
 
         public object ReturnValue { get; set; }
 

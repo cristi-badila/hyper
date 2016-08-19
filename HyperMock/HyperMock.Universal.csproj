@@ -120,6 +120,7 @@
     <Compile Include="Exceptions\UnableToSetupException.cs" />
     <Compile Include="Exceptions\UnknownExpressionException.cs" />
     <Compile Include="Exceptions\VerificationException.cs" />
+    <Compile Include="ExtensionMethods\ExpressionExtensionMethods.cs" />
     <Compile Include="ExtensionMethods\LambdaExtensionMethods.cs" />
     <Compile Include="IMock.cs" />
     <Compile Include="ParameterMatchers\CollectionMatcher.cs" />

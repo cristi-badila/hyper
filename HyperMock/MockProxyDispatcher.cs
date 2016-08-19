@@ -10,14 +10,14 @@
     /// </summary>
     public class MockProxyDispatcher : DispatchProxy
     {
-        public CallDescriptors RegisteredCalls { get; } = new CallDescriptors();
+        public CallDescriptors KnownCallDescriptors { get; } = new CallDescriptors();
 
         public CallRecordings RecordedCalls { get; } = new CallRecordings();
 
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
             var name = targetMethod.Name;
-            var matchedCallInfo = RegisteredCalls.Where(ci => ci.MemberName == name).FirstOrDefault(ci => ci.Parameters.Match(args));
+            var matchedCallInfo = KnownCallDescriptors.Where(ci => ci.MemberName == name).FirstOrDefault(ci => ci.ParameterMatchers.Match(args));
             RecordCall(targetMethod, args);
             return matchedCallInfo == null
                 ? HandleUnmatchedCall(targetMethod)
@@ -26,7 +26,7 @@
 
         private static object HandleUnmatchedCall(MethodInfo targetMethod)
         {
-            return GetDefault(targetMethod.ReturnType);
+            return GetDefaultValueByType(targetMethod.ReturnType);
         }
 
         private static object HandleMatchedCall(CallDescriptor matchedCallDescriptor)
@@ -39,7 +39,7 @@
             throw (Exception)Activator.CreateInstance(matchedCallDescriptor.ExceptionType);
         }
 
-        private static object GetDefault(Type type)
+        private static object GetDefaultValueByType(Type type)
         {
             return type != typeof(void) && type.GetTypeInfo().IsValueType
                 ? Activator.CreateInstance(type)
