@@ -12,13 +12,13 @@
         public static CallDescriptor AddHandlingForPropertyGet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            var dispatchParams = expression.GetDispatchParamsForGet();
-            if (dispatchParams == null)
+            var expressionInfo = expression.GetExpressionInfoForGet();
+            if (expressionInfo == null)
             {
                 throw new UnableToSetupException(Convert.ToString(expression));
             }
 
-            var callInfo = new CallDescriptor { MemberName = dispatchParams.Name };
+            var callInfo = new CallDescriptor { MemberName = expressionInfo.Name };
             mockProxyDispatcher.Dispatcher.RegisteredCalls.Add(callInfo);
             return callInfo;
         }
@@ -38,15 +38,15 @@
         public static CallDescriptor AddHandlingForPropertySet<TMock, TReturn>(this Mock<TMock> mockProxyDispatcher, Expression<Func<TMock, TReturn>> expression, ParameterMatcher parameterMatcher)
             where TMock : class
         {
-            var dispatchParams = expression.GetDispatchParamsForSet();
-            if (dispatchParams == null)
+            var expressionInfo = expression.GetExpressionInfoForSet();
+            if (expressionInfo == null)
             {
                 throw new UnableToSetupException(Convert.ToString(expression));
             }
 
             var callInfo = new CallDescriptor
             {
-                MemberName = dispatchParams.Name,
+                MemberName = expressionInfo.Name,
                 Parameters = new ParameterMatchersCollection { parameterMatcher }
             };
 
@@ -57,16 +57,16 @@
         public static CallDescriptor AddHandling<TMock, TLambda>(this Mock<TMock> mockProxyDispatcher, Expression<TLambda> expression)
             where TMock : class
         {
-            var dispatchParams = expression.GetDispatchParamsForMethod();
-            if (dispatchParams == null)
+            var expressionInfo = expression.GetExpressionInfoForMethod();
+            if (expressionInfo == null)
             {
                 throw new UnableToSetupException(Convert.ToString(expression));
             }
 
             var callInfo = new CallDescriptor
             {
-                MemberName = dispatchParams.Name,
-                Parameters = new ParameterMatchersCollection(dispatchParams.Arguments
+                MemberName = expressionInfo.Name,
+                Parameters = new ParameterMatchersCollection(expressionInfo.Arguments
                     .Select(argument => Expression.Lambda(argument, expression.Parameters))
                     .Select(LambdaExtensionMethods.GetParameterMatcher))
             };

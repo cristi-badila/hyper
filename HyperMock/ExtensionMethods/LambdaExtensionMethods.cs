@@ -93,13 +93,13 @@
             return matcherType;
         }
 
-        public static DispatchParams GetDispatchParamsForMethod(this LambdaExpression expression)
+        public static ExpressionInfo GetExpressionInfoForMethod(this LambdaExpression expression)
         {
             var body = expression.Body as MethodCallExpression;
-            return body == null ? null : new DispatchParams(body.Method.Name, body.Arguments);
+            return body == null ? null : new ExpressionInfo(body.Method.Name, body.Arguments);
         }
 
-        public static DispatchParams GetDispatchParamsForGet(this LambdaExpression expression)
+        public static ExpressionInfo GetExpressionInfoForGet(this LambdaExpression expression)
         {
             var body = expression.Body as MemberExpression;
             if (body == null)
@@ -108,10 +108,10 @@
             }
 
             var propInfo = (PropertyInfo)body.Member;
-            return new DispatchParams(propInfo.GetMethod.Name, null);
+            return new ExpressionInfo(propInfo.GetMethod.Name, null);
         }
 
-        public static DispatchParams GetDispatchParamsForSet(this LambdaExpression expression)
+        public static ExpressionInfo GetExpressionInfoForSet(this LambdaExpression expression)
         {
             var body = expression.Body as MemberExpression;
             if (body == null)
@@ -120,7 +120,7 @@
             }
 
             var propInfo = (PropertyInfo)body.Member;
-            return new DispatchParams(propInfo.SetMethod.Name, null);
+            return new ExpressionInfo(propInfo.SetMethod.Name, null);
         }
     }
 }

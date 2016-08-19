@@ -114,11 +114,11 @@
     <Compile Include="CallRecording.cs" />
     <Compile Include="CallDescriptors.cs" />
     <Compile Include="Collection.cs" />
-    <Compile Include="DispatchParams.cs" />
+    <Compile Include="ExpressionInfo.cs" />
     <Compile Include="Exceptions\MockException.cs" />
     <Compile Include="Exceptions\NoMatchingCallFoundException.cs" />
     <Compile Include="Exceptions\UnableToSetupException.cs" />
-    <Compile Include="Exceptions\UnknownDispatchParamsException.cs" />
+    <Compile Include="Exceptions\UnknownExpressionException.cs" />
     <Compile Include="Exceptions\VerificationException.cs" />
     <Compile Include="ExtensionMethods\LambdaExtensionMethods.cs" />
     <Compile Include="IMock.cs" />

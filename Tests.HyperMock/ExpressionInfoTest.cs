@@ -5,14 +5,14 @@
     using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
     [TestClass]
-    public class DispatchParamsTest
+    public class ExpressionInfoTest
     {
         [TestMethod]
         public void Constructor_WithoutParams_HasNonEmptyArguments()
         {
-            var dispatchParams = new DispatchParams();
+            var expressionInfo = new ExpressionInfo();
 
-            Assert.IsNotNull(dispatchParams.Arguments);
+            Assert.IsNotNull(expressionInfo.Arguments);
         }
 
         [TestMethod]
@@ -21,19 +21,19 @@
             Expression<Func<string, int>> tesExpression = @string => 42;
             var arguments = new Expression[] { tesExpression };
 
-            var dispatchParams = new DispatchParams("testName", arguments);
+            var expressionInfo = new ExpressionInfo("testName", arguments);
 
-            Assert.AreEqual("testName", dispatchParams.Name);
-            CollectionAssert.AreEquivalent(arguments, dispatchParams.Arguments);
+            Assert.AreEqual("testName", expressionInfo.Name);
+            CollectionAssert.AreEquivalent(arguments, expressionInfo.Arguments);
         }
 
         [TestMethod]
         public void Constructor_WithNameAndNullArguments_SetsTheGivenNameOnItselfAndHasNonNullArguments()
         {
-            var dispatchParams = new DispatchParams("testName", null);
+            var expressionInfo = new ExpressionInfo("testName", null);
 
-            Assert.AreEqual("testName", dispatchParams.Name);
-            Assert.IsNotNull(dispatchParams.Arguments);
+            Assert.AreEqual("testName", expressionInfo.Name);
+            Assert.IsNotNull(expressionInfo.Arguments);
         }
     }
 }

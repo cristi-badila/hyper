@@ -4,14 +4,14 @@
     using System.Linq;
     using System.Linq.Expressions;
 
-    public class DispatchParams
+    public class ExpressionInfo
     {
-        public DispatchParams()
+        public ExpressionInfo()
         {
             Arguments = new List<Expression>();
         }
 
-        public DispatchParams(string name, IEnumerable<Expression> arguments)
+        public ExpressionInfo(string name, IEnumerable<Expression> arguments)
             : this()
         {
             Name = name;

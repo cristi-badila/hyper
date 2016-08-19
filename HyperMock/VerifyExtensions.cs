@@ -1,6 +1,4 @@
-﻿using HyperMock.Universal.ParameterMatchers;
-
-namespace HyperMock.Universal
+﻿namespace HyperMock.Universal
 {
     using System;
     using System.Collections.Generic;
@@ -8,6 +6,7 @@ namespace HyperMock.Universal
     using System.Linq.Expressions;
     using Exceptions;
     using ExtensionMethods;
+    using ParameterMatchers;
 
     /// <summary>
     ///     Set of extensions for verifying behaviours have occurred.
@@ -55,13 +54,13 @@ namespace HyperMock.Universal
             this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, Occurred occurred)
             where TMock : class
         {
-            var dispatchParams = expression.GetDispatchParamsForGet();
-            if (dispatchParams == null)
+            var expressionInfo = expression.GetExpressionInfoForGet();
+            if (expressionInfo == null)
             {
-                throw new UnknownDispatchParamsException(expression);
+                throw new UnknownExpressionException(expression);
             }
 
-            mock.AssertCallOccurance(occurred, dispatchParams.Name, new ParameterMatchersCollection());
+            mock.AssertCallOccurance(occurred, expressionInfo.Name, new ParameterMatchersCollection());
         }
 
         /// <summary>
@@ -78,32 +77,32 @@ namespace HyperMock.Universal
             where TMock : class
         {
             occurred = occurred ?? Occurred.AtLeast(1);
-            var dispatchParams = expression.GetDispatchParamsForSet();
-            if (dispatchParams == null)
+            var expressionInfo = expression.GetExpressionInfoForSet();
+            if (expressionInfo == null)
             {
-                throw new UnknownDispatchParamsException(expression);
+                throw new UnknownExpressionException(expression);
             }
 
             var parameterMatchers = new ParameterMatchersCollection
             {
                 new ExactMatcher(expectedValue)
             };
-            mock.AssertCallOccurance(occurred, dispatchParams.Name, parameterMatchers);
+            mock.AssertCallOccurance(occurred, expressionInfo.Name, parameterMatchers);
         }
 
         public static void Verify<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression, Occurred occurred)
             where TMock : class
         {
-            var dispatchParams = expression.GetDispatchParamsForMethod();
-            if (dispatchParams == null)
+            var expressionInfo = expression.GetExpressionInfoForMethod();
+            if (expressionInfo == null)
             {
-                throw new UnknownDispatchParamsException(expression);
+                throw new UnknownExpressionException(expression);
             }
 
-            var parameters = new ParameterMatchersCollection(dispatchParams.Arguments
+            var parameters = new ParameterMatchersCollection(expressionInfo.Arguments
                     .Select(argument => Expression.Lambda(argument, expression.Parameters))
                     .Select(LambdaExtensionMethods.GetParameterMatcher));
-            mock.AssertCallOccurance(occurred, dispatchParams.Name, parameters);
+            mock.AssertCallOccurance(occurred, expressionInfo.Name, parameters);
         }
 
         public static IEnumerable<CallRecording> FindCalls(
