@@ -14,7 +14,7 @@
 
             var result = Subject.GetHelp();
 
-            Assert.AreEqual(result, "Some help");
+            Assert.AreEqual("Some help", result);
         }
 
         [TestMethod]

@@ -182,8 +182,7 @@
 
             var callDescriptor = new CallDescriptor
             {
-                MemberName = expressionInfo.Name,
-                ParameterMatchers = new ParameterMatchersList { new AnyMatcher() }
+                MemberName = expressionInfo.Name
             };
 
             mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
