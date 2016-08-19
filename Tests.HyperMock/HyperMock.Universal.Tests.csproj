@@ -100,7 +100,9 @@
     <Compile Include="Core\CallDescriptorTests.cs" />
     <Compile Include="Core\CallRecordingTests.cs" />
     <Compile Include="Core\ExpressionInfoTests.cs" />
-    <Compile Include="IntegrationTests\MultipleSetupsTests.cs" />
+    <Compile Include="Support\CustomException.cs" />
+    <Compile Include="Support\ITestInterface.cs" />
+    <Compile Include="Core\MockProxyDispatcherTests.cs" />
     <Compile Include="IntegrationTests\SetupTests.cs" />
     <Compile Include="IntegrationTests\VerifyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
