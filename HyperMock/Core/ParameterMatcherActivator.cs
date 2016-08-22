@@ -19,7 +19,7 @@
 
             if (!(matcher is ParameterMatcher))
             {
-                throw new UnknownParameterMatcher();
+                throw new InvalidParameterMatcherException(matcher.GetType());
             }
 
             return (ParameterMatcher)matcher;

@@ -3,21 +3,28 @@
     using System.Linq.Expressions;
     using System.Reflection;
     using Core;
+    using Exceptions;
     using ParameterMatchers;
 
     public static class LambdaExtensionMethods
     {
         public static ParameterMatcher GetParameterMatcher(this LambdaExpression lambda)
         {
-            var methodCallExpression = lambda.Body as MethodCallExpression;
-            return methodCallExpression == null
+            var methodCallExpression = lambda.GetNestedMethodCallExpression();
+            if (methodCallExpression?.Object is ParameterExpression)
+            {
+                throw new UnknownParameterMatcherException(methodCallExpression);
+            }
+
+            var matcherType = methodCallExpression?.GetMatcherType();
+            return matcherType == null
                 ? lambda.GetExactValueMatcher()
-                : ParameterMatcherActivator.CreateInstance(methodCallExpression.GetMatcherType(), methodCallExpression.Arguments);
+                : ParameterMatcherActivator.CreateInstance(matcherType, methodCallExpression.Arguments);
         }
 
         public static ParameterMatcher GetExactValueMatcher(this LambdaExpression lambda)
         {
-            return new ExactMatcher(lambda.Compile().DynamicInvoke(new object[1]));
+            return new ExactMatcher(lambda.Compile().DynamicInvoke(new object[lambda.Parameters.Count]));
         }
 
         public static ExpressionInfo GetExpressionInfoForMethod(this LambdaExpression expression)
@@ -42,6 +49,28 @@
             return body == null
                 ? null
                 : new ExpressionInfo(((PropertyInfo)body.Member).SetMethod.Name, null);
+        }
+
+        public static MethodCallExpression GetNestedMethodCallExpression(this LambdaExpression expression)
+        {
+            var expressionBody = expression.Body;
+            MethodCallExpression result = null;
+            var methodCallExpression = expressionBody as MethodCallExpression;
+            if (methodCallExpression != null)
+            {
+                result = methodCallExpression;
+            }
+            else
+            {
+                // Try to handle expressions that result from automatic type conversions
+                var unaryExpression = expressionBody as UnaryExpression;
+                if (unaryExpression?.NodeType == ExpressionType.Convert)
+                {
+                    result = unaryExpression.Operand as MethodCallExpression;
+                }
+            }
+
+            return result;
         }
     }
 }

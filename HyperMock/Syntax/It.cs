@@ -7,6 +7,12 @@
     public static class It
     {
         [ParameterMatcher(typeof(AnyMatcher))]
+        public static object IsAny()
+        {
+            return default(object);
+        }
+
+        [ParameterMatcher(typeof(AnyMatcher<>))]
         public static T IsAny<T>()
         {
             return default(T);
