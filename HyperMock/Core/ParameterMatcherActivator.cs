@@ -8,9 +8,9 @@
 
     public static class ParameterMatcherActivator
     {
-        public static ParameterMatcher CreateInstance(Type matcherType, IEnumerable<Expression> argumentExpression)
+        public static ParameterMatcher CreateInstance(Type matcherType, IEnumerable<Expression> argumentExpressions)
         {
-            var ctorArguments = argumentExpression
+            var ctorArguments = argumentExpressions
                 .Select(ResolveArgumentExpression)
                 .ToArray();
             var matcher = ctorArguments.Length == 0
