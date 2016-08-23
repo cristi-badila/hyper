@@ -102,6 +102,7 @@
     <Compile Include="Core\ExpressionInfoTests.cs" />
     <Compile Include="Core\ParameterMatcherActivatorTests.cs" />
     <Compile Include="ExtensionMethods\ExpressionInfoExtensionMethodsTests.cs" />
+    <Compile Include="ExtensionMethods\LambdaExtensionMethodsTests.cs" />
     <Compile Include="Support\CustomException.cs" />
     <Compile Include="Support\ITestInterface.cs" />
     <Compile Include="Core\MockProxyDispatcherTests.cs" />

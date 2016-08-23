@@ -28,7 +28,7 @@
         [TestMethod]
         public void GetParameterMatchers_ExpressionInfoHasOneArgument_ReturnsAParameterMatchersListWithTheParameterMatcher()
         {
-            Expression<Func<Guid, bool>> expression = param => param.Equals(It.IsAny());
+            Expression<Func<bool>> expression = () => Equals(It.IsAny());
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
             var expressionInfo = new ExpressionInfo { Arguments = new List<Expression> { argumentExpression } };
@@ -133,7 +133,7 @@
 
             Assert.ThrowsException<InvalidParameterExpressionException>(
                 () => expressionInfo.GetParameterMatchers(expression.Parameters).ToList(),
-                "A parameter expression was encountered which could not be parsed: \"p1.GetHelp()\"");
+                "A parameter expression was encountered which could not be evaluated: \"p1.GetHelp()\"");
         }
 
         [TestMethod]

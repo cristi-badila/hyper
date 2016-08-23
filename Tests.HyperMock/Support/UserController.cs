@@ -12,6 +12,8 @@
             _userService = userService;
         }
 
+        public int Version { get; set; }
+
         public bool Save(string name)
         {
             return _userService.Save(name);
