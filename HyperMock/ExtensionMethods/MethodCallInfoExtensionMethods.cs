@@ -5,7 +5,7 @@
     using System.Linq.Expressions;
     using Core;
 
-    public static class ExpressionInfoExtensionMethods
+    public static class MethodCallInfoExtensionMethods
     {
         public static ParameterMatchersList GetParameterMatchers(
             this MethodCallInfo methodCallInfo,

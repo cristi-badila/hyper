@@ -50,7 +50,7 @@
             var getMethodInfo = ((PropertyInfo)body?.Member)?.GetMethod;
             return getMethodInfo == null
                 ? null
-                : new MethodCallInfo(getMethodInfo.Name, null);
+                : new MethodCallInfo(getMethodInfo.Name);
         }
 
         public static MethodCallInfo GetExpressionInfoForSet(this LambdaExpression expression)
@@ -59,7 +59,7 @@
             var setMethodInfo = ((PropertyInfo)body?.Member)?.SetMethod;
             return setMethodInfo == null
                 ? null
-                : new MethodCallInfo(setMethodInfo.Name, null);
+                : new MethodCallInfo(setMethodInfo.Name);
         }
 
         public static MethodCallExpression GetNestedMethodCallExpression(this LambdaExpression expression)

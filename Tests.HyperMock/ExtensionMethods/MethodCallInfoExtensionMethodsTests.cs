@@ -13,14 +13,14 @@
     using Universal.ExtensionMethods;
 
     [TestClass]
-    public class ExpressionInfoExtensionMethodsTests
+    public class MethodCallInfoExtensionMethodsTests
     {
         [TestMethod]
         public void GetParameterMatchers_ExpressionInfoHasNoArguments_ReturnsAnEmptyParameterMatchersList()
         {
-            var expressionInfo = new MethodCallInfo();
+            var methodCallInfo = new MethodCallInfo();
 
-            var parameterMatchers = expressionInfo.GetParameterMatchers(new List<ParameterExpression>()).ToList();
+            var parameterMatchers = methodCallInfo.GetParameterMatchers(new List<ParameterExpression>()).ToList();
 
             Assert.AreEqual(0, parameterMatchers.Count);
         }
@@ -31,9 +31,9 @@
             Expression<Func<bool>> expression = () => Equals(It.IsAny());
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
-            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
+            var methodCallInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
 
-            var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters).ToList();
+            var parameterMatchers = methodCallInfo.GetParameterMatchers(expression.Parameters).ToList();
 
             Assert.AreEqual(1, parameterMatchers.Count);
             Assert.IsInstanceOfType(parameterMatchers.First(), typeof(AnyMatcher));
@@ -45,9 +45,9 @@
             Expression<Func<bool>> expression = () => Equals(It.IsAny<Guid>());
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
-            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
+            var methodCallInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
 
-            var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters).ToList();
+            var parameterMatchers = methodCallInfo.GetParameterMatchers(expression.Parameters).ToList();
 
             Assert.AreEqual(1, parameterMatchers.Count);
             Assert.IsInstanceOfType(parameterMatchers.First(), typeof(AnyMatcher<Guid>));
@@ -61,9 +61,9 @@
             Expression<Func<bool>> expression = () => Equals(fieldArgument);
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
-            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
+            var methodCallInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
 
-            var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters).ToList();
+            var parameterMatchers = methodCallInfo.GetParameterMatchers(expression.Parameters).ToList();
 
             Assert.AreEqual(1, parameterMatchers.Count);
             var parameterMatcher = parameterMatchers.First() as ExactMatcher;
@@ -79,9 +79,9 @@
             Expression<Func<bool>> expression = () => Equals(fieldArgument.Ticks);
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
-            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
+            var methodCallInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
 
-            var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters).ToList();
+            var parameterMatchers = methodCallInfo.GetParameterMatchers(expression.Parameters).ToList();
 
             Assert.AreEqual(1, parameterMatchers.Count);
             var parameterMatcher = parameterMatchers.First() as ExactMatcher;
@@ -97,9 +97,9 @@
             Expression<Func<bool>> expression = () => Equals(guid.ToString());
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
-            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
+            var methodCallInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
 
-            var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters).ToList();
+            var parameterMatchers = methodCallInfo.GetParameterMatchers(expression.Parameters).ToList();
 
             Assert.AreEqual(1, parameterMatchers.Count);
             var parameterMatcher = parameterMatchers.First() as ExactMatcher;
@@ -114,10 +114,10 @@
             Expression<Func<UserController, bool>> expression = p1 => p1.Equals(p1.GetHelp());
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
-            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
+            var methodCallInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
 
             Assert.ThrowsException<InvalidParameterExpressionException>(
-                () => expressionInfo.GetParameterMatchers(expression.Parameters).ToList(),
+                () => methodCallInfo.GetParameterMatchers(expression.Parameters).ToList(),
                 "A parameter expression was encountered which could not be evaluated: \"p1.GetHelp()\"");
         }
 
@@ -129,9 +129,9 @@
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression1 = methodCallExpression.Arguments.First();
             var argumentExpression2 = methodCallExpression.Arguments.Last();
-            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression1, argumentExpression2 });
+            var methodCallInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression1, argumentExpression2 });
 
-            var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters).ToList();
+            var parameterMatchers = methodCallInfo.GetParameterMatchers(expression.Parameters).ToList();
 
             Assert.AreEqual(2, parameterMatchers.Count);
             Assert.IsInstanceOfType(parameterMatchers.First(), typeof(AnyMatcher));
