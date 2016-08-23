@@ -131,9 +131,9 @@
                 Arguments = new List<Expression> { argumentExpression }
             };
 
-            Assert.ThrowsException<UnknownParameterMatcherException>(
+            Assert.ThrowsException<InvalidParameterExpressionException>(
                 () => expressionInfo.GetParameterMatchers(expression.Parameters).ToList(),
-                "Could not find a parameter matcher for the following parameter expression: \"p1.GetHelp()\"");
+                "A parameter expression was encountered which could not be parsed: \"p1.GetHelp()\"");
         }
 
         [TestMethod]

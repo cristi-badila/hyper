@@ -139,7 +139,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StubBehaviors\ReturnBehaviour.cs" />
     <Compile Include="Syntax\TestBase.cs" />
-    <Compile Include="Exceptions\UnknownParameterMatcherException.cs" />
+    <Compile Include="Exceptions\InvalidParameterExpressionException.cs" />
     <Compile Include="OccuredMatchers\CountOrMoreOccurred.cs" />
     <Compile Include="OccuredMatchers\ExactOccurred.cs" />
     <Compile Include="Syntax\Occurred.cs" />

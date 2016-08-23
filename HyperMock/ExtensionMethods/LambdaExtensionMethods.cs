@@ -1,5 +1,6 @@
 ﻿namespace HyperMock.Universal.ExtensionMethods
 {
+    using System;
     using System.Linq.Expressions;
     using System.Reflection;
     using Core;
@@ -11,11 +12,6 @@
         public static ParameterMatcher GetParameterMatcher(this LambdaExpression lambda)
         {
             var methodCallExpression = lambda.GetNestedMethodCallExpression();
-            if (methodCallExpression?.Object is ParameterExpression)
-            {
-                throw new UnknownParameterMatcherException(methodCallExpression);
-            }
-
             var matcherType = methodCallExpression?.GetMatcherType();
             return matcherType == null
                 ? lambda.GetExactValueMatcher()
@@ -24,7 +20,14 @@
 
         public static ParameterMatcher GetExactValueMatcher(this LambdaExpression lambda)
         {
-            return new ExactMatcher(lambda.Compile().DynamicInvoke(new object[lambda.Parameters.Count]));
+            try
+            {
+                return new ExactMatcher(lambda.Compile().DynamicInvoke(new object[lambda.Parameters.Count]));
+            }
+            catch (Exception exception) when (exception is MemberAccessException || exception is ArgumentException || exception is TargetInvocationException)
+            {
+                throw new InvalidParameterExpressionException(lambda);
+            }
         }
 
         public static ExpressionInfo GetExpressionInfoForMethod(this LambdaExpression expression)
