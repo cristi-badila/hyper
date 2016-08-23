@@ -1,19 +1,20 @@
 ﻿namespace HyperMock.Universal.Tests.Core
 {
     using System;
+    using System.Linq;
     using System.Linq.Expressions;
     using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
     using Universal.Core;
 
     [TestClass]
-    public class ExpressionInfoTests
+    public class MethodCallInfoTests
     {
         [TestMethod]
         public void Constructor_WithoutParams_HasNonEmptyArguments()
         {
-            var expressionInfo = new ExpressionInfo();
+            var methodCallInfo = new MethodCallInfo();
 
-            Assert.IsNotNull(expressionInfo.Arguments);
+            Assert.IsNotNull(methodCallInfo.Arguments);
         }
 
         [TestMethod]
@@ -22,19 +23,19 @@
             Expression<Func<string, int>> tesExpression = @string => 42;
             var arguments = new Expression[] { tesExpression };
 
-            var expressionInfo = new ExpressionInfo("testName", arguments);
+            var methodCallInfo = new MethodCallInfo("testName", arguments);
 
-            Assert.AreEqual("testName", expressionInfo.Name);
-            CollectionAssert.AreEquivalent(arguments, expressionInfo.Arguments);
+            Assert.AreEqual("testName", methodCallInfo.Name);
+            Assert.IsTrue(arguments.SequenceEqual(methodCallInfo.Arguments));
         }
 
         [TestMethod]
         public void Constructor_WithNameAndNullArguments_SetsTheGivenNameOnItselfAndHasNonNullArguments()
         {
-            var expressionInfo = new ExpressionInfo("testName", null);
+            var methodCallInfo = new MethodCallInfo("testName");
 
-            Assert.AreEqual("testName", expressionInfo.Name);
-            Assert.IsNotNull(expressionInfo.Arguments);
+            Assert.AreEqual("testName", methodCallInfo.Name);
+            Assert.IsNotNull(methodCallInfo.Arguments);
         }
     }
 }

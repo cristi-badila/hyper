@@ -116,7 +116,7 @@
     <Compile Include="Exceptions\InvalidParameterMatcherException.cs" />
     <Compile Include="Syntax\Collection.cs" />
     <Compile Include="Exceptions\HyperMockException.cs" />
-    <Compile Include="Core\ExpressionInfo.cs" />
+    <Compile Include="Core\MethodCallInfo.cs" />
     <Compile Include="Exceptions\UnknownExpressionException.cs" />
     <Compile Include="Exceptions\VerificationException.cs" />
     <Compile Include="ExtensionMethods\ExpressionInfoExtensionMethods.cs" />

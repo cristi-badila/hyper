@@ -18,7 +18,7 @@
         [TestMethod]
         public void GetParameterMatchers_ExpressionInfoHasNoArguments_ReturnsAnEmptyParameterMatchersList()
         {
-            var expressionInfo = new ExpressionInfo();
+            var expressionInfo = new MethodCallInfo();
 
             var parameterMatchers = expressionInfo.GetParameterMatchers(new List<ParameterExpression>()).ToList();
 
@@ -31,7 +31,7 @@
             Expression<Func<bool>> expression = () => Equals(It.IsAny());
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
-            var expressionInfo = new ExpressionInfo { Arguments = new List<Expression> { argumentExpression } };
+            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
 
             var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters).ToList();
 
@@ -44,11 +44,8 @@
         {
             Expression<Func<bool>> expression = () => Equals(It.IsAny<Guid>());
             var methodCallExpression = (MethodCallExpression)expression.Body;
-            var argumentExpression1 = methodCallExpression.Arguments.First();
-            var expressionInfo = new ExpressionInfo
-            {
-                Arguments = new List<Expression> { argumentExpression1 }
-            };
+            var argumentExpression = methodCallExpression.Arguments.First();
+            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
 
             var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters).ToList();
 
@@ -64,10 +61,7 @@
             Expression<Func<bool>> expression = () => Equals(fieldArgument);
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
-            var expressionInfo = new ExpressionInfo
-            {
-                Arguments = new List<Expression> { argumentExpression }
-            };
+            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
 
             var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters).ToList();
 
@@ -85,10 +79,7 @@
             Expression<Func<bool>> expression = () => Equals(fieldArgument.Ticks);
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
-            var expressionInfo = new ExpressionInfo
-            {
-                Arguments = new List<Expression> { argumentExpression }
-            };
+            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
 
             var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters).ToList();
 
@@ -106,10 +97,7 @@
             Expression<Func<bool>> expression = () => Equals(guid.ToString());
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
-            var expressionInfo = new ExpressionInfo
-            {
-                Arguments = new List<Expression> { argumentExpression }
-            };
+            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
 
             var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters).ToList();
 
@@ -126,10 +114,7 @@
             Expression<Func<UserController, bool>> expression = p1 => p1.Equals(p1.GetHelp());
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
-            var expressionInfo = new ExpressionInfo
-            {
-                Arguments = new List<Expression> { argumentExpression }
-            };
+            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression });
 
             Assert.ThrowsException<InvalidParameterExpressionException>(
                 () => expressionInfo.GetParameterMatchers(expression.Parameters).ToList(),
@@ -144,10 +129,7 @@
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression1 = methodCallExpression.Arguments.First();
             var argumentExpression2 = methodCallExpression.Arguments.Last();
-            var expressionInfo = new ExpressionInfo
-            {
-                Arguments = new List<Expression> { argumentExpression1, argumentExpression2 }
-            };
+            var expressionInfo = new MethodCallInfo(string.Empty, new[] { argumentExpression1, argumentExpression2 });
 
             var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters).ToList();
 

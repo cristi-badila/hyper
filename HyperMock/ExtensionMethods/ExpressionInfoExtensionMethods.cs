@@ -8,10 +8,10 @@
     public static class ExpressionInfoExtensionMethods
     {
         public static ParameterMatchersList GetParameterMatchers(
-            this ExpressionInfo expressionInfo,
+            this MethodCallInfo methodCallInfo,
             IEnumerable<ParameterExpression> parameters)
         {
-            return new ParameterMatchersList(expressionInfo.Arguments
+            return new ParameterMatchersList(methodCallInfo.Arguments
                 .Select(argument => Expression.Lambda(argument, parameters))
                 .Select(LambdaExtensionMethods.GetParameterMatcher));
         }

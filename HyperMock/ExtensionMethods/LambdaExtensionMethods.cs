@@ -36,30 +36,30 @@
             }
         }
 
-        public static ExpressionInfo GetExpressionInfoForMethod(this LambdaExpression expression)
+        public static MethodCallInfo GetExpressionInfoForMethod(this LambdaExpression expression)
         {
             var body = expression.Body as MethodCallExpression;
             return body == null
                 ? null
-                : new ExpressionInfo(body.Method.Name, body.Arguments);
+                : new MethodCallInfo(body.Method.Name, body.Arguments);
         }
 
-        public static ExpressionInfo GetExpressionInfoForGet(this LambdaExpression expression)
+        public static MethodCallInfo GetExpressionInfoForGet(this LambdaExpression expression)
         {
             var body = expression.Body as MemberExpression;
             var getMethodInfo = ((PropertyInfo)body?.Member)?.GetMethod;
             return getMethodInfo == null
                 ? null
-                : new ExpressionInfo(getMethodInfo.Name, null);
+                : new MethodCallInfo(getMethodInfo.Name, null);
         }
 
-        public static ExpressionInfo GetExpressionInfoForSet(this LambdaExpression expression)
+        public static MethodCallInfo GetExpressionInfoForSet(this LambdaExpression expression)
         {
             var body = expression.Body as MemberExpression;
             var setMethodInfo = ((PropertyInfo)body?.Member)?.SetMethod;
             return setMethodInfo == null
                 ? null
-                : new ExpressionInfo(setMethodInfo.Name, null);
+                : new MethodCallInfo(setMethodInfo.Name, null);
         }
 
         public static MethodCallExpression GetNestedMethodCallExpression(this LambdaExpression expression)

@@ -4,22 +4,22 @@
     using System.Linq;
     using System.Linq.Expressions;
 
-    public class ExpressionInfo
+    public class MethodCallInfo
     {
-        public ExpressionInfo()
+        public MethodCallInfo()
         {
             Arguments = new List<Expression>();
         }
 
-        public ExpressionInfo(string name, IEnumerable<Expression> arguments)
+        public MethodCallInfo(string name, IEnumerable<Expression> arguments = null)
             : this()
         {
             Name = name;
             Arguments = arguments == null ? Arguments : arguments.ToList();
         }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public List<Expression> Arguments { get; set; }
+        public IReadOnlyCollection<Expression> Arguments { get; }
     }
 }

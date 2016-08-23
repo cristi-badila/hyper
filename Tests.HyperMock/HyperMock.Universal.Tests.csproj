@@ -99,7 +99,7 @@
   <ItemGroup>
     <Compile Include="Core\CallDescriptorTests.cs" />
     <Compile Include="Core\CallRecordingTests.cs" />
-    <Compile Include="Core\ExpressionInfoTests.cs" />
+    <Compile Include="Core\MethodCallInfoTests.cs" />
     <Compile Include="Core\ParameterMatcherActivatorTests.cs" />
     <Compile Include="ExtensionMethods\ExpressionInfoExtensionMethodsTests.cs" />
     <Compile Include="ExtensionMethods\LambdaExtensionMethodsTests.cs" />
