@@ -5,7 +5,7 @@
     public class UnknownExpressionException : HyperMockException
     {
         public UnknownExpressionException(Expression expression)
-            : base($"Could not get expression info for expression {expression}")
+            : base($"Could not get call info from expression: {expression}")
         {
         }
     }
