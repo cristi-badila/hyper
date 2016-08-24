@@ -13,7 +13,7 @@
 
         public override bool Matches(object argument)
         {
-            return CtorParameter % 2 == 0;
+            return Equals(CtorParameter, argument);
         }
     }
 }

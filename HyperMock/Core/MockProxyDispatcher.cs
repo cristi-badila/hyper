@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Reflection;
-    using ExtensionMethods;
 
     /// <summary>
     ///     Instance of the dispatcher proxy. This acts like an interceptor for the mocking framework.

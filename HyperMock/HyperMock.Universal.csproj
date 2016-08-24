@@ -140,7 +140,6 @@
     <Compile Include="ParameterMatchers\AnyMatcher.cs" />
     <Compile Include="ParameterMatchers\ExactMatcher.cs" />
     <Compile Include="ParameterMatchers\PartialMatcher.cs" />
-    <Compile Include="ExtensionMethods\ParameterCollectionExtensionMethods.cs" />
     <Compile Include="Syntax\Mock.cs" />
     <Compile Include="Core\MockProxyDispatcher.cs" />
     <Compile Include="Core\ParameterMatchersList.cs" />

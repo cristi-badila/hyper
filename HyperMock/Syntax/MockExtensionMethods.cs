@@ -51,7 +51,7 @@
         {
             var callDescriptorFactory = GetMethodCallDescriptorFactory();
             var callDescriptor = callDescriptorFactory.Create(expression);
-            occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(callDescriptor.MemberName, callDescriptor.ParameterMatchers).Count());
+            occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(callDescriptor).Count());
         }
 
         /// <summary>
@@ -87,8 +87,7 @@
             occurred = occurred ?? Occurred.AtLeast(1);
             var callDescriptorFactory = GetSetterCallDescriptorFactory();
             var callDescriptor = callDescriptorFactory.Create(expression);
-            var parameterMatchers = new ParameterMatchersList(new ExactMatcher(expectedValue));
-            occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(callDescriptor.MemberName, parameterMatchers).Count());
+            occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(callDescriptor.MemberName, new ExactMatcher(expectedValue)).Count());
         }
 
         /// <summary>
