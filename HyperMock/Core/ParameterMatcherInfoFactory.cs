@@ -5,11 +5,10 @@
     using System.Reflection;
     using ParameterMatchers;
 
-    public class ParameterMatcherInfoFactory
+    public class ParameterMatcherInfoFactory : IParameterMatcherInfoFactory
     {
-        public ParameterMatcherInfo Create(Expression argumentExpression, LambdaExpression parrentExpression)
+        public ParameterMatcherInfo Create(LambdaExpression lambdaExpression)
         {
-            var lambdaExpression = Expression.Lambda(argumentExpression, parrentExpression.Parameters);
             var methodCallExpression = ReduceToMethodCallExpression(lambdaExpression);
             var matcherType = GetMatcherType(methodCallExpression);
 

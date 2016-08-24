@@ -3,8 +3,6 @@
     using System;
     using System.Linq;
     using System.Linq.Expressions;
-    using Exceptions;
-    using ExtensionMethods;
     using Core;
     using ParameterMatchers;
     using StubBehaviors;
@@ -51,14 +49,9 @@
         public static void Verify<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression, Occurred occurred)
             where TMock : class
         {
-            var expressionInfo = new MethodCallInfoFactory().Create(expression);
-            if (expressionInfo == null)
-            {
-                throw new UnknownCallExpressionException(expression);
-            }
-
-            var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters);
-            occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(expressionInfo.Name, parameterMatchers).Count());
+            var callDescriptorFactory = GetMethodCallDescriptorFactory();
+            var callDescriptor = callDescriptorFactory.Create(expression);
+            occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(callDescriptor.MemberName, callDescriptor.ParameterMatchers).Count());
         }
 
         /// <summary>
@@ -73,13 +66,9 @@
             this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, Occurred occurred)
             where TMock : class
         {
-            var expressionInfo = new GetterMethodCallInfoFactory().Create(expression);
-            if (expressionInfo == null)
-            {
-                throw new UnknownCallExpressionException(expression);
-            }
-
-            occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(expressionInfo.Name).Count());
+            var callDescriptorFactory = GetGetterCallDescriptorFactory();
+            var callDescriptor = callDescriptorFactory.Create(expression);
+            occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(callDescriptor.MemberName).Count());
         }
 
         /// <summary>
@@ -96,14 +85,10 @@
             where TMock : class
         {
             occurred = occurred ?? Occurred.AtLeast(1);
-            var expressionInfo = new SetterMethodCallInfoFactory().Create(expression);
-            if (expressionInfo == null)
-            {
-                throw new UnknownCallExpressionException(expression);
-            }
-
-            var parameterMatcher = new ExactMatcher(expectedValue);
-            occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(expressionInfo.Name, parameterMatcher).Count());
+            var callDescriptorFactory = GetSetterCallDescriptorFactory();
+            var callDescriptor = callDescriptorFactory.Create(expression);
+            var parameterMatchers = new ParameterMatchersList(new ExactMatcher(expectedValue));
+            occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(callDescriptor.MemberName, parameterMatchers).Count());
         }
 
         /// <summary>
@@ -146,17 +131,10 @@
         public static CallDescriptor Setup<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression)
             where TMock : class
         {
-            var expressionInfo = new MethodCallInfoFactory().Create(expression);
-            if (expressionInfo == null)
-            {
-                throw new UnknownCallExpressionException(expression);
-            }
-
-            var callDescriptor = new CallDescriptor(
-                expressionInfo.Name,
-                expressionInfo.GetParameterMatchers(expression.Parameters));
-
+            var callDescriptorFactory = GetMethodCallDescriptorFactory();
+            var callDescriptor = callDescriptorFactory.Create(expression);
             mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
+
             return callDescriptor;
         }
 
@@ -172,15 +150,10 @@
             this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            var expressionInfo = new GetterMethodCallInfoFactory().Create(expression);
-            if (expressionInfo == null)
-            {
-                throw new UnknownCallExpressionException(expression);
-            }
-
-            var callDescriptor = new CallDescriptor(expressionInfo.Name);
-
+            var callDescriptorFactory = GetGetterCallDescriptorFactory();
+            var callDescriptor = callDescriptorFactory.Create(expression);
             mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
+
             return new ReturnBehaviour<TReturn>(callDescriptor);
         }
 
@@ -196,15 +169,32 @@
             this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            var expressionInfo = new SetterMethodCallInfoFactory().Create(expression);
-            if (expressionInfo == null)
-            {
-                throw new UnknownCallExpressionException(expression);
-            }
-
-            var callDescriptor = new CallDescriptor(expressionInfo.Name);
+            var callDescriptorFactory = GetSetterCallDescriptorFactory();
+            var callDescriptor = callDescriptorFactory.Create(expression);
             mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
+
             return new VoidBehaviour(callDescriptor);
+        }
+
+        private static CallDescriptorFactory GetMethodCallDescriptorFactory()
+        {
+            return new CallDescriptorFactory(
+                new MethodCallInfoFactory(),
+                new ParameterMatcherFactory(new ParameterMatcherInfoFactory()));
+        }
+
+        private static CallDescriptorFactory GetGetterCallDescriptorFactory()
+        {
+            return new CallDescriptorFactory(
+                new GetterMethodCallInfoFactory(),
+                new ParameterMatcherFactory(new ParameterMatcherInfoFactory()));
+        }
+
+        private static CallDescriptorFactory GetSetterCallDescriptorFactory()
+        {
+            return new CallDescriptorFactory(
+                new SetterMethodCallInfoFactory(),
+                new ParameterMatcherFactory(new ParameterMatcherInfoFactory()));
         }
     }
 }

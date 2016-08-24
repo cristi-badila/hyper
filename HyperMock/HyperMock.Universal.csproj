@@ -114,13 +114,14 @@
     <Compile Include="Core\CallRecording.cs" />
     <Compile Include="Core\CallDescriptors.cs" />
     <Compile Include="Core\CallDescriptorFactory.cs" />
+    <Compile Include="Core\IParameterMatcherFactory.cs" />
+    <Compile Include="Core\IParameterMatcherInfoFactory.cs" />
     <Compile Include="Core\ParameterMatcherInfo.cs" />
     <Compile Include="Core\ParameterMatcherInfoFactory.cs" />
     <Compile Include="Core\SetterMethodCallInfoFactory.cs" />
     <Compile Include="Core\GetterMethodCallInfoFactory.cs" />
     <Compile Include="Core\ICallDescriptorFactory.cs" />
     <Compile Include="Core\IMethodCallInfoFactory.cs" />
-    <Compile Include="Core\IParameterMatcherFactory.cs" />
     <Compile Include="Core\MethodCallInfoFactory.cs" />
     <Compile Include="Exceptions\InvalidParameterMatcherException.cs" />
     <Compile Include="Exceptions\UnsupportedArgumentExpressionException.cs" />
@@ -129,9 +130,6 @@
     <Compile Include="Core\MethodCallInfo.cs" />
     <Compile Include="Exceptions\UnknownCallExpressionException.cs" />
     <Compile Include="Exceptions\VerificationException.cs" />
-    <Compile Include="ExtensionMethods\MethodCallInfoExtensionMethods.cs" />
-    <Compile Include="ExtensionMethods\LambdaExtensionMethods.cs" />
-    <Compile Include="ExtensionMethods\MethodCallExpressionExtensionMethods.cs" />
     <Compile Include="Core\IMock.cs" />
     <Compile Include="Core\ParameterMatcherFactory.cs" />
     <Compile Include="ParameterMatchers\CollectionMatcher.cs" />

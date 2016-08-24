@@ -25,8 +25,9 @@
             Expression<Func<bool>> expression = () => Equals(TestSyntax.GeneralMatcher());
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
+            var lambda = Expression.Lambda(argumentExpression);
 
-            var parameterMatchers = _subject.Create(argumentExpression, expression);
+            var parameterMatchers = _subject.Create(lambda);
 
             Assert.AreSame(parameterMatchers.MatcherType, typeof(GeneralMatcher));
             Assert.AreEqual(0, parameterMatchers.CtorArguments.Count);
@@ -38,8 +39,9 @@
             Expression<Func<bool>> expression = () => Equals(TestSyntax.GenericMatcher<bool>());
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
+            var lambda = Expression.Lambda(argumentExpression);
 
-            var parameterMatchers = _subject.Create(argumentExpression, expression);
+            var parameterMatchers = _subject.Create(lambda);
 
             Assert.AreSame(parameterMatchers.MatcherType, typeof(GenericMatcher<bool>));
             Assert.AreEqual(0, parameterMatchers.CtorArguments.Count);
@@ -52,8 +54,9 @@
             Expression<Func<bool>> expression = () => Equals(TestSyntax.IntMatcher(testString.Length));
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
+            var lambda = Expression.Lambda(argumentExpression);
 
-            var parameterMatchers = _subject.Create(argumentExpression, expression);
+            var parameterMatchers = _subject.Create(lambda);
 
             Assert.AreSame(parameterMatchers.MatcherType, typeof(IntMatcher));
             Assert.AreEqual(1, parameterMatchers.CtorArguments.Count);
@@ -67,8 +70,9 @@
             Expression<Func<bool>> expression = () => Equals(fieldArgument);
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
+            var lambda = Expression.Lambda(argumentExpression);
 
-            var parameterMatchers = _subject.Create(argumentExpression, expression);
+            var parameterMatchers = _subject.Create(lambda);
 
             Assert.AreSame(parameterMatchers.MatcherType, typeof(ExactMatcher));
             Assert.AreEqual(0, parameterMatchers.CtorArguments.Count);
@@ -81,8 +85,9 @@
             Expression<Func<bool>> expression = () => Equals(fieldArgument.Ticks);
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
+            var lambda = Expression.Lambda(argumentExpression);
 
-            var parameterMatchers = _subject.Create(argumentExpression, expression);
+            var parameterMatchers = _subject.Create(lambda);
 
             Assert.AreSame(parameterMatchers.MatcherType, typeof(ExactMatcher));
             Assert.AreEqual(0, parameterMatchers.CtorArguments.Count);
@@ -95,8 +100,9 @@
             Expression<Func<bool>> expression = () => Equals(guid.ToString());
             var methodCallExpression = (MethodCallExpression)expression.Body;
             var argumentExpression = methodCallExpression.Arguments.First();
+            var lambda = Expression.Lambda(argumentExpression);
 
-            var parameterMatchers = _subject.Create(argumentExpression, expression);
+            var parameterMatchers = _subject.Create(lambda);
 
             Assert.AreSame(parameterMatchers.MatcherType, typeof(ExactMatcher));
             Assert.AreEqual(0, parameterMatchers.CtorArguments.Count);

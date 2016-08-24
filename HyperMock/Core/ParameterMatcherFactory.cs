@@ -6,35 +6,23 @@
     using System.Linq.Expressions;
     using System.Reflection;
     using Exceptions;
-    using ExtensionMethods;
     using ParameterMatchers;
 
     public class ParameterMatcherFactory : IParameterMatcherFactory
     {
-        public static ParameterMatcher CreateInstance(Type matcherType, IEnumerable<Expression> argumentExpressions)
+        private readonly IParameterMatcherInfoFactory _parameterMatcherInfoFactory;
+
+        public ParameterMatcherFactory(IParameterMatcherInfoFactory parameterMatcherInfoFactory)
         {
-            var ctorArguments = argumentExpressions
-                .Select(ResolveArgumentExpression)
-                .ToArray();
-            var matcher = ctorArguments.Length == 0
-                ? Activator.CreateInstance(matcherType)
-                : Activator.CreateInstance(matcherType, ctorArguments);
-
-            if (!(matcher is ParameterMatcher))
-            {
-                throw new InvalidParameterMatcherException(matcher.GetType());
-            }
-
-            return (ParameterMatcher)matcher;
+            _parameterMatcherInfoFactory = parameterMatcherInfoFactory;
         }
 
-        public ParameterMatcher Create(LambdaExpression lambda)
+        public ParameterMatcher Create(LambdaExpression argumentExpression)
         {
-            var methodCallExpression = lambda.GetNestedMethodCallExpression();
-            var matcherType = methodCallExpression?.GetMatcherType();
-            return matcherType == null
-                ? GetExactValueMatcher(lambda)
-                : CreateInstance(matcherType, methodCallExpression.Arguments);
+            var parameterMatcherInfo = _parameterMatcherInfoFactory.Create(argumentExpression);
+            return parameterMatcherInfo.MatcherType == typeof(ExactMatcher)
+                ? GetExactValueMatcher(argumentExpression)
+                : CreateInstance(parameterMatcherInfo.MatcherType, parameterMatcherInfo.CtorArguments);
         }
 
         protected static ExactMatcher GetExactValueMatcher(LambdaExpression lambda)
@@ -59,29 +47,24 @@
             }
         }
 
-        protected static MethodCallExpression GetNestedMethodCallExpression(LambdaExpression expression)
+        protected static ParameterMatcher CreateInstance(Type matcherType, IEnumerable<Expression> argumentExpressions)
         {
-            var expressionBody = expression.Body;
-            MethodCallExpression result = null;
-            var methodCallExpression = expressionBody as MethodCallExpression;
-            if (methodCallExpression != null)
+            var ctorArguments = argumentExpressions
+                .Select(ResolveArgumentExpression)
+                .ToArray();
+            var matcher = ctorArguments.Length == 0
+                ? Activator.CreateInstance(matcherType)
+                : Activator.CreateInstance(matcherType, ctorArguments);
+
+            if (!(matcher is ParameterMatcher))
             {
-                result = methodCallExpression;
-            }
-            else
-            {
-                // Try to handle expressions that result from automatic type conversions
-                var unaryExpression = expressionBody as UnaryExpression;
-                if (unaryExpression?.NodeType == ExpressionType.Convert)
-                {
-                    result = unaryExpression.Operand as MethodCallExpression;
-                }
+                throw new InvalidParameterMatcherException(matcher.GetType());
             }
 
-            return result;
+            return (ParameterMatcher)matcher;
         }
 
-        private static object ResolveArgumentExpression(Expression expression)
+        protected static object ResolveArgumentExpression(Expression expression)
         {
             object result;
             var constantExpression = expression as ConstantExpression;

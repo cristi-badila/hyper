@@ -23,10 +23,9 @@
             try
             {
                 methodCallInfo = _methodCallInfoFactory.Create(expression);
-                var argumentLambdaExpressions = methodCallInfo.Arguments
-                    .Select(argument => Expression.Lambda(argument, expression.Parameters));
-                var matchers = argumentLambdaExpressions.Select(_parameterMatcherFactory.Create).ToList();
-                parameterMatchers = new ParameterMatchersList(matchers);
+                parameterMatchers = new ParameterMatchersList(methodCallInfo.Arguments
+                    .Select(argumentExpression => Expression.Lambda(argumentExpression, expression.Parameters))
+                    .Select(argumentLambda => _parameterMatcherFactory.Create(argumentLambda)).ToList());
             }
             catch (Exception exception)
                 when (exception is ArgumentException ||

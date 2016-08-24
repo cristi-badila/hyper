@@ -8,7 +8,7 @@
 
     public class ParameterMatcherInfo
     {
-        public ParameterMatcherInfo(Type matcherType, IEnumerable<Expression> ctorArguments)
+        public ParameterMatcherInfo(Type matcherType, IEnumerable<Expression> ctorArguments = null)
         {
             MatcherType = matcherType;
             CtorArguments = new ReadOnlyCollection<Expression>((ctorArguments ?? new Expression[0]).ToList());
