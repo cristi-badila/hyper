@@ -7,12 +7,21 @@
     {
         private readonly IUserService _userService;
 
+        // ReSharper disable once NotAccessedField.Local
+        private int _userKey;
+
         public UserController(IUserService userService)
         {
             _userService = userService;
         }
 
         public int Version { get; set; }
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
+        public int UserKey
+        {
+            set { _userKey = value; }
+        }
 
         public bool Save(string name)
         {
