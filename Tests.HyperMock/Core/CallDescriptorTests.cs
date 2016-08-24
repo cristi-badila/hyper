@@ -9,7 +9,7 @@
         [TestMethod]
         public void Constructor_ByDefault_InitializesParameterMatchers()
         {
-            var callDescriptor = new CallDescriptor();
+            var callDescriptor = new CallDescriptor(string.Empty);
 
             Assert.IsNotNull(callDescriptor.ParameterMatchers);
         }

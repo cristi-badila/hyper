@@ -13,7 +13,7 @@
         {
             return new ParameterMatchersList(methodCallInfo.Arguments
                 .Select(argument => Expression.Lambda(argument, parameters))
-                .Select(LambdaExtensionMethods.GetParameterMatcher));
+                .Select(LambdaExtensionMethods.GetParameterMatcher).ToList());
         }
     }
 }

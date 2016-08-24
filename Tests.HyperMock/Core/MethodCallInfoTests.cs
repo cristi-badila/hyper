@@ -12,7 +12,7 @@
         [TestMethod]
         public void Constructor_WithoutParams_HasNonEmptyArguments()
         {
-            var methodCallInfo = new MethodCallInfo();
+            var methodCallInfo = new MethodCallInfo(string.Empty);
 
             Assert.IsNotNull(methodCallInfo.Arguments);
         }

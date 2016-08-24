@@ -18,7 +18,7 @@
         [TestMethod]
         public void GetParameterMatchers_ExpressionInfoHasNoArguments_ReturnsAnEmptyParameterMatchersList()
         {
-            var methodCallInfo = new MethodCallInfo();
+            var methodCallInfo = new MethodCallInfo(string.Empty);
 
             var parameterMatchers = methodCallInfo.GetParameterMatchers(new List<ParameterExpression>()).ToList();
 

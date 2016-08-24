@@ -152,11 +152,9 @@
                 throw new UnknownExpressionException(expression);
             }
 
-            var callDescriptor = new CallDescriptor
-            {
-                MemberName = expressionInfo.Name,
-                ParameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters)
-            };
+            var callDescriptor = new CallDescriptor(
+                expressionInfo.Name,
+                expressionInfo.GetParameterMatchers(expression.Parameters));
 
             mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
             return callDescriptor;
@@ -180,10 +178,7 @@
                 throw new UnknownExpressionException(expression);
             }
 
-            var callDescriptor = new CallDescriptor
-            {
-                MemberName = expressionInfo.Name
-            };
+            var callDescriptor = new CallDescriptor(expressionInfo.Name);
 
             mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
             return new ReturnBehaviour<TReturn>(callDescriptor);
@@ -207,7 +202,7 @@
                 throw new UnknownExpressionException(expression);
             }
 
-            var callDescriptor = new CallDescriptor { MemberName = expressionInfo.Name };
+            var callDescriptor = new CallDescriptor(expressionInfo.Name);
             mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
             return new VoidBehaviour(callDescriptor);
         }

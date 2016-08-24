@@ -1,6 +1,5 @@
 ﻿namespace HyperMock.Universal.Tests.Core
 {
-    using System;
     using System.Reflection;
     using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
     using ParameterMatchers;
@@ -101,10 +100,8 @@
         [TestMethod]
         public void Invoke_AKnownCallDescriptorMatches_ReturnsTheDescriptorReturnValue()
         {
-            var callDescriptor = new CallDescriptor
+            var callDescriptor = new CallDescriptor("Function3", new ParameterMatchersList(new AnyMatcher()))
             {
-                MemberName = "Function3",
-                ParameterMatchers = new ParameterMatchersList { new AnyMatcher() },
                 ReturnValue = 13
             };
             _subject.KnownCallDescriptors.Add(callDescriptor);
@@ -115,10 +112,8 @@
         [TestMethod]
         public void Invoke_AKnownCallDescriptorMatchesAndHasAnExceptionTypeSet_ThrowsTheException()
         {
-            var callDescriptor = new CallDescriptor
+            var callDescriptor = new CallDescriptor("Function3", new ParameterMatchersList(new AnyMatcher()))
             {
-                MemberName = "Function3",
-                ParameterMatchers = new ParameterMatchersList { new AnyMatcher() },
                 ReturnValue = 13,
                 ExceptionType = typeof(CustomException)
             };
@@ -130,24 +125,18 @@
         [TestMethod]
         public void Invoke_MoreThenOneKnownCallDescriptorMatch_ReturnsTheDescriptorReturnValueOfTheLastMatchingDescriptor()
         {
-            var callDescriptor1 = new CallDescriptor
+            var callDescriptor1 = new CallDescriptor("Function3", new ParameterMatchersList(new ExactMatcher(2)))
             {
-                MemberName = "Function3",
-                ParameterMatchers = new ParameterMatchersList { new ExactMatcher(2) },
                 ReturnValue = 13
             };
             _subject.KnownCallDescriptors.Add(callDescriptor1);
-            var callDescriptor2 = new CallDescriptor
+            var callDescriptor2 = new CallDescriptor("Function3", new ParameterMatchersList(new ExactMatcher(3)))
             {
-                MemberName = "Function3",
-                ParameterMatchers = new ParameterMatchersList { new ExactMatcher(3) },
                 ReturnValue = 14
             };
             _subject.KnownCallDescriptors.Add(callDescriptor2);
-            var callDescriptor3 = new CallDescriptor
+            var callDescriptor3 = new CallDescriptor("Function3", new ParameterMatchersList(new ExactMatcher(2)))
             {
-                MemberName = "Function3",
-                ParameterMatchers = new ParameterMatchersList { new ExactMatcher(2) },
                 ReturnValue = 15
             };
             _subject.KnownCallDescriptors.Add(callDescriptor3);
