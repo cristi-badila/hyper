@@ -54,7 +54,7 @@
             var expressionInfo = expression.GetExpressionInfoForMethod();
             if (expressionInfo == null)
             {
-                throw new UnknownExpressionException(expression);
+                throw new UnknownCallExpressionException(expression);
             }
 
             var parameterMatchers = expressionInfo.GetParameterMatchers(expression.Parameters);
@@ -76,7 +76,7 @@
             var expressionInfo = expression.GetExpressionInfoForGet();
             if (expressionInfo == null)
             {
-                throw new UnknownExpressionException(expression);
+                throw new UnknownCallExpressionException(expression);
             }
 
             occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(expressionInfo.Name).Count());
@@ -99,7 +99,7 @@
             var expressionInfo = expression.GetExpressionInfoForSet();
             if (expressionInfo == null)
             {
-                throw new UnknownExpressionException(expression);
+                throw new UnknownCallExpressionException(expression);
             }
 
             var parameterMatcher = new ExactMatcher(expectedValue);
@@ -149,7 +149,7 @@
             var expressionInfo = expression.GetExpressionInfoForMethod();
             if (expressionInfo == null)
             {
-                throw new UnknownExpressionException(expression);
+                throw new UnknownCallExpressionException(expression);
             }
 
             var callDescriptor = new CallDescriptor(
@@ -175,7 +175,7 @@
             var expressionInfo = expression.GetExpressionInfoForGet();
             if (expressionInfo == null)
             {
-                throw new UnknownExpressionException(expression);
+                throw new UnknownCallExpressionException(expression);
             }
 
             var callDescriptor = new CallDescriptor(expressionInfo.Name);
@@ -199,7 +199,7 @@
             var expressionInfo = expression.GetExpressionInfoForGet();
             if (expressionInfo == null)
             {
-                throw new UnknownExpressionException(expression);
+                throw new UnknownCallExpressionException(expression);
             }
 
             var callDescriptor = new CallDescriptor(expressionInfo.Name);
