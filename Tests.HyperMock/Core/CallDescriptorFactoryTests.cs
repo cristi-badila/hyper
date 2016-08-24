@@ -76,7 +76,7 @@
             Expression<Func<int>> expression = () => "123".Length;
             var argumentExpressions = new List<Expression> { expression };
             _mockMethodCallInfoFactory.ReturnValue = new MethodCallInfo("someMethod", argumentExpressions);
-            var parameterMatcher = new TestMatcher2(string.Empty);
+            var parameterMatcher = new StringMatcher(string.Empty);
             _mockParameterMatcherFactory.ReturnValue = parameterMatcher;
 
             var callDescriptor = _subject.Create(_sampleExpression);

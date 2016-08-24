@@ -2,18 +2,18 @@
 {
     using Universal.Core;
 
-    public class TestMatcher2 : ParameterMatcher
+    public class IntMatcher : ParameterMatcher
     {
-        public TestMatcher2(string value)
+        public IntMatcher(int value)
         {
             CtorParameter = value;
         }
 
-        public string CtorParameter { get; }
+        public int CtorParameter { get; }
 
         public override bool Matches(object argument)
         {
-            return !Equals(CtorParameter, argument);
+            return CtorParameter % 2 == 0;
         }
     }
 }

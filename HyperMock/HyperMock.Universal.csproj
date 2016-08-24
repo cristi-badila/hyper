@@ -114,6 +114,8 @@
     <Compile Include="Core\CallRecording.cs" />
     <Compile Include="Core\CallDescriptors.cs" />
     <Compile Include="Core\CallDescriptorFactory.cs" />
+    <Compile Include="Core\ParameterMatcherInfo.cs" />
+    <Compile Include="Core\ParameterMatcherInfoFactory.cs" />
     <Compile Include="Core\SetterMethodCallInfoFactory.cs" />
     <Compile Include="Core\GetterMethodCallInfoFactory.cs" />
     <Compile Include="Core\ICallDescriptorFactory.cs" />
