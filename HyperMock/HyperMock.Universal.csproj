@@ -131,7 +131,7 @@
     <Compile Include="ExtensionMethods\LambdaExtensionMethods.cs" />
     <Compile Include="ExtensionMethods\MethodCallExpressionExtensionMethods.cs" />
     <Compile Include="Core\IMock.cs" />
-    <Compile Include="Core\ParameterMatcherActivator.cs" />
+    <Compile Include="Core\ParameterMatcherFactory.cs" />
     <Compile Include="ParameterMatchers\CollectionMatcher.cs" />
     <Compile Include="Syntax\MockExtensionMethods.cs" />
     <Compile Include="Syntax\It.cs" />

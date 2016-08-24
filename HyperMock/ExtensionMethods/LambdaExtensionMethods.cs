@@ -15,7 +15,7 @@
             var matcherType = methodCallExpression?.GetMatcherType();
             return matcherType == null
                 ? lambda.GetExactValueMatcher()
-                : ParameterMatcherActivator.CreateInstance(matcherType, methodCallExpression.Arguments);
+                : ParameterMatcherFactory.CreateInstance(matcherType, methodCallExpression.Arguments);
         }
 
         public static ExactMatcher GetExactValueMatcher(this LambdaExpression lambda)
@@ -34,32 +34,6 @@
             {
                 throw new InvalidParameterExpressionException(lambda);
             }
-        }
-
-        public static MethodCallInfo GetExpressionInfoForMethod(this LambdaExpression expression)
-        {
-            var body = expression.Body as MethodCallExpression;
-            return body == null
-                ? null
-                : new MethodCallInfo(body.Method.Name, body.Arguments);
-        }
-
-        public static MethodCallInfo GetExpressionInfoForGet(this LambdaExpression expression)
-        {
-            var body = expression.Body as MemberExpression;
-            var getMethodInfo = ((PropertyInfo)body?.Member)?.GetMethod;
-            return getMethodInfo == null
-                ? null
-                : new MethodCallInfo(getMethodInfo.Name);
-        }
-
-        public static MethodCallInfo GetExpressionInfoForSet(this LambdaExpression expression)
-        {
-            var body = expression.Body as MemberExpression;
-            var setMethodInfo = ((PropertyInfo)body?.Member)?.SetMethod;
-            return setMethodInfo == null
-                ? null
-                : new MethodCallInfo(setMethodInfo.Name);
         }
 
         public static MethodCallExpression GetNestedMethodCallExpression(this LambdaExpression expression)

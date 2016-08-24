@@ -51,7 +51,7 @@
         public static void Verify<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression, Occurred occurred)
             where TMock : class
         {
-            var expressionInfo = expression.GetExpressionInfoForMethod();
+            var expressionInfo = new MethodCallInfoFactory().Create(expression);
             if (expressionInfo == null)
             {
                 throw new UnknownCallExpressionException(expression);
@@ -73,7 +73,7 @@
             this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, Occurred occurred)
             where TMock : class
         {
-            var expressionInfo = expression.GetExpressionInfoForGet();
+            var expressionInfo = new GetterMethodCallInfoFactory().Create(expression);
             if (expressionInfo == null)
             {
                 throw new UnknownCallExpressionException(expression);
@@ -96,7 +96,7 @@
             where TMock : class
         {
             occurred = occurred ?? Occurred.AtLeast(1);
-            var expressionInfo = expression.GetExpressionInfoForSet();
+            var expressionInfo = new SetterMethodCallInfoFactory().Create(expression);
             if (expressionInfo == null)
             {
                 throw new UnknownCallExpressionException(expression);
@@ -146,7 +146,7 @@
         public static CallDescriptor Setup<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression)
             where TMock : class
         {
-            var expressionInfo = expression.GetExpressionInfoForMethod();
+            var expressionInfo = new MethodCallInfoFactory().Create(expression);
             if (expressionInfo == null)
             {
                 throw new UnknownCallExpressionException(expression);
@@ -172,7 +172,7 @@
             this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            var expressionInfo = expression.GetExpressionInfoForGet();
+            var expressionInfo = new GetterMethodCallInfoFactory().Create(expression);
             if (expressionInfo == null)
             {
                 throw new UnknownCallExpressionException(expression);
@@ -196,7 +196,7 @@
             this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            var expressionInfo = expression.GetExpressionInfoForGet();
+            var expressionInfo = new SetterMethodCallInfoFactory().Create(expression);
             if (expressionInfo == null)
             {
                 throw new UnknownCallExpressionException(expression);
