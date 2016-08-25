@@ -13,7 +13,7 @@
     [TestClass]
     public class CallDescriptorFactoryTests
     {
-        private CallDescriptorFactory _subject;
+        private MethodCallDescriptorFactory _subject;
         private MockMethodCallInfoFactory _mockMethodCallInfoFactory;
         private Expression<Func<int>> _sampleExpression;
         private MockParameterMatcherFactory _mockParameterMatcherFactory;
@@ -26,7 +26,7 @@
                 ReturnValue = new MethodCallInfo(string.Empty)
             };
             _mockParameterMatcherFactory = new MockParameterMatcherFactory();
-            _subject = new CallDescriptorFactory(_mockMethodCallInfoFactory, _mockParameterMatcherFactory);
+            _subject = new MethodCallDescriptorFactory(_mockMethodCallInfoFactory, _mockParameterMatcherFactory);
             _sampleExpression = () => 1;
         }
 

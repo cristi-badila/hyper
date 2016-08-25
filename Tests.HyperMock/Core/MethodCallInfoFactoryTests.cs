@@ -18,7 +18,7 @@
         }
 
         [TestMethod]
-        public void Create_ExpressionIsAMethodCallExpression_ReturnsAPropertMethodCallInfo()
+        public void Create_ExpressionIsAMethodCallExpression_ReturnsAProperMethodCallInfoInstance()
         {
             Expression<Func<string>> expression = () => 1.ToString("D");
 

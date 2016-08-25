@@ -101,6 +101,7 @@
     <Compile Include="Core\CallDescriptorTests.cs" />
     <Compile Include="Core\CallRecordingsTests.cs" />
     <Compile Include="Core\CallRecordingTests.cs" />
+    <Compile Include="Core\SingletonTests.cs" />
     <Compile Include="Core\ParameterMatcherInfoFactoryTests.cs" />
     <Compile Include="Core\ParameterMatcherInfoTests.cs" />
     <Compile Include="Core\ParameterMatchersListTests.cs" />

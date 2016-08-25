@@ -5,7 +5,7 @@
     using System.Reflection;
     using ParameterMatchers;
 
-    public class ParameterMatcherInfoFactory : IParameterMatcherInfoFactory
+    public class ParameterMatcherInfoFactory : Singleton<ParameterMatcherInfoFactory>, IParameterMatcherInfoFactory
     {
         public ParameterMatcherInfo Create(LambdaExpression lambdaExpression)
         {

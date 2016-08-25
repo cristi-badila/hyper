@@ -3,7 +3,7 @@
     using System;
     using System.Linq.Expressions;
 
-    public class MethodCallInfoFactory : IMethodCallInfoFactory
+    public class MethodCallInfoFactory : Singleton<MethodCallInfoFactory>, IMethodCallInfoFactory
     {
         public MethodCallInfo Create(LambdaExpression expression)
         {

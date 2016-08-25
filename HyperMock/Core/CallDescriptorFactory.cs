@@ -5,15 +5,18 @@
     using System.Linq.Expressions;
     using Exceptions;
 
-    public class CallDescriptorFactory : ICallDescriptorFactory
+    public class CallDescriptorFactory<T> : Singleton<T>, ICallDescriptorFactory
+        where T : CallDescriptorFactory<T>, new()
     {
         private readonly IMethodCallInfoFactory _methodCallInfoFactory;
         private readonly IParameterMatcherFactory _parameterMatcherFactory;
 
-        public CallDescriptorFactory(IMethodCallInfoFactory methodCallInfoFactory, IParameterMatcherFactory parameterMatcherFactory)
+        public CallDescriptorFactory(
+            IMethodCallInfoFactory methodCallInfoFactory,
+            IParameterMatcherFactory parameterMatcherFactory = null)
         {
             _methodCallInfoFactory = methodCallInfoFactory;
-            _parameterMatcherFactory = parameterMatcherFactory;
+            _parameterMatcherFactory = parameterMatcherFactory ?? ParameterMatcherFactory.Instance;
         }
 
         public CallDescriptor Create<TDelegate>(Expression<TDelegate> expression)

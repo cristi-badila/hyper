@@ -8,13 +8,18 @@
     using Exceptions;
     using ParameterMatchers;
 
-    public class ParameterMatcherFactory : IParameterMatcherFactory
+    public class ParameterMatcherFactory : Singleton<ParameterMatcherFactory>, IParameterMatcherFactory
     {
         private readonly IParameterMatcherInfoFactory _parameterMatcherInfoFactory;
 
-        public ParameterMatcherFactory(IParameterMatcherInfoFactory parameterMatcherInfoFactory)
+        public ParameterMatcherFactory()
+            : this(ParameterMatcherInfoFactory.Instance)
         {
-            _parameterMatcherInfoFactory = parameterMatcherInfoFactory;
+        }
+
+        public ParameterMatcherFactory(IParameterMatcherInfoFactory parameterMatcherInfoFactory = null)
+        {
+            _parameterMatcherInfoFactory = parameterMatcherInfoFactory ?? ParameterMatcherInfoFactory.Instance;
         }
 
         public ParameterMatcher Create(LambdaExpression argumentExpression)

@@ -49,7 +49,7 @@
         public static void Verify<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression, Occurred occurred)
             where TMock : class
         {
-            var callDescriptorFactory = GetMethodCallDescriptorFactory();
+            var callDescriptorFactory = MethodCallDescriptorFactory.Instance;
             var callDescriptor = callDescriptorFactory.Create(expression);
             occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(callDescriptor).Count());
         }
@@ -66,7 +66,7 @@
             this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression, Occurred occurred)
             where TMock : class
         {
-            var callDescriptorFactory = GetGetterCallDescriptorFactory();
+            var callDescriptorFactory = GetterCallDescriptorFactory.Instance;
             var callDescriptor = callDescriptorFactory.Create(expression);
             occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(callDescriptor.MemberName).Count());
         }
@@ -85,7 +85,7 @@
             where TMock : class
         {
             occurred = occurred ?? Occurred.AtLeast(1);
-            var callDescriptorFactory = GetSetterCallDescriptorFactory();
+            var callDescriptorFactory = SetterCallDescriptorFactory.Instance;
             var callDescriptor = callDescriptorFactory.Create(expression);
             occurred.Assert(mock.Dispatcher.RecordedCalls.Filter(callDescriptor.MemberName, new ExactMatcher(expectedValue)).Count());
         }
@@ -130,7 +130,7 @@
         public static CallDescriptor Setup<TMock, TLambda>(this Mock<TMock> mock, Expression<TLambda> expression)
             where TMock : class
         {
-            var callDescriptorFactory = GetMethodCallDescriptorFactory();
+            var callDescriptorFactory = MethodCallDescriptorFactory.Instance;
             var callDescriptor = callDescriptorFactory.Create(expression);
             mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
 
@@ -149,7 +149,7 @@
             this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            var callDescriptorFactory = GetGetterCallDescriptorFactory();
+            var callDescriptorFactory = GetterCallDescriptorFactory.Instance;
             var callDescriptor = callDescriptorFactory.Create(expression);
             mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
 
@@ -168,32 +168,11 @@
             this Mock<TMock> mock, Expression<Func<TMock, TReturn>> expression)
             where TMock : class
         {
-            var callDescriptorFactory = GetSetterCallDescriptorFactory();
+            var callDescriptorFactory = SetterCallDescriptorFactory.Instance;
             var callDescriptor = callDescriptorFactory.Create(expression);
             mock.Dispatcher.KnownCallDescriptors.Add(callDescriptor);
 
             return new VoidBehaviour(callDescriptor);
-        }
-
-        private static CallDescriptorFactory GetMethodCallDescriptorFactory()
-        {
-            return new CallDescriptorFactory(
-                new MethodCallInfoFactory(),
-                new ParameterMatcherFactory(new ParameterMatcherInfoFactory()));
-        }
-
-        private static CallDescriptorFactory GetGetterCallDescriptorFactory()
-        {
-            return new CallDescriptorFactory(
-                new GetterMethodCallInfoFactory(),
-                new ParameterMatcherFactory(new ParameterMatcherInfoFactory()));
-        }
-
-        private static CallDescriptorFactory GetSetterCallDescriptorFactory()
-        {
-            return new CallDescriptorFactory(
-                new SetterMethodCallInfoFactory(),
-                new ParameterMatcherFactory(new ParameterMatcherInfoFactory()));
         }
     }
 }

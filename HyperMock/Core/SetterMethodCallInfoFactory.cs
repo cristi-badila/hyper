@@ -4,7 +4,7 @@
     using System.Linq.Expressions;
     using System.Reflection;
 
-    public class SetterMethodCallInfoFactory : IMethodCallInfoFactory
+    public class SetterMethodCallInfoFactory : Singleton<SetterMethodCallInfoFactory>, IMethodCallInfoFactory
     {
         public MethodCallInfo Create(LambdaExpression expression)
         {
